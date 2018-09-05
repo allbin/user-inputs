@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="500px" height="300px" viewBox="0 0 500 300" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 47.1 (45422) - http://www.bohemiancoding.com/sketch -->
+    <title>symbol_delete</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="symbol_delete">
+            <circle id="Oval-2" fill="#FFFFFF" cx="250.5" cy="149.5" r="170.5"></circle>
+            <circle id="Oval-2" fill="#FE2A46" cx="251" cy="150" r="131"></circle>
+            <circle id="Oval-2" fill="#FFFFFF" cx="250" cy="150" r="82"></circle>
+            <circle id="Oval-2" fill="#FE2A46" cx="250.5" cy="150.5" r="71.5"></circle>
+            <g id="np_alert_1423668_000000" transform="translate(219.000000, 118.000000)" fill-rule="nonzero" fill="#FFFFFF">
+                <path d="M61.1864839,46.2688066 L36.6851209,3.22095895 C35.5639385,1.18945053 33.4638217,0 31.0136854,0 C28.5635491,0 26.5345562,1.18938053 25.3422498,3.22095895 L0.84088678,46.2688066 C-0.280295593,48.2975851 -0.280295593,50.7474626 0.84088678,52.779041 C1.96206915,54.8078196 4.06218599,56 6.44119834,56 L55.3725205,56 C57.7515328,56 59.8516497,54.8106195 60.9728321,52.779041 C62.3045161,50.7475326 62.3045161,48.2976551 61.1861269,46.2688066 L61.1864839,46.2688066 Z M34.585004,45.7766472 L28.0740818,45.7766472 L28.0740818,40.1058107 L34.585004,40.1058107 L34.585004,45.7766472 Z M34.585004,36.819195 L28.0740818,36.819195 L28.0740818,20.5779071 L34.585004,20.5779071 L34.585004,36.819195 Z" id="Shape"></path>
+            </g>
+        </g>
+    </g>
+</svg>
