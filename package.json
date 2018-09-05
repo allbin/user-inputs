@@ -1,6 +1,6 @@
 {
     "name": "user-prompt",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "description": "",
     "main": "dist/index.js",
     "scripts": {
@@ -15,7 +15,7 @@
     "dependencies": {
         "react": "16.3.2",
         "styled-components": "3.4.5",
-        "output-helpers": "git+https://bitbucket.org/allbin/output-helpers.git#v1.4.1",
+        "output-helpers": "git+https://bitbucket.org/allbin/output-helpers.git#v1.4.2",
         "moment": "2.x"
     },
     "devDependencies": {
@@ -31,6 +31,7 @@
         "tslint-eslint-rules": "5.4.0"
     },
     "peerDependencies": {
-        "moment": "2.x"
+        "moment": "2.x",
+        "output-helpers": "git+https://bitbucket.org/allbin/output-helpers.git#v1.4.2"
     }
 }
