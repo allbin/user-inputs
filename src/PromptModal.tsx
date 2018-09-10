@@ -2,6 +2,8 @@ import * as React from 'react';
 import styled, { keyframes } from 'styled-components';
 import oh from 'output-helpers';
 import Button from './Button';
+
+//These are require because build engine doesn't like 'import ... .svg'.
 let SymbolClone = require('./img/symbol_clone.svg');
 let SymbolDelete = require('./img/symbol_delete.svg');
 let SymbolArchive = require('./img/symbol_archive.svg');
