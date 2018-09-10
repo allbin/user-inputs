@@ -2,11 +2,11 @@ import * as React from 'react';
 import styled, { keyframes } from 'styled-components';
 import oh from 'output-helpers';
 import Button from './Button';
-import SymbolClone from './img/symbol_clone.svg';
-import SymbolDelete from './img/symbol_delete.svg';
-import SymbolArchive from './img/symbol_archive.svg';
-import SymbolNewDoc from './img/symbol_new_doc.svg';
-import SymbolNewFolder from './img/symbol_new_folder.svg';
+let SymbolClone = require('./img/symbol_clone.svg');
+let SymbolDelete = require('./img/symbol_delete.svg');
+let SymbolArchive = require('./img/symbol_archive.svg');
+let SymbolNewDoc = require('./img/symbol_new_doc.svg');
+let SymbolNewFolder = require('./img/symbol_new_folder.svg');
 
 export interface ConfirmModalProps {
     title: string;
