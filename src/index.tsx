@@ -330,8 +330,8 @@ export namespace InputHOC {
                 throw new Error("UserInput: GenerateInputs without a confirmCB requires every input to specify a onChange callback.");
             }
         } else {
-            let invalid_buttons = input_configs.some(input => input.type === "confirm");
-            if (!invalid_buttons) {
+            let confirm_buttons = input_configs.some(input => input.type === "confirm");
+            if (!confirm_buttons) {
                 throw new Error("UserInput: GenerateInputs with a confirmCB is required to have at least one input of type 'confirm'.");
             }
         }
