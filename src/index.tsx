@@ -7,8 +7,9 @@ import PromptModal from './PromptModal';
 import TextInput from './TextInput';
 import BoolInput from './BoolInput';
 import GridInput from './GridInput';
+import Button from './Button';
 
-export type InputType = "bool" | "button" | "date" | "grid" | "number" | "select" | "text";
+export type InputType = "bool" | "button" | "confirm" | "date" | "grid" | "number" | "select" | "text";
 export interface InputConfig {
     [key: string]: any;
     default_value: any;
@@ -34,6 +35,7 @@ export interface ComponentObject {
     select?: typeof React.Component;
     text?: typeof React.Component;
     modal?: typeof React.Component;
+    confirm?: typeof React.Component;
 }
 
 //Add the translations of this repo to OH. Prefix: "user_input_hoc_".
@@ -71,8 +73,7 @@ function getInputComponents(input_components: ComponentObject, inputs: InputConf
 
 
 
-
-function getComponentWithInputs(input_configs: InputConfig[], cb): typeof React.Component {
+function getComponentWithInputs(input_configs: InputConfig[], cb: (any) => void): any {
     class InputWrapper extends React.Component<any, PromptState> {
         confirmCB: (any) => void | null;
         input_components: ComponentObject;
@@ -89,14 +90,22 @@ function getComponentWithInputs(input_configs: InputConfig[], cb): typeof React.
             this.input_components = {
                 text: TextInput,
                 grid: GridInput,
-                bool: BoolInput
+                bool: BoolInput,
+                button: Button,
+                confirm: Button
             };
         }
 
+        getValues() {
+            return this.state.values;
+        }
+
+        resetValues() {
+            let default_values = input_configs.map(input => input.default_value);
+            this.setState({ values: default_values });
+        }
+
         userConfirmedCB() {
-            this.setState({
-                show: false
-            });
             if (this.confirmCB) {
                 this.confirmCB(this.state.values);
                 this.confirmCB = null;
@@ -117,9 +126,21 @@ function getComponentWithInputs(input_configs: InputConfig[], cb): typeof React.
                 if (custom_components && custom_components.hasOwnProperty(input_request.type)) {
                     InputComponent = custom_components[input_request.type];
                 }
+                let input_component_props = input_request.props || {};
+                if (input_request.type === "confirm") {
+                    return <InputComponent
+                        key={index}
+                        config={input_request}
+                        value={this.state.values[index]}
+                        onClick={(value) => {
+                            this.userConfirmedCB();
+                        }}
+                        {...input_component_props}
+                    />;
+                }
                 return <InputComponent
                     key={index}
-                    request={input_request}
+                    config={input_request}
                     value={this.state.values[index]}
                     onChange={(value) => {
                         if (input_request.onChange) {
@@ -127,6 +148,7 @@ function getComponentWithInputs(input_configs: InputConfig[], cb): typeof React.
                         }
                         this.inputValueChangeCB(index, value);
                     }}
+                    {...input_component_props}
                 />;
             });
         }
@@ -249,9 +271,10 @@ export function InputHOC (
                 if (custom_components && custom_components.hasOwnProperty(input_request.type)) {
                     InputComponent = custom_components[input_request.type];
                 }
+                let input_component_props = input_request.props || {};
                 return <InputComponent
                     key={index}
-                    request={input_request}
+                    config={input_request}
                     value={this.state.values[index]}
                     onChange={(value) => {
                         if (input_request.onChange) {
@@ -259,6 +282,7 @@ export function InputHOC (
                         }
                         this.inputValueChangeCB(index, value);
                     }}
+                    {...input_component_props}
                 />;
             });
         }
@@ -303,10 +327,20 @@ export namespace InputHOC {
         if (!confirmCB) {
             let inputs_missing_cb = input_configs.filter(input => !input.onChange);
             if (inputs_missing_cb.length > 0) {
-                throw new Error("UserInput: GenerateInputs with 'individual_callbacks' property true requires every input to specify a onChange callback.");
+                throw new Error("UserInput: GenerateInputs without a confirmCB requires every input to specify a onChange callback.");
+            }
+        } else {
+            let invalid_buttons = input_configs.some(input => input.type === "confirm");
+            if (!invalid_buttons) {
+                throw new Error("UserInput: GenerateInputs with a confirmCB is required to have at least one input of type 'confirm'.");
             }
         }
-        return getComponentWithInputs(input_configs, confirmCB);
+        let componentWithInputs = getComponentWithInputs(input_configs, confirmCB);
+        return {
+            getValues: () => { return componentWithInputs.getValues(); },
+            reset: () => {},
+            component: componentWithInputs
+        };
     }
 }
 
