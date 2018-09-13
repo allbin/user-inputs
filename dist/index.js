@@ -226,7 +226,7 @@ function InputHOC(WrappedComponent) {
         };
         Prompt.prototype.render = function () {
             return (React.createElement("div", null,
-                React.createElement(WrappedComponent, __assign({ UserPrompt: this.exports }, this.props)),
+                React.createElement(WrappedComponent, __assign({ userPrompt: this.exports }, this.props)),
                 this.renderPrompt()));
         };
         return Prompt;
@@ -250,8 +250,8 @@ exports.InputHOC = InputHOC;
             }
         }
         else {
-            var invalid_buttons = input_configs.some(function (input) { return input.type === "confirm"; });
-            if (!invalid_buttons) {
+            var confirm_buttons = input_configs.some(function (input) { return input.type === "confirm"; });
+            if (!confirm_buttons) {
                 throw new Error("UserInput: GenerateInputs with a confirmCB is required to have at least one input of type 'confirm'.");
             }
         }
