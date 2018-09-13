@@ -31,6 +31,7 @@ var PromptModal_1 = require("./PromptModal");
 var TextInput_1 = require("./TextInput");
 var BoolInput_1 = require("./BoolInput");
 var GridInput_1 = require("./GridInput");
+var Button_1 = require("./Button");
 //Add the translations of this repo to OH. Prefix: "user_input_hoc_".
 output_helpers_1.default.addDictionary(translations_1.default);
 var custom_components = {};
@@ -61,14 +62,20 @@ function getComponentWithInputs(input_configs, cb) {
             _this.input_components = {
                 text: TextInput_1.default,
                 grid: GridInput_1.default,
-                bool: BoolInput_1.default
+                bool: BoolInput_1.default,
+                button: Button_1.default,
+                confirm: Button_1.default
             };
             return _this;
         }
+        InputWrapper.prototype.getValues = function () {
+            return this.state.values;
+        };
+        InputWrapper.prototype.resetValues = function () {
+            var default_values = input_configs.map(function (input) { return input.default_value; });
+            this.setState({ values: default_values });
+        };
         InputWrapper.prototype.userConfirmedCB = function () {
-            this.setState({
-                show: false
-            });
             if (this.confirmCB) {
                 this.confirmCB(this.state.values);
                 this.confirmCB = null;
@@ -88,12 +95,18 @@ function getComponentWithInputs(input_configs, cb) {
                 if (custom_components && custom_components.hasOwnProperty(input_request.type)) {
                     InputComponent = custom_components[input_request.type];
                 }
-                return React.createElement(InputComponent, { key: index, request: input_request, value: _this.state.values[index], onChange: function (value) {
+                var input_component_props = input_request.props || {};
+                if (input_request.type === "confirm") {
+                    return React.createElement(InputComponent, __assign({ key: index, config: input_request, value: _this.state.values[index], onClick: function (value) {
+                            _this.userConfirmedCB();
+                        } }, input_component_props));
+                }
+                return React.createElement(InputComponent, __assign({ key: index, config: input_request, value: _this.state.values[index], onChange: function (value) {
                         if (input_request.onChange) {
                             input_request.onChange(value);
                         }
                         _this.inputValueChangeCB(index, value);
-                    } });
+                    } }, input_component_props));
             });
         };
         InputWrapper.prototype.render = function () {
@@ -191,12 +204,13 @@ function InputHOC(WrappedComponent) {
                 if (custom_components && custom_components.hasOwnProperty(input_request.type)) {
                     InputComponent = custom_components[input_request.type];
                 }
-                return React.createElement(InputComponent, { key: index, request: input_request, value: _this.state.values[index], onChange: function (value) {
+                var input_component_props = input_request.props || {};
+                return React.createElement(InputComponent, __assign({ key: index, config: input_request, value: _this.state.values[index], onChange: function (value) {
                         if (input_request.onChange) {
                             input_request.onChange(value);
                         }
                         _this.inputValueChangeCB(index, value);
-                    } });
+                    } }, input_component_props));
             });
         };
         Prompt.prototype.renderPrompt = function () {
@@ -232,10 +246,21 @@ exports.InputHOC = InputHOC;
         if (!confirmCB) {
             var inputs_missing_cb = input_configs.filter(function (input) { return !input.onChange; });
             if (inputs_missing_cb.length > 0) {
-                throw new Error("UserInput: GenerateInputs with 'individual_callbacks' property true requires every input to specify a onChange callback.");
+                throw new Error("UserInput: GenerateInputs without a confirmCB requires every input to specify a onChange callback.");
             }
         }
-        return getComponentWithInputs(input_configs, confirmCB);
+        else {
+            var invalid_buttons = input_configs.some(function (input) { return input.type === "confirm"; });
+            if (!invalid_buttons) {
+                throw new Error("UserInput: GenerateInputs with a confirmCB is required to have at least one input of type 'confirm'.");
+            }
+        }
+        var componentWithInputs = getComponentWithInputs(input_configs, confirmCB);
+        return {
+            getValues: function () { return componentWithInputs.getValues(); },
+            reset: function () { },
+            component: componentWithInputs
+        };
     }
     InputHOC.generateInputs = generateInputs;
 })(InputHOC = exports.InputHOC || (exports.InputHOC = {}));
