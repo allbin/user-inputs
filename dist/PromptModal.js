@@ -21,6 +21,7 @@ var React = require("react");
 var styled_components_1 = require("styled-components");
 var output_helpers_1 = require("output-helpers");
 var Button_1 = require("./Button");
+//These are require because build engine doesn't like 'import ... .svg'.
 var SymbolClone = require('./img/symbol_clone.svg');
 var SymbolDelete = require('./img/symbol_delete.svg');
 var SymbolArchive = require('./img/symbol_archive.svg');

@@ -19,15 +19,19 @@ gulp.task('clean', () => {
     return del(['build', 'dist']);
 });
 
-gulp.task('build', function () {
+gulp.task('build:static', () => {
+    return gulp.src(['./img/**/*']).pipe(gulp.dest('dist/img'));
+});
+
+gulp.task('build:scripts', () => {
     return lint().pipe(sourcemaps.init())
         .pipe(tsProject())
         .pipe(sourcemaps.write('.'))
         .pipe(gulp.dest('dist'));
 });
 
+gulp.task('build', gulp.series("clean", gulp.parallel("build:static", "build:scripts")));
 
-
-gulp.task('release:patch', gulp.series("clean", "build", allbin.tagAndPush(["package.json", "dist"], "patch")));
-gulp.task('release:minor', gulp.series("clean", "build", allbin.tagAndPush(["package.json", "dist"], "minor")));
-gulp.task('release:major', gulp.series("clean", "build", allbin.tagAndPush(["package.json", "dist"], "major")));
+gulp.task('release:patch', gulp.series("build", allbin.tagAndPush(["package.json", "dist"], "patch")));
+gulp.task('release:minor', gulp.series("build", allbin.tagAndPush(["package.json", "dist"], "minor")));
+gulp.task('release:major', gulp.series("build", allbin.tagAndPush(["package.json", "dist"], "major")));
