@@ -32,23 +32,10 @@ var TextInput_1 = require("./TextInput");
 var BoolInput_1 = require("./BoolInput");
 var GridInput_1 = require("./GridInput");
 var Button_1 = require("./Button");
+var valid_types = ["bool", "button", "confirm", "date", "grid", "number", "select", "text"];
 //Add the translations of this repo to OH. Prefix: "user_input_hoc_".
 output_helpers_1.default.addDictionary(translations_1.default);
 var custom_components = {};
-function getInputComponents(input_components, inputs, values, changeCB) {
-    return inputs.map(function (input_request, index) {
-        var InputComponent = input_components[input_request.type];
-        if (custom_components && custom_components.hasOwnProperty(input_request.type)) {
-            InputComponent = custom_components[input_request.type];
-        }
-        return React.createElement(InputComponent, { key: index, request: input_request, value: values[index], onChange: function (value) {
-                if (input_request.onChange) {
-                    input_request.onChange(value);
-                }
-                changeCB(index, value);
-            } });
-    });
-}
 function getComponentWithInputs(input_configs, cb) {
     var InputWrapper = /** @class */ (function (_super) {
         __extends(InputWrapper, _super);
@@ -144,13 +131,22 @@ function InputHOC(WrappedComponent) {
             return _this;
         }
         Prompt.prototype.initPrompt = function (inputs, props, confirmCB, cancelCB) {
-            var sanitized_inputs = inputs.filter(function (input) { return input.type !== "button"; });
-            if (sanitized_inputs.length !== inputs.length) {
-                console.warn("UserInput: Invalid input types detected for Prompt.");
+            var _this = this;
+            var invalid_inputs = inputs.some(function (input) { return input.type === "button" || input.type === "confirm"; });
+            if (invalid_inputs) {
+                throw new Error("UserInput: Inputs of type 'button' OR 'confirm' are not allowed in prompt.");
+            }
+            invalid_inputs = inputs.some(function (input) { return input.hasOwnProperty("default_value") === false; });
+            if (invalid_inputs) {
+                throw new Error("UserInput: Inputs must be configured with a 'default_value'.");
+            }
+            invalid_inputs = inputs.some(function (input) { return !_this.input_components[input.type]; });
+            if (invalid_inputs) {
+                throw new Error("UserInput: Inputs must be configured with a valid 'type'. " + valid_types.join(','));
             }
             this.confirmCB = confirmCB || null;
             this.cancelCB = cancelCB || null;
-            var values = sanitized_inputs.map(function (input) { return input.default_value; });
+            var values = inputs.map(function (input) { return input.default_value; });
             this.setState({
                 show: true,
                 modal_props: props,
@@ -254,6 +250,16 @@ exports.InputHOC = InputHOC;
             if (!confirm_buttons) {
                 throw new Error("UserInput: GenerateInputs with a confirmCB is required to have at least one input of type 'confirm'.");
             }
+        }
+        var invalid_inputs = input_configs.some(function (input) {
+            return (input.type !== "confirm" && input.type !== "button") && input.hasOwnProperty("default_value") === false;
+        });
+        if (invalid_inputs) {
+            throw new Error("UserInput: Every input that is not a 'button' or 'confirm' must be configured with a 'default_value'.");
+        }
+        invalid_inputs = input_configs.some(function (input) { return !valid_types.includes(input.type); });
+        if (invalid_inputs) {
+            throw new Error("UserInput: Inputs must be configured with a valid 'type'. " + valid_types.join(','));
         }
         var componentWithInputs = getComponentWithInputs(input_configs, confirmCB);
         return {
