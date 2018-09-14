@@ -151,7 +151,9 @@ export default class ConfirmModal extends React.Component<ConfirmModalProps, any
                                     <Button
                                         big
                                         filled
-                                        label={oh.translate('user_input_hoc_cancel')}
+                                        config={{
+                                            label: oh.translate('user_input_hoc_cancel')
+                                        }}
                                         onClick={() => this.props.cancelCB()}
                                     />
                                 </div>
@@ -161,8 +163,10 @@ export default class ConfirmModal extends React.Component<ConfirmModalProps, any
                                 <Button
                                     big
                                     filled
-                                    label={oh.translate('user_input_hoc_confirm')}
                                     light
+                                    config={{
+                                        label: oh.translate('user_input_hoc_confirm')
+                                    }}
                                     onClick={() => this.props.confirmCB()}
                                 />
                             </div>

@@ -78,6 +78,7 @@ export default class Button extends React.Component<any, any> {
     }
 
     render() {
+        let cfg = this.props.config;
         let classes = [];
         if (this.props.dark) { classes.push('dark'); }
         if (this.props.light) { classes.push('light'); }
@@ -96,7 +97,7 @@ export default class Button extends React.Component<any, any> {
                 className={`button ${classes.join(' ')}`}
                 onClick={e => this.props.onClick ? this.props.onClick(e) : null}
             >
-                {this.props.label}
+                {cfg.label}
             </this.container>
         );
     }

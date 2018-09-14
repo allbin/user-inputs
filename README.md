@@ -54,14 +54,14 @@ export default class MyComp extends React.Component {
 
 
 # Known issues
-- The non-optistimic saves (`userInput.saveProfile()`) do currently not wait for each other, if multiple saves are made before the previous has finished they may overwrite whatever changes the previous call made. A queue should be added.
+- The 
 
 
 
 # Wrapping function
-The HOC wrapping function attaches the `profile` prop to the component being wrapped.
+The HOC wrapping function attaches the `userPrompt` prop to the component being wrapped.
 
-Example: `userInput(YourComponent)` will give access to `this.props.profile` inside *YourComponent*.
+Example: `userInput(YourComponent)` will give access to `this.props.userPrompt` inside *YourComponent*.
 
 ### Optional parameters
 #### SpinnerComponent
