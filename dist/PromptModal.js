@@ -53,9 +53,13 @@ var ConfirmModal = /** @class */ (function (_super) {
                             null
                             :
                                 React.createElement("div", { className: "modal_footer_left" },
-                                    React.createElement(Button_1.default, { big: true, filled: true, label: output_helpers_1.default.translate('user_input_hoc_cancel'), onClick: function () { return _this.props.cancelCB(); } })),
+                                    React.createElement(Button_1.default, { big: true, filled: true, config: {
+                                            label: output_helpers_1.default.translate('user_input_hoc_cancel')
+                                        }, onClick: function () { return _this.props.cancelCB(); } })),
                         React.createElement("div", { className: "modal_footer_left" },
-                            React.createElement(Button_1.default, { big: true, filled: true, label: output_helpers_1.default.translate('user_input_hoc_confirm'), light: true, onClick: function () { return _this.props.confirmCB(); } })))))));
+                            React.createElement(Button_1.default, { big: true, filled: true, light: true, config: {
+                                    label: output_helpers_1.default.translate('user_input_hoc_confirm')
+                                }, onClick: function () { return _this.props.confirmCB(); } })))))));
     };
     return ConfirmModal;
 }(React.Component));

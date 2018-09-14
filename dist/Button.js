@@ -28,6 +28,7 @@ var Button = /** @class */ (function (_super) {
     }
     Button.prototype.render = function () {
         var _this = this;
+        var cfg = this.props.config;
         var classes = [];
         if (this.props.dark) {
             classes.push('dark');
@@ -50,7 +51,7 @@ var Button = /** @class */ (function (_super) {
         if (this.props.big) {
             classes.push('big');
         }
-        return (React.createElement(this.container, { onMouseEnter: function (e) { return _this.props.onMouseEnter ? _this.props.onMouseEnter(e) : null; }, onMouseLeave: function (e) { return _this.props.onMouseEnter ? _this.props.onMouseLeave(e) : null; }, block: this.props.block, filled: this.props.filled, className: "button " + classes.join(' '), onClick: function (e) { return _this.props.onClick ? _this.props.onClick(e) : null; } }, this.props.label));
+        return (React.createElement(this.container, { onMouseEnter: function (e) { return _this.props.onMouseEnter ? _this.props.onMouseEnter(e) : null; }, onMouseLeave: function (e) { return _this.props.onMouseEnter ? _this.props.onMouseLeave(e) : null; }, block: this.props.block, filled: this.props.filled, className: "button " + classes.join(' '), onClick: function (e) { return _this.props.onClick ? _this.props.onClick(e) : null; } }, cfg.label));
     };
     return Button;
 }(React.Component));
