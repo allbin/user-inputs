@@ -9,6 +9,7 @@ import BoolInput from './BoolInput';
 import GridInput from './GridInput';
 import Button from './Button';
 
+let valid_types = ["bool", "button", "confirm", "date", "grid", "number", "select", "text"];
 export type InputType = "bool" | "button" | "confirm" | "date" | "grid" | "number" | "select" | "text";
 export interface InputConfig {
     [key: string]: any;
@@ -46,30 +47,6 @@ oh.addDictionary(translations);
 
 let custom_components: ComponentObject = {};
 
-
-
-
-
-function getInputComponents(input_components: ComponentObject, inputs: InputConfig[], values: any[], changeCB: (number, any) => void): JSX.Element[] {
-    return inputs.map((input_request, index) => {
-        let InputComponent = input_components[input_request.type];
-        if (custom_components && custom_components.hasOwnProperty(input_request.type)) {
-            InputComponent = custom_components[input_request.type];
-        }
-
-        return <InputComponent
-            key={index}
-            request={input_request}
-            value={values[index]}
-            onChange={(value) => {
-                if (input_request.onChange) {
-                    input_request.onChange(value);
-                }
-                changeCB(index, value);
-            }}
-        />;
-    });
-}
 
 
 
@@ -210,13 +187,21 @@ export function InputHOC (
         }
 
         initPrompt(inputs: InputConfig[], props?: object, confirmCB?: (any) => void, cancelCB?: () => void) {
-            let sanitized_inputs = inputs.filter(input => input.type !== "button");
-            if (sanitized_inputs.length !== inputs.length) {
-                console.warn("UserInput: Invalid input types detected for Prompt.");
+            let invalid_inputs = inputs.some(input => input.type === "button" || input.type === "confirm");
+            if (invalid_inputs) {
+                throw new Error("UserInput: Inputs of type 'button' OR 'confirm' are not allowed in prompt.");
+            }
+            invalid_inputs = inputs.some(input => input.hasOwnProperty("default_value") === false);
+            if (invalid_inputs) {
+                throw new Error("UserInput: Inputs must be configured with a 'default_value'.");
+            }
+            invalid_inputs = inputs.some(input => !this.input_components[input.type]);
+            if (invalid_inputs) {
+                throw new Error("UserInput: Inputs must be configured with a valid 'type'. " + valid_types.join(','));
             }
             this.confirmCB = confirmCB || null;
             this.cancelCB = cancelCB || null;
-            let values = sanitized_inputs.map(input => input.default_value);
+            let values = inputs.map(input => input.default_value);
             this.setState({
                 show: true,
                 modal_props: props,
@@ -334,6 +319,16 @@ export namespace InputHOC {
             if (!confirm_buttons) {
                 throw new Error("UserInput: GenerateInputs with a confirmCB is required to have at least one input of type 'confirm'.");
             }
+        }
+        let invalid_inputs = input_configs.some((input) => {
+            return (input.type !== "confirm" && input.type !== "button") && input.hasOwnProperty("default_value") === false;
+        });
+        if (invalid_inputs) {
+            throw new Error("UserInput: Every input that is not a 'button' or 'confirm' must be configured with a 'default_value'.");
+        }
+        invalid_inputs = input_configs.some(input => !valid_types.includes(input.type));
+        if (invalid_inputs) {
+            throw new Error("UserInput: Inputs must be configured with a valid 'type'. " + valid_types.join(','));
         }
         let componentWithInputs = getComponentWithInputs(input_configs, confirmCB);
         return {
