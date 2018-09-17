@@ -8,7 +8,7 @@
         "module": "commonjs",
         "jsx": "react",
         "target": "es5",
-        "lib": ["es7", "dom"]
+        "lib": ["es7", "dom"],
     },
     "include": ["./src/**/*", "./custom.d.ts"],
     "exclude": ["./tmp/"]

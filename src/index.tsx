@@ -2,145 +2,29 @@ import * as React from 'react';
 import oh from 'output-helpers';
 import translations from './translations';
 
+import * as generateForm from './generateForm';
 
 import PromptModal from './PromptModal';
-import TextInput from './TextInput';
-import BoolInput from './BoolInput';
-import GridInput from './GridInput';
-import Button from './Button';
+import TextInput from './input_components/TextInput';
+import BoolInput from './input_components/BoolInput';
+import GridInput from './input_components/GridInput';
+import Button from './input_components/Button';
 
 let valid_types = ["bool", "button", "confirm", "date", "grid", "number", "select", "text"];
-export type InputType = "bool" | "button" | "confirm" | "date" | "grid" | "number" | "select" | "text";
-export interface InputConfig {
-    [key: string]: any;
-    default_value: any;
-    type: InputType;
-    onChange: (any) => void;
-}
-export interface PromptRequest {
-    inputs: InputConfig[];
-    props?: object;
-}
-export interface PromptState {
-    show?: boolean;
-    modal_props?: any;
-    values?: any[];
-    inputs?: any[];
-}
-export interface ComponentObject {
-    bool?: typeof React.Component;
-    button?: typeof React.Component;
-    date?: typeof React.Component;
-    grid?: typeof React.Component;
-    number?: typeof React.Component;
-    select?: typeof React.Component;
-    text?: typeof React.Component;
-    modal?: typeof React.Component;
-    confirm?: typeof React.Component;
-}
 
-//Add the translations of this repo to OH. Prefix: "user_input_hoc_".
+
+//Add translations of this repo to OH. Prefix: "user_input_hoc_".
 oh.addDictionary(translations);
 
 
 
-
+let default_components: ComponentObject = {
+    text: TextInput,
+    bool: BoolInput,
+    grid: GridInput,
+    button: Button
+};
 let custom_components: ComponentObject = {};
-
-
-
-
-function getComponentWithInputs(input_configs: InputConfig[], cb: (any) => void): any {
-    class InputWrapper extends React.Component<any, PromptState> {
-        confirmCB: (any) => void | null;
-        input_components: ComponentObject;
-
-        constructor(props) {
-            super(props);
-
-            this.state = {
-                values: input_configs.map(input => input.default_value),
-                inputs: input_configs
-            };
-            this.confirmCB = cb || null;
-
-            this.input_components = {
-                text: TextInput,
-                grid: GridInput,
-                bool: BoolInput,
-                button: Button,
-                confirm: Button
-            };
-        }
-
-        getValues() {
-            return this.state.values;
-        }
-
-        resetValues() {
-            let default_values = input_configs.map(input => input.default_value);
-            this.setState({ values: default_values });
-        }
-
-        userConfirmedCB() {
-            if (this.confirmCB) {
-                this.confirmCB(this.state.values);
-                this.confirmCB = null;
-            }
-        }
-
-        inputValueChangeCB(index, value) {
-            let all_values = [].concat(this.state.values);
-            all_values[index] = value;
-            this.setState({
-                values: all_values
-            });
-        }
-
-        renderInputs() {
-            return this.state.inputs.map((input_request, index) => {
-                let InputComponent = this.input_components[input_request.type];
-                if (custom_components && custom_components.hasOwnProperty(input_request.type)) {
-                    InputComponent = custom_components[input_request.type];
-                }
-                let input_component_props = input_request.props || {};
-                if (input_request.type === "confirm") {
-                    return <InputComponent
-                        key={index}
-                        config={input_request}
-                        value={this.state.values[index]}
-                        onClick={(value) => {
-                            this.userConfirmedCB();
-                        }}
-                        {...input_component_props}
-                    />;
-                }
-                return <InputComponent
-                    key={index}
-                    config={input_request}
-                    value={this.state.values[index]}
-                    onChange={(value) => {
-                        if (input_request.onChange) {
-                            input_request.onChange(value);
-                        }
-                        this.inputValueChangeCB(index, value);
-                    }}
-                    {...input_component_props}
-                />;
-            });
-        }
-
-        render() {
-            return (
-                <div>
-                    { this.renderInputs() }
-                </div>
-            );
-        }
-    }
-
-    return InputWrapper;
-}
 
 
 
@@ -330,12 +214,7 @@ export namespace InputHOC {
         if (invalid_inputs) {
             throw new Error("UserInput: Inputs must be configured with a valid 'type'. " + valid_types.join(','));
         }
-        let componentWithInputs = getComponentWithInputs(input_configs, confirmCB);
-        return {
-            getValues: () => { return componentWithInputs.getValues(); },
-            reset: () => {},
-            component: componentWithInputs
-        };
+        return generateForm.getInputForm(default_components, custom_components, input_configs, confirmCB);
     }
 }
 
