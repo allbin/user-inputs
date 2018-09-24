@@ -3,7 +3,21 @@ interface InputConfig {
     [key: string]: any;
     default_value: any;
     type: InputType;
+    key: string;
     onChange: (any) => void;
+    props: {
+        [key: string]: any;
+    }
+}
+interface InputConfigUpdate {
+    [key: string]: any;
+    default_value: any;
+    type: InputType;
+    key: string;
+    onChange: (any) => void;
+    props: {
+        [key: string]: any;
+    }
 }
 interface PromptRequest {
     inputs: InputConfig[];
@@ -12,7 +26,9 @@ interface PromptRequest {
 interface PromptState {
     show?: boolean;
     modal_props?: any;
-    values?: any[];
+    values?: {
+        [key: string]: any
+    };
     inputs?: any[];
 }
 interface ComponentObject {

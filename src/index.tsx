@@ -39,6 +39,7 @@ export function InputHOC (
         exports: {
             prompt: (prompt_request: PromptRequest, confirmCB: (any) => void, cancelCB: () => void) => void;
             cancel: () => void;
+            setConfig: (input_config: InputConfig) => void;
         };
         confirmCB: any;
         cancelCB: any;
@@ -50,7 +51,7 @@ export function InputHOC (
             this.state = {
                 show: false,
                 modal_props: {},
-                values: []
+                values: {}
             };
             this.exports = {
                 prompt: (prompt_request, confirmCB, cancelCB) => {
@@ -58,6 +59,25 @@ export function InputHOC (
                 },
                 cancel: () => {
                     this.cancelRequest();
+                },
+                setConfig: (input_config: InputConfig) => {
+                    if (input_config.hasOwnProperty("key") === false) {
+                        throw new Error("UserInput: input_config must contain 'key' property.");
+                    }
+                    let inputs = this.state.inputs;
+                    let input_index = inputs.findIndex(input => input.key === input_config.key);
+                    if (input_index < 0) {
+                        throw new Error("UserInput: Key not found in existing inputs. Key must match an input created with 'promp()'.");
+                    }
+                    let values = this.state.values;
+                    if (input_config.hasOwnProperty("value")) {
+                        values[input_config.key] = input_config.value;
+                    }
+                    inputs[input_index] = Object.assign({}, inputs[input_index], input_config);
+                    this.setState({
+                        inputs: inputs,
+                        values: values
+                    });
                 }
             };
             this.confirmCB = null;
@@ -85,7 +105,8 @@ export function InputHOC (
             }
             this.confirmCB = confirmCB || null;
             this.cancelCB = cancelCB || null;
-            let values = inputs.map(input => input.default_value);
+            let values = {};
+            inputs.forEach(input => values[input.key] = input.default_value);
             this.setState({
                 show: true,
                 modal_props: props,
@@ -135,21 +156,22 @@ export function InputHOC (
 
         renderInputs() {
             if (!this.state.inputs) { return null; }
-            return this.state.inputs.map((input_request, index) => {
+            return this.state.inputs.map((input_request) => {
                 let InputComponent = this.input_components[input_request.type];
                 if (custom_components && custom_components.hasOwnProperty(input_request.type)) {
                     InputComponent = custom_components[input_request.type];
                 }
                 let input_component_props = input_request.props || {};
+                let key = input_request.key;
                 return <InputComponent
-                    key={index}
+                    key={key}
                     config={input_request}
-                    value={this.state.values[index]}
+                    value={this.state.values[key]}
                     onChange={(value) => {
                         if (input_request.onChange) {
                             input_request.onChange(value);
                         }
-                        this.inputValueChangeCB(index, value);
+                        this.inputValueChangeCB(key, value);
                     }}
                     {...input_component_props}
                 />;

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import styled, { keyframes } from 'styled-components';
 import oh from 'output-helpers';
-import Button from './Button';
+import Button from './input_components/Button';
 
 //These are require because build engine doesn't like 'import ... .svg'.
 let SymbolClone = require('./img/symbol_clone.svg');

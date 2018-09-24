@@ -2,7 +2,7 @@ import * as React from 'react';
 
 
 export function getInputForm(default_components: ComponentObject, custom_components: ComponentObject, input_configs: InputConfig[], cb: (any) => void): any {
-    let mounted_component: InputWrapper;
+    let mounted_forms: InputWrapper[] = [];
 
     class InputWrapper extends React.Component<any, PromptState> {
         confirmCB: (any) => void | null;
@@ -10,9 +10,12 @@ export function getInputForm(default_components: ComponentObject, custom_compone
 
         constructor(props) {
             super(props);
-            mounted_component = this;
+
+            let values = {};
+            input_configs.forEach(input => values[input.key] = input.default_value);
+
             this.state = {
-                values: input_configs.map(input => input.default_value),
+                values: values,
                 inputs: input_configs
             };
             this.confirmCB = cb || null;
@@ -26,9 +29,31 @@ export function getInputForm(default_components: ComponentObject, custom_compone
             };
         }
 
-        // componentDidMount() {
-        //     mounted_component = this;
-        // }
+        componentDidMount() {
+            mounted_forms.push(this);
+        }
+
+        componentWillUnmount() {
+            let mount_index = mounted_forms.findIndex(form => form === this);
+            mounted_forms.splice(mount_index, 1);
+        }
+
+        setConfig(input_config: InputConfig) {
+            let inputs = this.state.inputs;
+            let input_index = inputs.findIndex(input => input.key === input_config.key);
+            if (input_index < 0) {
+                throw new Error("UserInput: Key not found in existing inputs. Key must match an input created with 'promp()'.");
+            }
+            let values = this.state.values;
+            if (input_config.hasOwnProperty("value")) {
+                values[input_config.key] = input_config.value;
+            }
+            inputs[input_index] = Object.assign({}, inputs[input_index], input_config);
+            this.setState({
+                inputs: inputs,
+                values: values
+            });
+        }
 
         getValues() {
             return this.state.values;
@@ -99,22 +124,18 @@ export function getInputForm(default_components: ComponentObject, custom_compone
     return {
         component: InputWrapper,
         reset: () => {
-            if (!mounted_component) {
-                console.error("Cannot reset form before it has been mounted.");
-                return;
-            }
-            mounted_component.resetValues();
+            mounted_forms.forEach((form) => {
+                form.resetValues();
+            });
         },
         getValues: () => {
-            if (!mounted_component) {
-                console.error("Cannot getValues from form before it has been mounted.");
-                return;
-            }
-            mounted_component.getValues();
+            mounted_forms.forEach((form) => {
+                form.getValues();
+            });
         },
-        setValues: (new_values: object) => {
-            Object.keys(new_values).forEach((key) => {
-                //WORK HERE!
+        setInputConfig: (input_config: InputConfig) => {
+            mounted_forms.forEach((form) => {
+                form.setConfig(input_config);
             });
         }
     };

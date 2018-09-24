@@ -63,17 +63,12 @@ The HOC wrapping function attaches the `userPrompt` prop to the component being 
 
 Example: `userInput(YourComponent)` will give access to `this.props.userPrompt` inside *YourComponent*.
 
-### Optional parameters
-#### SpinnerComponent
-*userInput(YourComponent, **`SpinnerComponent`**)*.  
-Optionally a second component can be supplied which will be shown while the profile is being fetched. The spinner component, if supplied, also gets all props assigned to the wrapped component.
-
 
 
 # Utility functions
 
 `userInput.configure(<config object>, <default profile>)` - See [Setting config and default](#setting-config-and-default).
 
-`userInput.doAfterFirstFetch(<callback>)` - The callback will be called with the profile as argument after the first time the profile has been fetched. Can be called multiple times, callbacks will be called in the 
+`userInput.generateForm(<callback>)` - The 
 
 
