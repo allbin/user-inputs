@@ -27,82 +27,22 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var React = require("react");
 var output_helpers_1 = require("output-helpers");
 var translations_1 = require("./translations");
+var generateForm = require("./generateForm");
 var PromptModal_1 = require("./PromptModal");
-var TextInput_1 = require("./TextInput");
-var BoolInput_1 = require("./BoolInput");
-var GridInput_1 = require("./GridInput");
-var Button_1 = require("./Button");
+var TextInput_1 = require("./input_components/TextInput");
+var BoolInput_1 = require("./input_components/BoolInput");
+var GridInput_1 = require("./input_components/GridInput");
+var Button_1 = require("./input_components/Button");
 var valid_types = ["bool", "button", "confirm", "date", "grid", "number", "select", "text"];
-//Add the translations of this repo to OH. Prefix: "user_input_hoc_".
+//Add translations of this repo to OH. Prefix: "user_input_hoc_".
 output_helpers_1.default.addDictionary(translations_1.default);
+var default_components = {
+    text: TextInput_1.default,
+    bool: BoolInput_1.default,
+    grid: GridInput_1.default,
+    button: Button_1.default
+};
 var custom_components = {};
-function getComponentWithInputs(input_configs, cb) {
-    var InputWrapper = /** @class */ (function (_super) {
-        __extends(InputWrapper, _super);
-        function InputWrapper(props) {
-            var _this = _super.call(this, props) || this;
-            _this.state = {
-                values: input_configs.map(function (input) { return input.default_value; }),
-                inputs: input_configs
-            };
-            _this.confirmCB = cb || null;
-            _this.input_components = {
-                text: TextInput_1.default,
-                grid: GridInput_1.default,
-                bool: BoolInput_1.default,
-                button: Button_1.default,
-                confirm: Button_1.default
-            };
-            return _this;
-        }
-        InputWrapper.prototype.getValues = function () {
-            return this.state.values;
-        };
-        InputWrapper.prototype.resetValues = function () {
-            var default_values = input_configs.map(function (input) { return input.default_value; });
-            this.setState({ values: default_values });
-        };
-        InputWrapper.prototype.userConfirmedCB = function () {
-            if (this.confirmCB) {
-                this.confirmCB(this.state.values);
-                this.confirmCB = null;
-            }
-        };
-        InputWrapper.prototype.inputValueChangeCB = function (index, value) {
-            var all_values = [].concat(this.state.values);
-            all_values[index] = value;
-            this.setState({
-                values: all_values
-            });
-        };
-        InputWrapper.prototype.renderInputs = function () {
-            var _this = this;
-            return this.state.inputs.map(function (input_request, index) {
-                var InputComponent = _this.input_components[input_request.type];
-                if (custom_components && custom_components.hasOwnProperty(input_request.type)) {
-                    InputComponent = custom_components[input_request.type];
-                }
-                var input_component_props = input_request.props || {};
-                if (input_request.type === "confirm") {
-                    return React.createElement(InputComponent, __assign({ key: index, config: input_request, value: _this.state.values[index], onClick: function (value) {
-                            _this.userConfirmedCB();
-                        } }, input_component_props));
-                }
-                return React.createElement(InputComponent, __assign({ key: index, config: input_request, value: _this.state.values[index], onChange: function (value) {
-                        if (input_request.onChange) {
-                            input_request.onChange(value);
-                        }
-                        _this.inputValueChangeCB(index, value);
-                    } }, input_component_props));
-            });
-        };
-        InputWrapper.prototype.render = function () {
-            return (React.createElement("div", null, this.renderInputs()));
-        };
-        return InputWrapper;
-    }(React.Component));
-    return InputWrapper;
-}
 function InputHOC(WrappedComponent) {
     var Prompt = /** @class */ (function (_super) {
         __extends(Prompt, _super);
@@ -111,7 +51,7 @@ function InputHOC(WrappedComponent) {
             _this.state = {
                 show: false,
                 modal_props: {},
-                values: []
+                values: {}
             };
             _this.exports = {
                 prompt: function (prompt_request, confirmCB, cancelCB) {
@@ -119,6 +59,25 @@ function InputHOC(WrappedComponent) {
                 },
                 cancel: function () {
                     _this.cancelRequest();
+                },
+                setConfig: function (input_config) {
+                    if (input_config.hasOwnProperty("key") === false) {
+                        throw new Error("UserInput: input_config must contain 'key' property.");
+                    }
+                    var inputs = _this.state.inputs;
+                    var input_index = inputs.findIndex(function (input) { return input.key === input_config.key; });
+                    if (input_index < 0) {
+                        throw new Error("UserInput: Key not found in existing inputs. Key must match an input created with 'promp()'.");
+                    }
+                    var values = _this.state.values;
+                    if (input_config.hasOwnProperty("value")) {
+                        values[input_config.key] = input_config.value;
+                    }
+                    inputs[input_index] = Object.assign({}, inputs[input_index], input_config);
+                    _this.setState({
+                        inputs: inputs,
+                        values: values
+                    });
                 }
             };
             _this.confirmCB = null;
@@ -146,7 +105,8 @@ function InputHOC(WrappedComponent) {
             }
             this.confirmCB = confirmCB || null;
             this.cancelCB = cancelCB || null;
-            var values = inputs.map(function (input) { return input.default_value; });
+            var values = {};
+            inputs.forEach(function (input) { return values[input.key] = input.default_value; });
             this.setState({
                 show: true,
                 modal_props: props,
@@ -195,17 +155,18 @@ function InputHOC(WrappedComponent) {
             if (!this.state.inputs) {
                 return null;
             }
-            return this.state.inputs.map(function (input_request, index) {
+            return this.state.inputs.map(function (input_request) {
                 var InputComponent = _this.input_components[input_request.type];
                 if (custom_components && custom_components.hasOwnProperty(input_request.type)) {
                     InputComponent = custom_components[input_request.type];
                 }
                 var input_component_props = input_request.props || {};
-                return React.createElement(InputComponent, __assign({ key: index, config: input_request, value: _this.state.values[index], onChange: function (value) {
+                var key = input_request.key;
+                return React.createElement(InputComponent, __assign({ key: key, config: input_request, value: _this.state.values[key], onChange: function (value) {
                         if (input_request.onChange) {
                             input_request.onChange(value);
                         }
-                        _this.inputValueChangeCB(index, value);
+                        _this.inputValueChangeCB(key, value);
                     } }, input_component_props));
             });
         };
@@ -261,12 +222,7 @@ exports.InputHOC = InputHOC;
         if (invalid_inputs) {
             throw new Error("UserInput: Inputs must be configured with a valid 'type'. " + valid_types.join(','));
         }
-        var componentWithInputs = getComponentWithInputs(input_configs, confirmCB);
-        return {
-            getValues: function () { return componentWithInputs.getValues(); },
-            reset: function () { },
-            component: componentWithInputs
-        };
+        return generateForm.getInputForm(default_components, custom_components, input_configs, confirmCB);
     }
     InputHOC.generateInputs = generateInputs;
 })(InputHOC = exports.InputHOC || (exports.InputHOC = {}));
