@@ -42,7 +42,7 @@ export function getInputForm(default_components: ComponentObject, custom_compone
             let inputs = this.state.inputs;
             let input_index = inputs.findIndex(input => input.key === input_config.key);
             if (input_index < 0) {
-                throw new Error("UserInput: Key not found in existing inputs. Key must match an input created with 'promp()'.");
+                throw new Error("UserInput: Key not found in existing inputs. Key must match an input created with 'generateInputs()'.");
             }
             let values = this.state.values;
             if (input_config.hasOwnProperty("value")) {
@@ -133,9 +133,16 @@ export function getInputForm(default_components: ComponentObject, custom_compone
                 form.getValues();
             });
         },
-        setInputConfig: (input_config: InputConfig) => {
+        setInputConfig: (updated_configs: InputConfig) => {
+            let inputs = input_configs;
+            let input_index = inputs.findIndex(input => input.key === updated_configs.key);
+            if (input_index < 0) {
+                throw new Error("UserInput: Key not found in existing inputs. Key must match an input created with 'generateInputs()'.");
+            }
+            inputs[input_index] = Object.assign({}, inputs[input_index], updated_configs);
+
             mounted_forms.forEach((form) => {
-                form.setConfig(input_config);
+                form.setConfig(updated_configs);
             });
         }
     };
