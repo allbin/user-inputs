@@ -7,7 +7,7 @@ interface InputConfig {
     onChange: (any) => void;
     props: {
         [key: string]: any;
-    }
+    };
 }
 interface InputConfigUpdate {
     [key: string]: any;
@@ -17,7 +17,7 @@ interface InputConfigUpdate {
     onChange: (any) => void;
     props: {
         [key: string]: any;
-    }
+    };
 }
 interface PromptRequest {
     inputs: InputConfig[];
