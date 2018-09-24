@@ -71,11 +71,11 @@ export function getInputForm(default_components: ComponentObject, custom_compone
             }
         }
 
-        inputValueChangeCB(index, value) {
-            let all_values = [].concat(this.state.values);
-            all_values[index] = value;
+        inputValueChangeCB(key, value) {
+            let values = Object.assign({}, this.props.values);
+            values[key] = value;
             this.setState({
-                values: all_values
+                values: values
             });
         }
 
