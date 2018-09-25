@@ -86,11 +86,12 @@ export function getInputForm(default_components: ComponentObject, custom_compone
                     InputComponent = custom_components[input_request.type];
                 }
                 let input_component_props = input_request.props || {};
+                let key = input_request.key;
                 if (input_request.type === "confirm") {
                     return <InputComponent
-                        key={index}
+                        key={key}
                         config={input_request}
-                        value={this.state.values[index]}
+                        value={this.state.values[key]}
                         onClick={(value) => {
                             this.userConfirmedCB();
                         }}
@@ -98,14 +99,14 @@ export function getInputForm(default_components: ComponentObject, custom_compone
                     />;
                 }
                 return <InputComponent
-                    key={index}
+                    key={key}
                     config={input_request}
-                    value={this.state.values[index]}
+                    value={this.state.values[key]}
                     onChange={(value) => {
                         if (input_request.onChange) {
                             input_request.onChange(value);
                         }
-                        this.inputValueChangeCB(index, value);
+                        this.inputValueChangeCB(key, value);
                     }}
                     {...input_component_props}
                 />;
@@ -133,16 +134,19 @@ export function getInputForm(default_components: ComponentObject, custom_compone
                 form.getValues();
             });
         },
-        setInputConfig: (updated_configs: InputConfig) => {
+        setInputConfig: (updated_config: InputConfig) => {
+            if (updated_config.hasOwnProperty("key") === false) {
+                throw new Error("UserInput: input_config must contain 'key' property.");
+            }
             let inputs = input_configs;
-            let input_index = inputs.findIndex(input => input.key === updated_configs.key);
+            let input_index = inputs.findIndex(input => input.key === updated_config.key);
             if (input_index < 0) {
                 throw new Error("UserInput: Key not found in existing inputs. Key must match an input created with 'generateInputs()'.");
             }
-            inputs[input_index] = Object.assign({}, inputs[input_index], updated_configs);
+            inputs[input_index] = Object.assign({}, inputs[input_index], updated_config);
 
             mounted_forms.forEach((form) => {
-                form.setConfig(updated_configs);
+                form.setConfig(updated_config);
             });
         }
     };
