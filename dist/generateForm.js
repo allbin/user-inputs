@@ -126,8 +126,11 @@ function getInputForm(default_components, custom_components, input_configs, cb) 
             });
         },
         getValues: function () {
-            mounted_forms.forEach(function (form) {
-                form.getValues();
+            return mounted_forms.map(function (form) {
+                return {
+                    values: form.getValues(),
+                    ref: form
+                };
             });
         },
         setInputConfig: function (updated_config) {
