@@ -2,7 +2,7 @@ import * as React from 'react';
 import oh from 'output-helpers';
 import translations from './translations';
 
-import * as generateForm from './generateForm';
+import * as formGenerator from './formGenerator';
 
 import PromptModal from './PromptModal';
 import TextInput from './input_components/TextInput';
@@ -211,7 +211,7 @@ export namespace InputHOC {
     export function setCustomComponents(object_with_components: ComponentObject) {
         custom_components = object_with_components;
     }
-    export function generateInputs(input_configs: InputConfig[], confirmCB?: (any) => void) {
+    export function generateForm(input_configs: InputConfig[], confirmCB?: (any) => void) {
         if (input_configs.length < 1) {
             throw new Error("UserInput: GenerateInputs requires at least one input.");
         }
@@ -240,7 +240,7 @@ export namespace InputHOC {
         if (invalid_inputs) {
             throw new Error("UserInput: Inputs that are not type 'button' or 'confirm' must be configured with a 'key' property. ");
         }
-        return generateForm.getInputForm(default_components, custom_components, input_configs, confirmCB);
+        return formGenerator.getInputForm(default_components, custom_components, input_configs, confirmCB);
     }
 }
 
