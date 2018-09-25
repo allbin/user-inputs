@@ -27,7 +27,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var React = require("react");
 var output_helpers_1 = require("output-helpers");
 var translations_1 = require("./translations");
-var generateForm = require("./generateForm");
+var formGenerator = require("./formGenerator");
 var PromptModal_1 = require("./PromptModal");
 var TextInput_1 = require("./input_components/TextInput");
 var BoolInput_1 = require("./input_components/BoolInput");
@@ -196,7 +196,7 @@ exports.InputHOC = InputHOC;
         custom_components = object_with_components;
     }
     InputHOC.setCustomComponents = setCustomComponents;
-    function generateInputs(input_configs, confirmCB) {
+    function generateForm(input_configs, confirmCB) {
         if (input_configs.length < 1) {
             throw new Error("UserInput: GenerateInputs requires at least one input.");
         }
@@ -226,9 +226,9 @@ exports.InputHOC = InputHOC;
         if (invalid_inputs) {
             throw new Error("UserInput: Inputs that are not type 'button' or 'confirm' must be configured with a 'key' property. ");
         }
-        return generateForm.getInputForm(default_components, custom_components, input_configs, confirmCB);
+        return formGenerator.getInputForm(default_components, custom_components, input_configs, confirmCB);
     }
-    InputHOC.generateInputs = generateInputs;
+    InputHOC.generateForm = generateForm;
 })(InputHOC = exports.InputHOC || (exports.InputHOC = {}));
 exports.default = InputHOC;
 
