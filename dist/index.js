@@ -143,11 +143,11 @@ function InputHOC(WrappedComponent) {
                 this.confirmCB = null;
             }
         };
-        Prompt.prototype.inputValueChangeCB = function (index, value) {
-            var all_values = [].concat(this.state.values);
-            all_values[index] = value;
+        Prompt.prototype.inputValueChangeCB = function (key, value) {
+            var values = Object.assign({}, this.props.values);
+            values[key] = value;
             this.setState({
-                values: all_values
+                values: values
             });
         };
         Prompt.prototype.renderInputs = function () {

@@ -84,11 +84,11 @@ function getInputForm(default_components, custom_components, input_configs, cb) 
                 this.confirmCB = null;
             }
         };
-        InputWrapper.prototype.inputValueChangeCB = function (index, value) {
-            var all_values = [].concat(this.state.values);
-            all_values[index] = value;
+        InputWrapper.prototype.inputValueChangeCB = function (key, value) {
+            var values = Object.assign({}, this.props.values);
+            values[key] = value;
             this.setState({
-                values: all_values
+                values: values
             });
         };
         InputWrapper.prototype.renderInputs = function () {
