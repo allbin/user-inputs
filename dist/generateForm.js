@@ -99,16 +99,17 @@ function getInputForm(default_components, custom_components, input_configs, cb) 
                     InputComponent = custom_components[input_request.type];
                 }
                 var input_component_props = input_request.props || {};
+                var key = input_request.key;
                 if (input_request.type === "confirm") {
-                    return React.createElement(InputComponent, __assign({ key: index, config: input_request, value: _this.state.values[index], onClick: function (value) {
+                    return React.createElement(InputComponent, __assign({ key: key, config: input_request, value: _this.state.values[key], onClick: function (value) {
                             _this.userConfirmedCB();
                         } }, input_component_props));
                 }
-                return React.createElement(InputComponent, __assign({ key: index, config: input_request, value: _this.state.values[index], onChange: function (value) {
+                return React.createElement(InputComponent, __assign({ key: key, config: input_request, value: _this.state.values[key], onChange: function (value) {
                         if (input_request.onChange) {
                             input_request.onChange(value);
                         }
-                        _this.inputValueChangeCB(index, value);
+                        _this.inputValueChangeCB(key, value);
                     } }, input_component_props));
             });
         };
@@ -129,15 +130,18 @@ function getInputForm(default_components, custom_components, input_configs, cb) 
                 form.getValues();
             });
         },
-        setInputConfig: function (updated_configs) {
+        setInputConfig: function (updated_config) {
+            if (updated_config.hasOwnProperty("key") === false) {
+                throw new Error("UserInput: input_config must contain 'key' property.");
+            }
             var inputs = input_configs;
-            var input_index = inputs.findIndex(function (input) { return input.key === updated_configs.key; });
+            var input_index = inputs.findIndex(function (input) { return input.key === updated_config.key; });
             if (input_index < 0) {
                 throw new Error("UserInput: Key not found in existing inputs. Key must match an input created with 'generateInputs()'.");
             }
-            inputs[input_index] = Object.assign({}, inputs[input_index], updated_configs);
+            inputs[input_index] = Object.assign({}, inputs[input_index], updated_config);
             mounted_forms.forEach(function (form) {
-                form.setConfig(updated_configs);
+                form.setConfig(updated_config);
             });
         }
     };

@@ -222,6 +222,10 @@ exports.InputHOC = InputHOC;
         if (invalid_inputs) {
             throw new Error("UserInput: Inputs must be configured with a valid 'type'. " + valid_types.join(','));
         }
+        invalid_inputs = input_configs.some(function (input) { return !input.hasOwnProperty('key'); });
+        if (invalid_inputs) {
+            throw new Error("UserInput: Inputs must be configured with a 'key'. ");
+        }
         return generateForm.getInputForm(default_components, custom_components, input_configs, confirmCB);
     }
     InputHOC.generateInputs = generateInputs;
