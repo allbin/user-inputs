@@ -125,6 +125,9 @@ function getInputForm(default_components, custom_components, input_configs, cb) 
                 form.resetValues();
             });
         },
+        getForms: function () {
+            return mounted_forms;
+        },
         getValues: function () {
             return mounted_forms.map(function (form) {
                 return {
