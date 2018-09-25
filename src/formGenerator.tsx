@@ -129,6 +129,9 @@ export function getInputForm(default_components: ComponentObject, custom_compone
                 form.resetValues();
             });
         },
+        getForms: () => {
+            return mounted_forms;
+        },
         getValues: () => {
             return mounted_forms.map((form) => {
                 return {
