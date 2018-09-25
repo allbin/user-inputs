@@ -130,8 +130,11 @@ export function getInputForm(default_components: ComponentObject, custom_compone
             });
         },
         getValues: () => {
-            mounted_forms.forEach((form) => {
-                form.getValues();
+            return mounted_forms.map((form) => {
+                return {
+                    values: form.getValues(),
+                    ref: form
+                };
             });
         },
         setInputConfig: (updated_config: InputConfig) => {
