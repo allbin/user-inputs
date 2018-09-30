@@ -59,7 +59,7 @@ function getInputForm(default_components, custom_components, input_configs, cb) 
             var inputs = this.state.inputs;
             var input_index = inputs.findIndex(function (input) { return input.key === input_config.key; });
             if (input_index < 0) {
-                throw new Error("UserInput: Key not found in existing inputs. Key must match an input created with 'generateInputs()'.");
+                throw new Error("UserInput: Key not found in existing inputs. Key must match an input created with 'generateForm()'.");
             }
             var values = this.state.values;
             if (input_config.hasOwnProperty("value")) {
@@ -143,7 +143,7 @@ function getInputForm(default_components, custom_components, input_configs, cb) 
             var inputs = input_configs;
             var input_index = inputs.findIndex(function (input) { return input.key === updated_config.key; });
             if (input_index < 0) {
-                throw new Error("UserInput: Key not found in existing inputs. Key must match an input created with 'generateInputs()'.");
+                throw new Error("UserInput: Key not found in existing inputs. Key must match an input created with 'generateForm()'.");
             }
             inputs[input_index] = Object.assign({}, inputs[input_index], updated_config);
             mounted_forms.forEach(function (form) {
