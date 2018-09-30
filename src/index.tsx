@@ -158,13 +158,13 @@ export function InputHOC (
 
         renderInputs() {
             if (!this.state.inputs) { return null; }
-            return this.state.inputs.map((input_request) => {
+            return this.state.inputs.map((input_request, index) => {
                 let InputComponent = this.input_components[input_request.type];
                 if (custom_components && custom_components.hasOwnProperty(input_request.type)) {
                     InputComponent = custom_components[input_request.type];
                 }
                 let input_component_props = input_request.props || {};
-                let key = input_request.key;
+                let key = input_request.key || "input_" + index;
                 return <InputComponent
                     key={key}
                     config={input_request}

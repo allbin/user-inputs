@@ -86,7 +86,7 @@ export function getInputForm(default_components: ComponentObject, custom_compone
                     InputComponent = custom_components[input_request.type];
                 }
                 let input_component_props = input_request.props || {};
-                let key = input_request.key;
+                let key = input_request.key || "input_" + index;
                 if (input_request.type === "confirm") {
                     return <InputComponent
                         key={key}
