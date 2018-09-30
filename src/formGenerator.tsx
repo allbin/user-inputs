@@ -24,6 +24,8 @@ export function getInputForm(default_components: ComponentObject, custom_compone
                 text: default_components.text,
                 grid: default_components.grid,
                 bool: default_components.bool,
+                multi_select: default_components.multi_select,
+                select: default_components.select,
                 button: default_components.button,
                 confirm: default_components.button
             };
