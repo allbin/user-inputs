@@ -99,7 +99,7 @@ function getInputForm(default_components, custom_components, input_configs, cb) 
                     InputComponent = custom_components[input_request.type];
                 }
                 var input_component_props = input_request.props || {};
-                var key = input_request.key;
+                var key = input_request.key || "input_" + index;
                 if (input_request.type === "confirm") {
                     return React.createElement(InputComponent, __assign({ key: key, config: input_request, value: _this.state.values[key], onClick: function (value) {
                             _this.userConfirmedCB();

@@ -157,13 +157,13 @@ function InputHOC(WrappedComponent) {
             if (!this.state.inputs) {
                 return null;
             }
-            return this.state.inputs.map(function (input_request) {
+            return this.state.inputs.map(function (input_request, index) {
                 var InputComponent = _this.input_components[input_request.type];
                 if (custom_components && custom_components.hasOwnProperty(input_request.type)) {
                     InputComponent = custom_components[input_request.type];
                 }
                 var input_component_props = input_request.props || {};
-                var key = input_request.key;
+                var key = input_request.key || "input_" + index;
                 return React.createElement(InputComponent, __assign({ key: key, config: input_request, value: _this.state.values[key], onChange: function (value) {
                         if (input_request.onChange) {
                             input_request.onChange(value);
