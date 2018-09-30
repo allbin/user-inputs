@@ -10,7 +10,7 @@ import BoolInput from './input_components/BoolInput';
 import GridInput from './input_components/GridInput';
 import Button from './input_components/Button';
 
-let valid_types = ["bool", "button", "confirm", "date", "grid", "number", "select", "text"];
+let valid_types = ["bool", "button", "confirm", "date", "grid", "number", "multi_select", "select", "text"];
 
 
 //Add translations of this repo to OH. Prefix: "user_input_hoc_".
@@ -22,7 +22,9 @@ let default_components: ComponentObject = {
     text: TextInput,
     bool: BoolInput,
     grid: GridInput,
-    button: Button
+    button: Button,
+    select: TextInput,
+    multi_select: TextInput
 };
 let custom_components: ComponentObject = {};
 
