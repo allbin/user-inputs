@@ -88,7 +88,10 @@ function InputHOC(WrappedComponent) {
             _this.input_components = {
                 text: TextInput_1.default,
                 grid: GridInput_1.default,
-                bool: BoolInput_1.default
+                bool: BoolInput_1.default,
+                select: TextInput_1.default,
+                multi_select: TextInput_1.default,
+                textarea: TextInput_1.default
             };
             return _this;
         }
