@@ -89,7 +89,10 @@ export function InputHOC (
             this.input_components = {
                 text: TextInput,
                 grid: GridInput,
-                bool: BoolInput
+                bool: BoolInput,
+                select: TextInput,
+                multi_select: TextInput,
+                textarea: TextInput
             };
         }
 
