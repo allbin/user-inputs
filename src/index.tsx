@@ -10,7 +10,7 @@ import BoolInput from './input_components/BoolInput';
 import GridInput from './input_components/GridInput';
 import Button from './input_components/Button';
 
-let valid_types = ["bool", "button", "confirm", "date", "grid", "number", "multi_select", "select", "text"];
+let valid_types = ["bool", "button", "confirm", "date", "grid", "number", "multi_select", "select", "text", "textarea"];
 
 
 //Add translations of this repo to OH. Prefix: "user_input_hoc_".
