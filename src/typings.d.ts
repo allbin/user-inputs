@@ -1,4 +1,4 @@
-type InputType = "bool" | "button" | "confirm" | "date" | "grid" | "number" | "multi_select" | "select" | "text";
+type InputType = "bool" | "button" | "confirm" | "date" | "grid" | "number" | "multi_select" | "select" | "text" | "textarea";
 interface InputConfig {
     [key: string]: any;
     default_value: any;
@@ -39,6 +39,7 @@ interface ComponentObject {
     number?: typeof React.Component;
     select?: typeof React.Component;
     text?: typeof React.Component;
+    textarea?: typeof React.Component;
     multi_select?: typeof React.Component;
     modal?: typeof React.Component;
     confirm?: typeof React.Component;

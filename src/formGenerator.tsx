@@ -22,6 +22,7 @@ export function getInputForm(default_components: ComponentObject, custom_compone
 
             this.input_components = {
                 text: default_components.text,
+                textarea: default_components.textarea,
                 grid: default_components.grid,
                 bool: default_components.bool,
                 multi_select: default_components.multi_select,

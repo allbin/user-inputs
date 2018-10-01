@@ -24,7 +24,8 @@ let default_components: ComponentObject = {
     grid: GridInput,
     button: Button,
     select: TextInput,
-    multi_select: TextInput
+    multi_select: TextInput,
+    textarea: TextInput,
 };
 let custom_components: ComponentObject = {};
 
