@@ -149,7 +149,7 @@ export function InputHOC (
         }
 
         inputValueChangeCB(key, value) {
-            let values = Object.assign({}, this.props.values);
+            let values = Object.assign({}, this.state.values);
             values[key] = value;
             this.setState({
                 values: values
