@@ -40,6 +40,7 @@ function getInputForm(default_components, custom_components, input_configs, cb) 
             _this.confirmCB = cb || null;
             _this.input_components = {
                 text: default_components.text,
+                textarea: default_components.textarea,
                 grid: default_components.grid,
                 bool: default_components.bool,
                 multi_select: default_components.multi_select,

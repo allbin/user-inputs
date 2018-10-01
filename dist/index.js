@@ -42,7 +42,8 @@ var default_components = {
     grid: GridInput_1.default,
     button: Button_1.default,
     select: TextInput_1.default,
-    multi_select: TextInput_1.default
+    multi_select: TextInput_1.default,
+    textarea: TextInput_1.default,
 };
 var custom_components = {};
 function InputHOC(WrappedComponent) {
