@@ -33,7 +33,7 @@ var TextInput_1 = require("./input_components/TextInput");
 var BoolInput_1 = require("./input_components/BoolInput");
 var GridInput_1 = require("./input_components/GridInput");
 var Button_1 = require("./input_components/Button");
-var valid_types = ["bool", "button", "confirm", "date", "grid", "number", "multi_select", "select", "text"];
+var valid_types = ["bool", "button", "confirm", "date", "grid", "number", "multi_select", "select", "text", "textarea"];
 //Add translations of this repo to OH. Prefix: "user_input_hoc_".
 output_helpers_1.default.addDictionary(translations_1.default);
 var default_components = {
