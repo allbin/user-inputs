@@ -87,7 +87,7 @@ function getInputForm(default_components, custom_components, input_configs, cb) 
             }
         };
         InputWrapper.prototype.inputValueChangeCB = function (key, value) {
-            var values = Object.assign({}, this.props.values);
+            var values = Object.assign({}, this.state.values);
             values[key] = value;
             this.setState({
                 values: values

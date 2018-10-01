@@ -146,7 +146,7 @@ function InputHOC(WrappedComponent) {
             }
         };
         Prompt.prototype.inputValueChangeCB = function (key, value) {
-            var values = Object.assign({}, this.props.values);
+            var values = Object.assign({}, this.state.values);
             values[key] = value;
             this.setState({
                 values: values
