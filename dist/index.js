@@ -54,14 +54,36 @@ function InputHOC(WrappedComponent) {
             _this.state = {
                 show: false,
                 modal_props: {},
-                values: {}
+                values: {},
+                prompt_request: null,
+                tag: null
             };
             _this.exports = {
-                prompt: function (prompt_request, confirmCB, cancelCB) {
-                    _this.initPrompt(prompt_request.inputs, prompt_request.props, confirmCB, cancelCB);
+                confirm: function (prompt_request, confirmCB, cancelCB) {
+                    if (prompt_request.hasOwnProperty("inputs") === false) {
+                        prompt_request.inputs = [];
+                    }
+                    if (prompt_request.hasOwnProperty("props") === false) {
+                        prompt_request.props = {};
+                    }
+                    prompt_request.props.show_cancel_btn = true;
+                    _this.initPrompt(prompt_request, confirmCB, cancelCB);
+                },
+                alert: function (prompt_request, confirmCB) {
+                    if (prompt_request.hasOwnProperty("inputs") === false) {
+                        prompt_request.inputs = [];
+                    }
+                    if (prompt_request.hasOwnProperty("props") === false) {
+                        prompt_request.props = {};
+                    }
+                    prompt_request.props.show_cancel_btn = false;
+                    _this.initPrompt(prompt_request, confirmCB);
                 },
                 cancel: function () {
                     _this.cancelRequest();
+                },
+                isOpen: function () {
+                    return _this.state.show;
                 },
                 setConfig: function (input_config) {
                     if (input_config.hasOwnProperty("key") === false) {
@@ -95,8 +117,10 @@ function InputHOC(WrappedComponent) {
             };
             return _this;
         }
-        Prompt.prototype.initPrompt = function (inputs, props, confirmCB, cancelCB) {
+        Prompt.prototype.initPrompt = function (prompt_request, confirmCB, cancelCB) {
             var _this = this;
+            var inputs = prompt_request.inputs;
+            var props = prompt_request.props;
             var invalid_inputs = inputs.some(function (input) { return input.type === "button" || input.type === "confirm"; });
             if (invalid_inputs) {
                 throw new Error("UserInput: Inputs of type 'button' OR 'confirm' are not allowed in prompt.");
@@ -117,7 +141,8 @@ function InputHOC(WrappedComponent) {
                 show: true,
                 modal_props: props,
                 inputs: inputs,
-                values: values
+                values: values,
+                prompt_request: prompt_request
             });
         };
         Prompt.prototype.cancelRequest = function () {
@@ -126,7 +151,9 @@ function InputHOC(WrappedComponent) {
             this.setState({
                 show: false,
                 inputs: [],
-                values: []
+                values: [],
+                prompt_request: null,
+                tag: null
             });
         };
         Prompt.prototype.userConfirmedCB = function () {

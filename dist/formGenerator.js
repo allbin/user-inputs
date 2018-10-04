@@ -35,7 +35,9 @@ function getInputForm(default_components, custom_components, input_configs, cb) 
             input_configs.forEach(function (input) { return values[input.key] = input.default_value; });
             _this.state = {
                 values: values,
-                inputs: input_configs
+                inputs: input_configs,
+                prompt_request: null,
+                tag: null
             };
             _this.confirmCB = cb || null;
             _this.input_components = {
