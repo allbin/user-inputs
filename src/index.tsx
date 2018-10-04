@@ -45,6 +45,8 @@ export function InputHOC (
             setConfig: (input_config: InputConfig) => void;
             isOpen: () => boolean;
             alert: (prompt_request: PromptRequest, confirmCB: (any) => void) => void;
+            setTag: (tag: string) => void;
+            getTag: () => string | null;
         };
         confirmCB: any;
         cancelCB: any;
@@ -87,6 +89,14 @@ export function InputHOC (
                 },
                 isOpen: () => {
                     return this.state.show;
+                },
+                setTag: (tag) => {
+                    this.setState({
+                        tag: tag
+                    });
+                },
+                getTag: () => {
+                    return this.state.tag;
                 },
                 setConfig: (input_config: InputConfig) => {
                     if (input_config.hasOwnProperty("key") === false) {
