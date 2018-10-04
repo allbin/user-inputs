@@ -40,9 +40,11 @@ export function InputHOC (
 ): typeof React.Component {
     class Prompt extends React.Component<any, PromptState> {
         exports: {
-            prompt: (prompt_request: PromptRequest, confirmCB: (any) => void, cancelCB: () => void) => void;
+            confirm: (prompt_request: PromptRequest, confirmCB: (any) => void, cancelCB: () => void) => void;
             cancel: () => void;
             setConfig: (input_config: InputConfig) => void;
+            isOpen: () => boolean;
+            alert: (prompt_request: PromptRequest, confirmCB: (any) => void) => void;
         };
         confirmCB: any;
         cancelCB: any;
@@ -54,14 +56,37 @@ export function InputHOC (
             this.state = {
                 show: false,
                 modal_props: {},
-                values: {}
+                values: {},
+                prompt_request: null,
+                tag: null
             };
+
             this.exports = {
-                prompt: (prompt_request, confirmCB, cancelCB) => {
-                    this.initPrompt(prompt_request.inputs, prompt_request.props, confirmCB, cancelCB);
+                confirm: (prompt_request, confirmCB, cancelCB) => {
+                    if (prompt_request.hasOwnProperty("inputs") === false) {
+                        prompt_request.inputs = [];
+                    }
+                    if (prompt_request.hasOwnProperty("props") === false) {
+                        prompt_request.props = {};
+                    }
+                    prompt_request.props.show_cancel_btn = true;
+                    this.initPrompt(prompt_request, confirmCB, cancelCB);
+                },
+                alert: (prompt_request, confirmCB) => {
+                    if (prompt_request.hasOwnProperty("inputs") === false) {
+                        prompt_request.inputs = [];
+                    }
+                    if (prompt_request.hasOwnProperty("props") === false) {
+                        prompt_request.props = {};
+                    }
+                    prompt_request.props.show_cancel_btn = false;
+                    this.initPrompt(prompt_request, confirmCB);
                 },
                 cancel: () => {
                     this.cancelRequest();
+                },
+                isOpen: () => {
+                    return this.state.show;
                 },
                 setConfig: (input_config: InputConfig) => {
                     if (input_config.hasOwnProperty("key") === false) {
@@ -96,7 +121,9 @@ export function InputHOC (
             };
         }
 
-        initPrompt(inputs: InputConfig[], props?: object, confirmCB?: (any) => void, cancelCB?: () => void) {
+        initPrompt(prompt_request: PromptRequest, confirmCB?: (any) => void, cancelCB?: () => void) {
+            let inputs = prompt_request.inputs;
+            let props = prompt_request.props;
             let invalid_inputs = inputs.some(input => input.type === "button" || input.type === "confirm");
             if (invalid_inputs) {
                 throw new Error("UserInput: Inputs of type 'button' OR 'confirm' are not allowed in prompt.");
@@ -117,7 +144,8 @@ export function InputHOC (
                 show: true,
                 modal_props: props,
                 inputs: inputs,
-                values: values
+                values: values,
+                prompt_request: prompt_request
             });
         }
 
@@ -127,7 +155,9 @@ export function InputHOC (
             this.setState({
                 show: false,
                 inputs: [],
-                values: []
+                values: [],
+                prompt_request: null,
+                tag: null
             });
         }
 
@@ -199,7 +229,6 @@ export function InputHOC (
                 />
             );
         }
-
 
         render() {
             return (<div>

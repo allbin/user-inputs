@@ -13,11 +13,11 @@ let SymbolNewFolder = require('./img/symbol_new_folder.svg');
 export interface ConfirmModalProps {
     title: string;
     message: string;
-    remove_cancel: boolean;
     class: string;
     confirmCB: () => void;
     cancelCB: () => void;
     renderInputs: () => JSX.Element;
+    show_cancel_btn: boolean;
 }
 
 export default class ConfirmModal extends React.Component<ConfirmModalProps, any> {
@@ -123,6 +123,23 @@ export default class ConfirmModal extends React.Component<ConfirmModalProps, any
         `;
     }
 
+    renderCancelButton() {
+        if (this.props.show_cancel_btn === false) {
+            return null;
+        }
+        return (
+            <div className="modal_footer_left">
+                <Button
+                    big
+                    filled
+                    config={{
+                        label: oh.translate('user_input_hoc_cancel')
+                    }}
+                    onClick={() => this.props.cancelCB()}
+                />
+            </div>
+        );
+    }
 
     render() {
         return (
@@ -143,22 +160,7 @@ export default class ConfirmModal extends React.Component<ConfirmModalProps, any
                             { this.props.renderInputs() }
                         </div>
                         <div className="modal_footer">
-                            {
-                                this.props.remove_cancel === true ?
-                                null
-                                :
-                                <div className="modal_footer_left">
-                                    <Button
-                                        big
-                                        filled
-                                        config={{
-                                            label: oh.translate('user_input_hoc_cancel')
-                                        }}
-                                        onClick={() => this.props.cancelCB()}
-                                    />
-                                </div>
-                            }
-
+                            { this.renderCancelButton() }
                             <div className="modal_footer_left">
                                 <Button
                                     big

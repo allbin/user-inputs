@@ -21,7 +21,9 @@ interface InputConfigUpdate {
 }
 interface PromptRequest {
     inputs: InputConfig[];
-    props?: object;
+    props?: {
+        [key: string]: any
+    };
 }
 interface PromptState {
     show?: boolean;
@@ -30,6 +32,8 @@ interface PromptState {
         [key: string]: any
     };
     inputs?: any[];
+    prompt_request: PromptRequest | null;
+    tag: string | null;
 }
 interface ComponentObject {
     bool?: typeof React.Component;
