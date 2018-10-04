@@ -85,6 +85,14 @@ function InputHOC(WrappedComponent) {
                 isOpen: function () {
                     return _this.state.show;
                 },
+                setTag: function (tag) {
+                    _this.setState({
+                        tag: tag
+                    });
+                },
+                getTag: function () {
+                    return _this.state.tag;
+                },
                 setConfig: function (input_config) {
                     if (input_config.hasOwnProperty("key") === false) {
                         throw new Error("UserInput: input_config must contain 'key' property.");
