@@ -16,7 +16,9 @@ export function getInputForm(default_components: ComponentObject, custom_compone
 
             this.state = {
                 values: values,
-                inputs: input_configs
+                inputs: input_configs,
+                prompt_request: null,
+                tag: null
             };
             this.confirmCB = cb || null;
 
