@@ -39,22 +39,25 @@ export default class ConfirmModal extends React.Component<ConfirmModalProps, any
         this.container = styled.div `
 
             @media (max-width: 700px) {
-                .modal_box{
-                    width: 100%;
-                    top: 0;
-                    bottom: 0;
-                }
-                .modal_footer{
-                    position: absolute;
-                    bottom: 0;
-                    left: 0;
-                    right: 0;
-                    .modal_footer_left{
-                        width: 100%;
-                        display: block;
-                        margin-bottom: 14px;
-                        button{
-                            width: 100%;
+                .modal_container{
+                    .modal_box{
+                        width: 100% !important;
+                        top: 0 !important;
+                        bottom: 0 !important;
+                        border-radius: 0 !important;
+                    }
+                    .modal_footer{
+                        position: absolute !important;
+                        bottom: 0 !important;
+                        left: 0 !important;
+                        right: 0 !important;
+                        .modal_footer_left, .modal_footer_right{
+                            width: 100% !important;
+                            display: block !important;
+                            margin-bottom: 14px !important;
+                            button{
+                                width: 100% !important;
+                            }
                         }
                     }
                 }
