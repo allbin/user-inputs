@@ -43,7 +43,7 @@ class GridInput extends React.Component<GridInputProps, any> {
                 background-color: ${props => props.theme.colors.border};
                 padding: 4px;
                 display: grid;
-                grid-template-columns: ${props => props.grid_type === 'colors' || props.grid_type === 'icons' ? 'repeat(6, 1fr)' : 'repeat(4, 1fr)'};
+                grid-template-columns: ${props => props.grid_type === 'colors' || props.grid_type === 'icons' ? 'repeat(6, 1fr)' : 'repeat( auto-fit, minmax(120px, 1fr) )'};
                 grid-gap: 4px 4px;
             }
         `;
@@ -53,10 +53,10 @@ class GridInput extends React.Component<GridInputProps, any> {
             background-color: #fff;
             cursor: pointer;
             border-radius: 4px;
-            padding: ${props => props.grid_type === 'icons' ? '6px 0' : '12px 0'};
+            padding: ${props => props.grid_type === 'icons' ? '6px 0' : '16px 0'};
             height: ${props => props.grid_type === 'colors' || props.grid_type === 'icons' ? '44px' : 'unset'};
             text-align: center;
-            font-size: 12px;
+            font-size: 16px;
             &:HOVER{
                 background-color: ${props => props.grid_type === 'colors' ? props.color : props.theme.colors.dark[1]};
                 opacity: 0.5;
