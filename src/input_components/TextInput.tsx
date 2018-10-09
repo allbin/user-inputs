@@ -2,7 +2,8 @@ import * as React from 'react';
 import styled from 'styled-components';
 
 export interface TextInputConfig {
-    label: string;
+    label?: string;
+    class_name?: string;
 }
 export interface TextInputProps {
     value: string;
@@ -41,8 +42,13 @@ class TextInput extends React.Component<TextInputProps, TextInputConfig> {
 
     render() {
         let cfg = this.props.config;
+        let class_names = "user_input multi_select_input";
+        if (cfg.class_name) {
+            class_names += " " + cfg.class_name;
+        }
+
         return (
-            <this.container className="user_input text_input">
+            <this.container className={class_names}>
                 { cfg.label ? <p>{ cfg.label }</p> : null }
                 <input
                     autoFocus={true}

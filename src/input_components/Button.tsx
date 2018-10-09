@@ -1,12 +1,30 @@
 import * as React from 'react';
 import styled from 'styled-components';
-
+export interface ButtonConfig {
+    label: string;
+    class_name?: string;
+}
+export interface ButtonProps {
+    config: ButtonConfig;
+    dark?: boolean;
+    light?: boolean;
+    red?: boolean;
+    green?: boolean;
+    teal?: boolean;
+    disabled?: boolean;
+    big?: boolean;
+    onMouseEnter?: () => void;
+    onMouseLeave?: () => void;
+    block?: boolean;
+    filled?: boolean;
+    onClick: () => void;
+}
 interface ContainerStyleProps {
     filled: boolean;
     block: boolean;
 }
 
-export default class Button extends React.Component<any, any> {
+export default class Button extends React.Component<ButtonProps, any> {
     container: typeof React.Component;
 
     constructor(props) {
@@ -79,6 +97,10 @@ export default class Button extends React.Component<any, any> {
 
     render() {
         let cfg = this.props.config;
+        let class_names = "user_input button_input";
+        if (cfg.class_name) {
+            class_names += " " + cfg.class_name;
+        }
         let classes = [];
         if (this.props.dark) { classes.push('dark'); }
         if (this.props.light) { classes.push('light'); }
@@ -87,15 +109,16 @@ export default class Button extends React.Component<any, any> {
         if (this.props.teal) { classes.push('teal'); }
         if (this.props.disabled) { classes.push('disabled'); }
         if (this.props.big) { classes.push('big'); }
+        class_names += " " + classes.join(" ");
 
         return (
             <this.container
-                onMouseEnter={e => this.props.onMouseEnter ? this.props.onMouseEnter(e) : null}
-                onMouseLeave={e => this.props.onMouseEnter ? this.props.onMouseLeave(e) : null}
+                onMouseEnter={() => this.props.onMouseEnter ? this.props.onMouseEnter() : null}
+                onMouseLeave={() => this.props.onMouseEnter ? this.props.onMouseLeave() : null}
                 block={this.props.block}
                 filled={this.props.filled}
-                className={`button ${classes.join(' ')}`}
-                onClick={e => this.props.onClick ? this.props.onClick(e) : null}
+                className={class_names}
+                onClick={e => this.props.onClick ? this.props.onClick() : null}
             >
                 {cfg.label}
             </this.container>

@@ -3,6 +3,7 @@ import styled from 'styled-components';
 
 export interface BoolInputConfig {
     label: string;
+    class_name?: string;
 }
 export interface BoolInputProps {
     value: boolean;
@@ -81,8 +82,13 @@ class BoolInput extends React.Component<BoolInputProps, any> {
 
     render() {
         let cfg = this.props.config;
+        let class_names = "user_input bool_input";
+        if (cfg.class_name) {
+            class_names += " " + cfg.class_name;
+        }
+
         return (
-            <this.container className="user_input bool_input">
+            <this.container className={class_names}>
                 { cfg.label ? <p>{ cfg.label }</p> : null }
                 <div className="bool_block">
                     <div

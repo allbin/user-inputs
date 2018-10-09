@@ -7,6 +7,7 @@ export interface TextareaInputConfig {
     label?: string;
     rows?: number;
     placeholder?: string;
+    class_name?: string;
 }
 export interface TextareaInputProps {
     value: string;
@@ -47,9 +48,13 @@ class TextareaInput extends React.Component<TextareaInputProps, TextareaInputCon
 
     render() {
         let cfg = Object.assign({}, default_config, this.props.config);
+        let class_names = "user_input textarea_input";
+        if (cfg.class_name) {
+            class_names += " " + cfg.class_name;
+        }
 
         return (
-            <this.container className="user_input textarea_input">
+            <this.container className={class_names}>
                 { cfg.label ? <p>{ cfg.label }</p> : null }
                 <textarea
                     rows={3}

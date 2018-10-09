@@ -11,6 +11,7 @@ export interface SelectInputConfig {
     label?: string;
     options: SelectInputOptions[];
     placeholder?: string;
+    class_name?: string;
 }
 export interface SelectInputProps {
     value?: string;
@@ -37,9 +38,13 @@ class SelectInput extends React.Component<SelectInputProps, SelectInputConfig> {
 
     render() {
         let cfg = this.props.config;
+        let class_names = "user_input select_input";
+        if (cfg.class_name) {
+            class_names += " " + cfg.class_name;
+        }
 
         return (
-            <this.container className="user_input text_input">
+            <this.container className="user_input select_input">
                 { cfg.label ? <p className="multi_select_label">{ cfg.label }</p> : null }
                 <Select
                     placeholder={cfg.placeholder ? cfg.placeholder : cfg.label ? cfg.label : '' }

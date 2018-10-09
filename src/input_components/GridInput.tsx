@@ -7,9 +7,10 @@ interface GridInputStyleProps {
     presentation: string;
 }
 export interface GridInputConfig {
-    label: string;
+    label?: string;
     grid_type: GridType;
     options: any;
+    class_name?: string;
 }
 export interface GridInputProps {
     value: any;
@@ -57,12 +58,12 @@ class GridInput extends React.Component<GridInputProps, any> {
             text-align: center;
             font-size: 12px;
             &:HOVER{
-                background-color: ${props => props.grid_type === 'colors' ? props.presentation : props.theme.colors.dark[1]};
+                background-color: ${props => props.grid_type === 'colors' ? props.color : props.theme.colors.dark[1]};
                 opacity: 0.5;
                 color: #fff;
             }
             &.active{
-                background-color: ${props => props.grid_type === 'colors' ? props.presentation : props.theme.colors.dark[1]};
+                background-color: ${props => props.grid_type === 'colors' ? props.color : props.theme.colors.dark[1]};
                 color: #fff;
                 font-weight: bold;
                 &:HOVER{
@@ -82,17 +83,22 @@ class GridInput extends React.Component<GridInputProps, any> {
 
     render() {
         let cfg = this.props.config;
+        let class_names = "user_input grid_input";
+        if (cfg.class_name) {
+            class_names += " " + cfg.class_name;
+        }
+
         return (
             <this.container
                 grid_type={cfg.grid_type}
-                className="user_input bool_input">
+                className={class_names}>
                 { cfg.label ? <p>{ cfg.label }</p> : null }
                 <div className="grid_block">
                     {
                         cfg.options.map((item, i) => {
                             return (
                                 <this.gridItem
-                                    presentation={item.presentation}
+                                    color={item.color}
                                     grid_type={cfg.grid_type}
                                     key={i}
                                     className={`grid_item ${this.props.value === item.value ? 'active' : ''}`}
@@ -100,7 +106,7 @@ class GridInput extends React.Component<GridInputProps, any> {
                                         this.props.onChange(item.value);
                                     }}
                                     >
-                                    { cfg.grid_type === 'icons' ? null : <span>{item.presentation}</span> }
+                                    { cfg.grid_type === 'icons' ? null : <span>{item.label}</span> }
 
                                 </this.gridItem>
                             );

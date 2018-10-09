@@ -11,7 +11,7 @@ export interface MultiSelectInputConfig {
     label?: string;
     placeholder?: string;
     options: MultiSelectOptions[];
-    class_names: string[];
+    class_name: string;
 }
 export interface MultiSelectInputProps {
     value: string;
@@ -38,9 +38,9 @@ class MultiSelectInput extends React.Component<MultiSelectInputProps, MultiSelec
 
     render() {
         let cfg = this.props.config;
-        let class_names = "user_input text_input";
-        if (cfg.class_names) {
-            class_names += "" + cfg.class_names.join(" ");
+        let class_names = "user_input multi_select_input";
+        if (cfg.class_name) {
+            class_names += " " + cfg.class_name;
         }
 
         return (
