@@ -1,6 +1,7 @@
 import * as React from 'react';
 export interface TextInputConfig {
-    label: string;
+    label?: string;
+    class_name?: string;
 }
 export interface TextInputProps {
     value: string;

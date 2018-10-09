@@ -29,7 +29,11 @@ var TextInput = /** @class */ (function (_super) {
     TextInput.prototype.render = function () {
         var _this = this;
         var cfg = this.props.config;
-        return (React.createElement(this.container, { className: "user_input text_input" },
+        var class_names = "user_input multi_select_input";
+        if (cfg.class_name) {
+            class_names += " " + cfg.class_name;
+        }
+        return (React.createElement(this.container, { className: class_names },
             cfg.label ? React.createElement("p", null, cfg.label) : null,
             React.createElement("input", { autoFocus: true, type: "text", value: this.props.value, onChange: function (e) { return _this.props.onChange(e.target.value); } })));
     };

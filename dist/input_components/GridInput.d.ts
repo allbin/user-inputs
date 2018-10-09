@@ -1,9 +1,10 @@
 import * as React from 'react';
 export declare type GridType = "icons" | "colors";
 export interface GridInputConfig {
-    label: string;
+    label?: string;
     grid_type: GridType;
     options: any;
+    class_name?: string;
 }
 export interface GridInputProps {
     value: any;
