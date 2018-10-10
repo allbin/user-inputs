@@ -18,6 +18,8 @@ export interface ConfirmModalProps {
     cancelCB: () => void;
     renderInputs: () => JSX.Element;
     show_cancel_btn: boolean;
+    confirm_button_label?: string;
+    cancel_button_label?: string;
 }
 
 export default class ConfirmModal extends React.Component<ConfirmModalProps, any> {
@@ -159,7 +161,7 @@ export default class ConfirmModal extends React.Component<ConfirmModalProps, any
                     big
                     filled
                     config={{
-                        label: oh.translate('user_input_hoc_cancel')
+                        label: this.props.cancel_button_label || oh.translate('user_input_hoc_cancel')
                     }}
                     onClick={() => this.props.cancelCB()}
                 />
@@ -193,7 +195,7 @@ export default class ConfirmModal extends React.Component<ConfirmModalProps, any
                                     filled
                                     light
                                     config={{
-                                        label: oh.translate('user_input_hoc_confirm')
+                                        label: this.props.confirm_button_label || oh.translate('user_input_hoc_confirm')
                                     }}
                                     onClick={() => this.props.confirmCB()}
                                 />
