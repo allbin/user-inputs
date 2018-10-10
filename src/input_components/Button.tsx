@@ -18,6 +18,7 @@ export interface ButtonProps {
     block?: boolean;
     filled?: boolean;
     onClick: () => void;
+    autofocus?: boolean;
 }
 interface ContainerStyleProps {
     filled: boolean;
@@ -118,6 +119,7 @@ export default class Button extends React.Component<ButtonProps, any> {
                 block={this.props.block}
                 filled={this.props.filled}
                 disabled={this.props.disabled || false}
+                autofocus={this.props.autofocus || false}
                 className={class_names}
                 onClick={e => this.props.onClick ? this.props.onClick() : null}
             >

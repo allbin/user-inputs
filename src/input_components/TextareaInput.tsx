@@ -13,6 +13,7 @@ export interface TextareaInputProps {
     value: string;
     config: TextareaInputConfig;
     onChange: (string) => void;
+    autofocus?: boolean;
 }
 
 let default_config = {
@@ -58,6 +59,7 @@ class TextareaInput extends React.Component<TextareaInputProps, TextareaInputCon
                 { cfg.label ? <p>{ cfg.label }</p> : null }
                 <textarea
                     rows={3}
+                    autoFocus={this.props.autofocus || false}
                     placeholder={cfg.placeholder ? cfg.placeholder : cfg.label ? cfg.label : '' }
                     value={this.props.value}
                     onChange={e => this.props.onChange(e.target.value)}>

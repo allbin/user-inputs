@@ -9,6 +9,7 @@ export interface TextInputProps {
     value: string;
     config: TextInputConfig;
     onChange: (string) => void;
+    autofocus?: boolean;
 }
 
 class TextInput extends React.Component<TextInputProps, TextInputConfig> {
@@ -51,7 +52,7 @@ class TextInput extends React.Component<TextInputProps, TextInputConfig> {
             <this.container className={class_names}>
                 { cfg.label ? <p>{ cfg.label }</p> : null }
                 <input
-                    autoFocus={true}
+                    autoFocus={this.props.autofocus || false}
                     type="text"
                     value={this.props.value}
                     onChange={e => this.props.onChange(e.target.value)}
