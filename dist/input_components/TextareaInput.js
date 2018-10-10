@@ -38,7 +38,7 @@ var TextareaInput = /** @class */ (function (_super) {
         }
         return (React.createElement(this.container, { className: class_names },
             cfg.label ? React.createElement("p", null, cfg.label) : null,
-            React.createElement("textarea", { rows: 3, placeholder: cfg.placeholder ? cfg.placeholder : cfg.label ? cfg.label : '', value: this.props.value, onChange: function (e) { return _this.props.onChange(e.target.value); } })));
+            React.createElement("textarea", { rows: 3, autoFocus: this.props.autofocus || false, placeholder: cfg.placeholder ? cfg.placeholder : cfg.label ? cfg.label : '', value: this.props.value, onChange: function (e) { return _this.props.onChange(e.target.value); } })));
     };
     return TextareaInput;
 }(React.Component));

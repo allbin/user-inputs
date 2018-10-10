@@ -9,6 +9,7 @@ export interface TextareaInputProps {
     value: string;
     config: TextareaInputConfig;
     onChange: (string: any) => void;
+    autofocus?: boolean;
 }
 declare class TextareaInput extends React.Component<TextareaInputProps, TextareaInputConfig> {
     container: typeof React.Component;

@@ -35,7 +35,7 @@ var TextInput = /** @class */ (function (_super) {
         }
         return (React.createElement(this.container, { className: class_names },
             cfg.label ? React.createElement("p", null, cfg.label) : null,
-            React.createElement("input", { autoFocus: true, type: "text", value: this.props.value, onChange: function (e) { return _this.props.onChange(e.target.value); } })));
+            React.createElement("input", { autoFocus: this.props.autofocus || false, type: "text", value: this.props.value, onChange: function (e) { return _this.props.onChange(e.target.value); } })));
     };
     return TextInput;
 }(React.Component));

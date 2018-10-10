@@ -7,6 +7,7 @@ export interface TextInputProps {
     value: string;
     config: TextInputConfig;
     onChange: (string: any) => void;
+    autofocus?: boolean;
 }
 declare class TextInput extends React.Component<TextInputProps, TextInputConfig> {
     container: typeof React.Component;

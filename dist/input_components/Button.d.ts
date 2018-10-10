@@ -17,6 +17,7 @@ export interface ButtonProps {
     block?: boolean;
     filled?: boolean;
     onClick: () => void;
+    autofocus?: boolean;
 }
 export default class Button extends React.Component<ButtonProps, any> {
     container: typeof React.Component;
