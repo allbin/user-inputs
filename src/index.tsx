@@ -128,9 +128,9 @@ export function InputHOC (
                 text: TextInput,
                 grid: GridInput,
                 bool: BoolInput,
-                select: TextInput,
-                multi_select: TextInput,
-                textarea: TextInput
+                select: SelectInput,
+                multi_select: MultiSelectInput,
+                textarea: TextareaInput
             };
         }
 
