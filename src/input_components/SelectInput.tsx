@@ -44,7 +44,7 @@ class SelectInput extends React.Component<SelectInputProps, SelectInputConfig> {
         }
 
         return (
-            <this.container className="user_input select_input">
+            <this.container className={class_names}>
                 { cfg.label ? <p className="multi_select_label">{ cfg.label }</p> : null }
                 <Select
                     placeholder={cfg.placeholder ? cfg.placeholder : cfg.label ? cfg.label : '' }
