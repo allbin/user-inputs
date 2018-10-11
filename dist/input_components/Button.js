@@ -56,7 +56,7 @@ var Button = /** @class */ (function (_super) {
             classes.push('big');
         }
         class_names += " " + classes.join(" ");
-        return (React.createElement(this.container, { onMouseEnter: function () { return _this.props.onMouseEnter ? _this.props.onMouseEnter() : null; }, onMouseLeave: function () { return _this.props.onMouseEnter ? _this.props.onMouseLeave() : null; }, block: this.props.block, filled: this.props.filled, disabled: this.props.disabled || false, autofocus: this.props.autofocus || false, className: class_names, onClick: function (e) { return _this.props.onClick ? _this.props.onClick() : null; } }, cfg.label));
+        return (React.createElement(this.container, { onMouseEnter: function () { return _this.props.onMouseEnter ? _this.props.onMouseEnter() : null; }, onMouseLeave: function () { return _this.props.onMouseEnter ? _this.props.onMouseLeave() : null; }, block: this.props.block, filled: this.props.filled, disabled: this.props.disabled || false, autoFocus: this.props.autofocus || false, className: class_names, onClick: function (e) { return _this.props.onClick ? _this.props.onClick() : null; } }, cfg.label));
     };
     return Button;
 }(React.Component));
