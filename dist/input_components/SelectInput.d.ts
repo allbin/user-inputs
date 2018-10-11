@@ -8,6 +8,7 @@ export interface SelectInputConfig {
     options: SelectInputOptions[];
     placeholder?: string;
     class_name?: string;
+    no_options_message?: string;
 }
 export interface SelectInputProps {
     value?: string;

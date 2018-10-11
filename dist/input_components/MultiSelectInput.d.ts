@@ -7,7 +7,8 @@ export interface MultiSelectInputConfig {
     label?: string;
     placeholder?: string;
     options: MultiSelectOptions[];
-    class_name: string;
+    class_name?: string;
+    no_options_message?: string;
 }
 export interface MultiSelectInputProps {
     value: string;
