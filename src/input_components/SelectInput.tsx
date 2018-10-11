@@ -12,6 +12,7 @@ export interface SelectInputConfig {
     options: SelectInputOptions[];
     placeholder?: string;
     class_name?: string;
+    no_options_message?: string;
 }
 export interface SelectInputProps {
     value?: string;
@@ -52,6 +53,7 @@ class SelectInput extends React.Component<SelectInputProps, SelectInputConfig> {
                     onChange={(e) => {
                         this.props.onChange(e);
                     }}
+                    noOptionsMessage={() => cfg.no_options_message || null}
                     options={cfg.options}
                 />
             </this.container>

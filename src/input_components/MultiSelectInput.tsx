@@ -11,7 +11,8 @@ export interface MultiSelectInputConfig {
     label?: string;
     placeholder?: string;
     options: MultiSelectOptions[];
-    class_name: string;
+    class_name?: string;
+    no_options_message?: string;
 }
 export interface MultiSelectInputProps {
     value: string;
@@ -53,6 +54,7 @@ class MultiSelectInput extends React.Component<MultiSelectInputProps, MultiSelec
                     onChange={(e) => {
                         this.props.onChange(e);
                     }}
+                    noOptionsMessage={() => cfg.no_options_message || null}
                     options={cfg.options}
                 />
             </this.container>
