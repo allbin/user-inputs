@@ -122,9 +122,9 @@ function InputHOC(WrappedComponent) {
                 text: TextInput_1.default,
                 grid: GridInput_1.default,
                 bool: BoolInput_1.default,
-                select: TextInput_1.default,
-                multi_select: TextInput_1.default,
-                textarea: TextInput_1.default
+                select: SelectInput_1.default,
+                multi_select: MultiSelectInput_1.default,
+                textarea: TextareaInput_1.default
             };
             return _this;
         }
