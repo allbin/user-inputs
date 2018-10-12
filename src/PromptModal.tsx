@@ -76,7 +76,6 @@ export default class ConfirmModal extends React.Component<ConfirmModalProps, any
                         font-size: 24px;
                     }
                     .modal_body{
-                        opacity: 0.6;
                         text-align: center;
                         margin: 12px 20px 28px;
                         .user_input{
