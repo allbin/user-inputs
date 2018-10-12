@@ -13,6 +13,8 @@ export interface MultiSelectInputConfig {
     options: MultiSelectOptions[];
     class_name?: string;
     no_options_message?: string;
+    disabled?: boolean;
+    searchable?: boolean;
 }
 export interface MultiSelectInputProps {
     value: string;
@@ -54,6 +56,8 @@ class MultiSelectInput extends React.Component<MultiSelectInputProps, MultiSelec
                     onChange={(e) => {
                         this.props.onChange(e);
                     }}
+                    isSearchable={cfg.searchable || false}
+                    isDisabled={cfg.disabled || false}
                     noOptionsMessage={() => cfg.no_options_message || null}
                     options={cfg.options}
                 />
