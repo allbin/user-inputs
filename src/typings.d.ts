@@ -1,4 +1,4 @@
-type InputType = "bool" | "button" | "confirm" | "date" | "grid" | "number" | "multi_select" | "select" | "text" | "textarea";
+type InputType = "bool" | "button" | "confirm" | "date" | "grid" | "number" | "multi_select" | "select" | "text" | "textarea" | "tri_state";
 interface InputConfig {
     [key: string]: any;
     default_value: any;

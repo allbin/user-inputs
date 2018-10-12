@@ -13,7 +13,7 @@ import MultiSelectInput from './input_components/MultiSelectInput';
 import TextareaInput from './input_components/TextareaInput';
 import Button from './input_components/Button';
 
-let valid_types = ["bool", "button", "confirm", "date", "grid", "number", "multi_select", "select", "text", "textarea"];
+let valid_types = ["bool", "button", "confirm", "date", "grid", "number", "multi_select", "select", "text", "textarea", "tri_state"];
 
 
 //Add translations of this repo to OH. Prefixed with "user_input_hoc_".
@@ -29,6 +29,7 @@ let default_components: ComponentObject = {
     select: SelectInput,
     multi_select: MultiSelectInput,
     textarea: TextareaInput,
+    tri_state: GridInput
 };
 let custom_components: ComponentObject = {};
 
