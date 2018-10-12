@@ -189,7 +189,7 @@ export default class ConfirmModal extends React.Component<ConfirmModalProps, any
                         </div>
                         <div className="modal_footer">
                             { this.renderCancelButton() }
-                            <div className="modal_footer_left">
+                            <div className="modal_footer_right">
                                 <Button
                                     big
                                     filled
