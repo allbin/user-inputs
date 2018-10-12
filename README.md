@@ -59,9 +59,9 @@ export default class MyComp extends React.Component {
 
 
 # Wrapping function
-The HOC wrapping function attaches the `userPrompt` prop to the component being wrapped.
+The HOC wrapping function attaches the `userInput` prop to the component being wrapped.
 
-Example: `userInput(YourComponent)` will give access to `this.props.userPrompt` inside *YourComponent*.
+Example: `userInput(YourComponent)` will give access to `this.props.userInput` inside *YourComponent*.
 
 
 
