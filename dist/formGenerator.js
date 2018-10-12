@@ -48,7 +48,8 @@ function getInputForm(default_components, custom_components, input_configs, cb) 
                 multi_select: default_components.multi_select,
                 select: default_components.select,
                 button: default_components.button,
-                confirm: default_components.button
+                confirm: default_components.button,
+                tri_state: default_components.tri_state
             };
             return _this;
         }
