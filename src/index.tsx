@@ -187,10 +187,10 @@ export function InputHOC (
                         values[input.key] = values[input.key].trim();
                     }
                 }
-                if (input.type === "select") {
+                if (input.type === "select" && values[input.key] !== input.default_value) {
                     values[input.key] = values[input.key].value;
                 }
-                if (input.type === "select") {
+                if (input.type === "select" && values[input.key] !== input.default_value) {
                     values[input.key] = values[input.key].map(option => option.value);
                 }
             });
