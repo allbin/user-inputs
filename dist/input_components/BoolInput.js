@@ -30,7 +30,11 @@ var BoolInput = /** @class */ (function (_super) {
     BoolInput.prototype.render = function () {
         var _this = this;
         var cfg = this.props.config;
-        return (React.createElement(this.container, { className: "user_input bool_input" },
+        var class_names = "user_input bool_input";
+        if (cfg.class_name) {
+            class_names += " " + cfg.class_name;
+        }
+        return (React.createElement(this.container, { className: class_names },
             cfg.label ? React.createElement("p", null, cfg.label) : null,
             React.createElement("div", { className: "bool_block" },
                 React.createElement("div", { className: "bool_input " + (this.props.value === true ? 'active' : ''), onClick: function () {

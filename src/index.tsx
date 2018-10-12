@@ -8,12 +8,15 @@ import PromptModal from './PromptModal';
 import TextInput from './input_components/TextInput';
 import BoolInput from './input_components/BoolInput';
 import GridInput from './input_components/GridInput';
+import SelectInput from './input_components/SelectInput';
+import MultiSelectInput from './input_components/MultiSelectInput';
+import TextareaInput from './input_components/TextareaInput';
 import Button from './input_components/Button';
 
 let valid_types = ["bool", "button", "confirm", "date", "grid", "number", "multi_select", "select", "text", "textarea"];
 
 
-//Add translations of this repo to OH. Prefix: "user_input_hoc_".
+//Add translations of this repo to OH. Prefixed with "user_input_hoc_".
 oh.addDictionary(translations);
 
 
@@ -23,9 +26,9 @@ let default_components: ComponentObject = {
     bool: BoolInput,
     grid: GridInput,
     button: Button,
-    select: TextInput,
-    multi_select: TextInput,
-    textarea: TextInput,
+    select: SelectInput,
+    multi_select: MultiSelectInput,
+    textarea: TextareaInput,
 };
 let custom_components: ComponentObject = {};
 
@@ -125,9 +128,9 @@ export function InputHOC (
                 text: TextInput,
                 grid: GridInput,
                 bool: BoolInput,
-                select: TextInput,
-                multi_select: TextInput,
-                textarea: TextInput
+                select: SelectInput,
+                multi_select: MultiSelectInput,
+                textarea: TextareaInput
             };
         }
 

@@ -1,18 +1,26 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
-export interface TextInputConfig {
+// this.props has everything passed in to config.props as well as the full config object in this.props.config.
+
+export interface TextareaInputConfig {
     label?: string;
+    rows?: number;
+    placeholder?: string;
     class_name?: string;
 }
-export interface TextInputProps {
+export interface TextareaInputProps {
     value: string;
-    config: TextInputConfig;
+    config: TextareaInputConfig;
     onChange: (string) => void;
     autofocus?: boolean;
 }
 
-class TextInput extends React.Component<TextInputProps, TextInputConfig> {
+let default_config = {
+    rows: 3
+};
+
+class TextareaInput extends React.Component<TextareaInputProps, TextareaInputConfig> {
     container: typeof React.Component;
 
     constructor(props) {
@@ -20,30 +28,28 @@ class TextInput extends React.Component<TextInputProps, TextInputConfig> {
 
         this.container = styled.div `
             text-align: left;
-            p{
+            p {
                 color: ${props => props.theme.colors.dark[1]};
                 font-size: 14px;
                 margin-bottom: 12px;
                 font-weight: bold;
             }
-            input{
+            textarea {
                 border: 2px solid ${props => props.theme.colors.gray[2]};
                 border-radius: 4px;
                 font-size: 16px;
                 padding: 8px 12px;
                 width: 100%;
-                transition: all 0.3s;
-                &:HOVER, &:FOCUS{
+                &:HOVER, &:FOCUS {
                     border-color: ${props => props.theme.colors.brand[2]};
                 }
             }
         `;
-
     }
 
     render() {
-        let cfg = this.props.config;
-        let class_names = "user_input multi_select_input";
+        let cfg = Object.assign({}, default_config, this.props.config);
+        let class_names = "user_input textarea_input";
         if (cfg.class_name) {
             class_names += " " + cfg.class_name;
         }
@@ -51,15 +57,16 @@ class TextInput extends React.Component<TextInputProps, TextInputConfig> {
         return (
             <this.container className={class_names}>
                 { cfg.label ? <p>{ cfg.label }</p> : null }
-                <input
+                <textarea
+                    rows={3}
                     autoFocus={this.props.autofocus || false}
-                    type="text"
+                    placeholder={cfg.placeholder ? cfg.placeholder : cfg.label ? cfg.label : '' }
                     value={this.props.value}
-                    onChange={e => this.props.onChange(e.target.value)}
-                />
+                    onChange={e => this.props.onChange(e.target.value)}>
+                </textarea>
             </this.container>
         );
     }
 }
 
-export default TextInput;
+export default TextareaInput;

@@ -1,6 +1,7 @@
 import * as React from 'react';
 export interface BoolInputConfig {
     label: string;
+    class_name?: string;
 }
 export interface BoolInputProps {
     value: boolean;

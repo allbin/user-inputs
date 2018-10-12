@@ -29,6 +29,10 @@ var Button = /** @class */ (function (_super) {
     Button.prototype.render = function () {
         var _this = this;
         var cfg = this.props.config;
+        var class_names = "user_input button_input";
+        if (cfg.class_name) {
+            class_names += " " + cfg.class_name;
+        }
         var classes = [];
         if (this.props.dark) {
             classes.push('dark');
@@ -51,7 +55,8 @@ var Button = /** @class */ (function (_super) {
         if (this.props.big) {
             classes.push('big');
         }
-        return (React.createElement(this.container, { onMouseEnter: function (e) { return _this.props.onMouseEnter ? _this.props.onMouseEnter(e) : null; }, onMouseLeave: function (e) { return _this.props.onMouseEnter ? _this.props.onMouseLeave(e) : null; }, block: this.props.block, filled: this.props.filled, className: "button " + classes.join(' '), onClick: function (e) { return _this.props.onClick ? _this.props.onClick(e) : null; } }, cfg.label));
+        class_names += " " + classes.join(" ");
+        return (React.createElement(this.container, { onMouseEnter: function () { return _this.props.onMouseEnter ? _this.props.onMouseEnter() : null; }, onMouseLeave: function () { return _this.props.onMouseEnter ? _this.props.onMouseLeave() : null; }, block: this.props.block, filled: this.props.filled, disabled: this.props.disabled || false, autoFocus: this.props.autofocus || false, className: class_names, onClick: function (e) { return _this.props.onClick ? _this.props.onClick() : null; } }, cfg.label));
     };
     return Button;
 }(React.Component));

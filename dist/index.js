@@ -32,18 +32,21 @@ var PromptModal_1 = require("./PromptModal");
 var TextInput_1 = require("./input_components/TextInput");
 var BoolInput_1 = require("./input_components/BoolInput");
 var GridInput_1 = require("./input_components/GridInput");
+var SelectInput_1 = require("./input_components/SelectInput");
+var MultiSelectInput_1 = require("./input_components/MultiSelectInput");
+var TextareaInput_1 = require("./input_components/TextareaInput");
 var Button_1 = require("./input_components/Button");
 var valid_types = ["bool", "button", "confirm", "date", "grid", "number", "multi_select", "select", "text", "textarea"];
-//Add translations of this repo to OH. Prefix: "user_input_hoc_".
+//Add translations of this repo to OH. Prefixed with "user_input_hoc_".
 output_helpers_1.default.addDictionary(translations_1.default);
 var default_components = {
     text: TextInput_1.default,
     bool: BoolInput_1.default,
     grid: GridInput_1.default,
     button: Button_1.default,
-    select: TextInput_1.default,
-    multi_select: TextInput_1.default,
-    textarea: TextInput_1.default,
+    select: SelectInput_1.default,
+    multi_select: MultiSelectInput_1.default,
+    textarea: TextareaInput_1.default,
 };
 var custom_components = {};
 function InputHOC(WrappedComponent) {
@@ -119,9 +122,9 @@ function InputHOC(WrappedComponent) {
                 text: TextInput_1.default,
                 grid: GridInput_1.default,
                 bool: BoolInput_1.default,
-                select: TextInput_1.default,
-                multi_select: TextInput_1.default,
-                textarea: TextInput_1.default
+                select: SelectInput_1.default,
+                multi_select: MultiSelectInput_1.default,
+                textarea: TextareaInput_1.default
             };
             return _this;
         }

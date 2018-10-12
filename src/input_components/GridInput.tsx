@@ -7,9 +7,10 @@ interface GridInputStyleProps {
     presentation: string;
 }
 export interface GridInputConfig {
-    label: string;
+    label?: string;
     grid_type: GridType;
     options: any;
+    class_name?: string;
 }
 export interface GridInputProps {
     value: any;
@@ -42,7 +43,7 @@ class GridInput extends React.Component<GridInputProps, any> {
                 background-color: ${props => props.theme.colors.border};
                 padding: 4px;
                 display: grid;
-                grid-template-columns: ${props => props.grid_type === 'colors' || props.grid_type === 'icons' ? 'repeat(6, 1fr)' : 'repeat(4, 1fr)'};
+                grid-template-columns: ${props => props.grid_type === 'colors' || props.grid_type === 'icons' ? 'repeat(6, 1fr)' : 'repeat( auto-fit, minmax(120px, 1fr) )'};
                 grid-gap: 4px 4px;
             }
         `;
@@ -52,17 +53,17 @@ class GridInput extends React.Component<GridInputProps, any> {
             background-color: #fff;
             cursor: pointer;
             border-radius: 4px;
-            padding: ${props => props.grid_type === 'icons' ? '6px 0' : '12px 0'};
+            padding: ${props => props.grid_type === 'icons' ? '6px 0' : '16px 0'};
             height: ${props => props.grid_type === 'colors' || props.grid_type === 'icons' ? '44px' : 'unset'};
             text-align: center;
-            font-size: 12px;
+            font-size: 16px;
             &:HOVER{
-                background-color: ${props => props.grid_type === 'colors' ? props.presentation : props.theme.colors.dark[1]};
+                background-color: ${props => props.grid_type === 'colors' ? props.color : props.theme.colors.dark[1]};
                 opacity: 0.5;
                 color: #fff;
             }
             &.active{
-                background-color: ${props => props.grid_type === 'colors' ? props.presentation : props.theme.colors.dark[1]};
+                background-color: ${props => props.grid_type === 'colors' ? props.color : props.theme.colors.dark[1]};
                 color: #fff;
                 font-weight: bold;
                 &:HOVER{
@@ -82,17 +83,22 @@ class GridInput extends React.Component<GridInputProps, any> {
 
     render() {
         let cfg = this.props.config;
+        let class_names = "user_input grid_input";
+        if (cfg.class_name) {
+            class_names += " " + cfg.class_name;
+        }
+
         return (
             <this.container
                 grid_type={cfg.grid_type}
-                className="user_input bool_input">
+                className={class_names}>
                 { cfg.label ? <p>{ cfg.label }</p> : null }
                 <div className="grid_block">
                     {
                         cfg.options.map((item, i) => {
                             return (
                                 <this.gridItem
-                                    presentation={item.presentation}
+                                    color={item.color}
                                     grid_type={cfg.grid_type}
                                     key={i}
                                     className={`grid_item ${this.props.value === item.value ? 'active' : ''}`}
@@ -100,7 +106,7 @@ class GridInput extends React.Component<GridInputProps, any> {
                                         this.props.onChange(item.value);
                                     }}
                                     >
-                                    { cfg.grid_type === 'icons' ? null : <span>{item.presentation}</span> }
+                                    { cfg.grid_type === 'icons' ? null : <span>{item.label}</span> }
 
                                 </this.gridItem>
                             );

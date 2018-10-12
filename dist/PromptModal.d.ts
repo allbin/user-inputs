@@ -7,6 +7,8 @@ export interface ConfirmModalProps {
     cancelCB: () => void;
     renderInputs: () => JSX.Element;
     show_cancel_btn: boolean;
+    confirm_button_label?: string;
+    cancel_button_label?: string;
 }
 export default class ConfirmModal extends React.Component<ConfirmModalProps, any> {
     container: typeof React.Component;
