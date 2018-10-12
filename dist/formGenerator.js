@@ -85,6 +85,12 @@ function getInputForm(default_components, custom_components, input_configs, cb) 
                         values[input.key] = values[input.key].trim();
                     }
                 }
+                if (input.type === "select") {
+                    values[input.key] = values[input.key].value;
+                }
+                if (input.type === "select") {
+                    values[input.key] = values[input.key].map(function (option) { return option.value; });
+                }
             });
             return values;
         };
@@ -99,6 +105,12 @@ function getInputForm(default_components, custom_components, input_configs, cb) 
                     if (typeof values[input.key] === "string") {
                         values[input.key] = values[input.key].trim();
                     }
+                }
+                if (input.type === "select") {
+                    values[input.key] = values[input.key].value;
+                }
+                if (input.type === "select") {
+                    values[input.key] = values[input.key].map(function (option) { return option.value; });
                 }
             });
             if (this.confirmCB) {

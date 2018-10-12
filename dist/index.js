@@ -180,6 +180,12 @@ function InputHOC(WrappedComponent) {
                         values[input.key] = values[input.key].trim();
                     }
                 }
+                if (input.type === "select") {
+                    values[input.key] = values[input.key].value;
+                }
+                if (input.type === "select") {
+                    values[input.key] = values[input.key].map(function (option) { return option.value; });
+                }
             });
             if (this.confirmCB) {
                 this.confirmCB(values);
