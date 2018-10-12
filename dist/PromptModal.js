@@ -60,7 +60,7 @@ var ConfirmModal = /** @class */ (function (_super) {
                         this.props.renderInputs()),
                     React.createElement("div", { className: "modal_footer" },
                         this.renderCancelButton(),
-                        React.createElement("div", { className: "modal_footer_left" },
+                        React.createElement("div", { className: "modal_footer_right" },
                             React.createElement(Button_1.default, { big: true, filled: true, light: true, config: {
                                     label: this.props.confirm_button_label || output_helpers_1.default.translate('user_input_hoc_confirm')
                                 }, onClick: function () { return _this.props.confirmCB(); } })))))));
