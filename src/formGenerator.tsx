@@ -61,7 +61,15 @@ export function getInputForm(default_components: ComponentObject, custom_compone
         }
 
         getValues() {
-            return this.state.values;
+            let values = Object.assign({}, this.state.values);
+            this.state.inputs.forEach((input) => {
+                if ((input.type === "text" || input.type === "textarea") && (!input.hasOwnProperty("trim") || input.trim === true)) {
+                    if (typeof values[input.key] === "string") {
+                        values[input.key] = values[input.key].trim();
+                    }
+                }
+            });
+            return values;
         }
 
         resetValues() {
@@ -70,8 +78,16 @@ export function getInputForm(default_components: ComponentObject, custom_compone
         }
 
         userConfirmedCB() {
+            let values = Object.assign({}, this.state.values);
+            this.state.inputs.forEach((input) => {
+                if ((input.type === "text" || input.type === "textarea") && (!input.hasOwnProperty("trim") || input.trim === true)) {
+                    if (typeof values[input.key] === "string") {
+                        values[input.key] = values[input.key].trim();
+                    }
+                }
+            });
             if (this.confirmCB) {
-                this.confirmCB(this.state.values);
+                this.confirmCB(values);
                 this.confirmCB = null;
             }
         }
