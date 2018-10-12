@@ -9,6 +9,8 @@ export interface MultiSelectInputConfig {
     options: MultiSelectOptions[];
     class_name?: string;
     no_options_message?: string;
+    disabled?: boolean;
+    searchable?: boolean;
 }
 export interface MultiSelectInputProps {
     value: string;

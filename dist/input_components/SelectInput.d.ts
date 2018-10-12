@@ -9,6 +9,8 @@ export interface SelectInputConfig {
     placeholder?: string;
     class_name?: string;
     no_options_message?: string;
+    searchable?: boolean;
+    disabled?: boolean;
 }
 export interface SelectInputProps {
     value?: string;

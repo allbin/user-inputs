@@ -38,7 +38,7 @@ var MultiSelectInput = /** @class */ (function (_super) {
             cfg.label ? React.createElement("p", { className: "multi_select_label" }, cfg.label) : null,
             React.createElement(react_select_1.default, { placeholder: cfg.placeholder ? cfg.placeholder : cfg.label ? cfg.label : '', isMulti: true, value: this.props.value, onChange: function (e) {
                     _this.props.onChange(e);
-                }, noOptionsMessage: function () { return cfg.no_options_message || null; }, options: cfg.options })));
+                }, isSearchable: cfg.searchable || false, isDisabled: cfg.disabled || false, noOptionsMessage: function () { return cfg.no_options_message || null; }, options: cfg.options })));
     };
     return MultiSelectInput;
 }(React.Component));
