@@ -69,6 +69,12 @@ export function getInputForm(default_components: ComponentObject, custom_compone
                         values[input.key] = values[input.key].trim();
                     }
                 }
+                if (input.type === "select") {
+                    values[input.key] = values[input.key].value;
+                }
+                if (input.type === "select") {
+                    values[input.key] = values[input.key].map(option => option.value);
+                }
             });
             return values;
         }
@@ -85,6 +91,12 @@ export function getInputForm(default_components: ComponentObject, custom_compone
                     if (typeof values[input.key] === "string") {
                         values[input.key] = values[input.key].trim();
                     }
+                }
+                if (input.type === "select") {
+                    values[input.key] = values[input.key].value;
+                }
+                if (input.type === "select") {
+                    values[input.key] = values[input.key].map(option => option.value);
                 }
             });
             if (this.confirmCB) {

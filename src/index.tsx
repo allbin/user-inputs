@@ -187,6 +187,12 @@ export function InputHOC (
                         values[input.key] = values[input.key].trim();
                     }
                 }
+                if (input.type === "select") {
+                    values[input.key] = values[input.key].value;
+                }
+                if (input.type === "select") {
+                    values[input.key] = values[input.key].map(option => option.value);
+                }
             });
             if (this.confirmCB) {
                 this.confirmCB(values);
