@@ -13,6 +13,8 @@ export interface SelectInputConfig {
     placeholder?: string;
     class_name?: string;
     no_options_message?: string;
+    searchable?: boolean;
+    disabled?: boolean;
 }
 export interface SelectInputProps {
     value?: string;
@@ -53,6 +55,8 @@ class SelectInput extends React.Component<SelectInputProps, SelectInputConfig> {
                     onChange={(e) => {
                         this.props.onChange(e);
                     }}
+                    isDisabled={cfg.disabled || false}
+                    isSearchable={cfg.searchable || false}
                     noOptionsMessage={() => cfg.no_options_message || null}
                     options={cfg.options}
                 />

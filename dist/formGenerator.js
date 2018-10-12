@@ -77,15 +77,31 @@ function getInputForm(default_components, custom_components, input_configs, cb) 
             });
         };
         InputWrapper.prototype.getValues = function () {
-            return this.state.values;
+            var values = Object.assign({}, this.state.values);
+            this.state.inputs.forEach(function (input) {
+                if ((input.type === "text" || input.type === "textarea") && (!input.hasOwnProperty("trim") || input.trim === true)) {
+                    if (typeof values[input.key] === "string") {
+                        values[input.key] = values[input.key].trim();
+                    }
+                }
+            });
+            return values;
         };
         InputWrapper.prototype.resetValues = function () {
             var default_values = input_configs.map(function (input) { return input.default_value; });
             this.setState({ values: default_values });
         };
         InputWrapper.prototype.userConfirmedCB = function () {
+            var values = Object.assign({}, this.state.values);
+            this.state.inputs.forEach(function (input) {
+                if ((input.type === "text" || input.type === "textarea") && (!input.hasOwnProperty("trim") || input.trim === true)) {
+                    if (typeof values[input.key] === "string") {
+                        values[input.key] = values[input.key].trim();
+                    }
+                }
+            });
             if (this.confirmCB) {
-                this.confirmCB(this.state.values);
+                this.confirmCB(values);
                 this.confirmCB = null;
             }
         };
