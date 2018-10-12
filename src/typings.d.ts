@@ -47,4 +47,5 @@ interface ComponentObject {
     multi_select?: typeof React.Component;
     modal?: typeof React.Component;
     confirm?: typeof React.Component;
+    tri_state?: typeof React.Component;
 }
