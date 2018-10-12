@@ -41,23 +41,23 @@ export default class ConfirmModal extends React.Component<ConfirmModalProps, any
         this.container = styled.div `
 
             @media (max-width: 700px) {
-                .modal_container{
-                    .modal_box{
+                .modal_container {
+                    .modal_box {
                         width: 100% !important;
                         top: 0 !important;
                         bottom: 0 !important;
                         border-radius: 0 !important;
                     }
-                    .modal_footer{
+                    .modal_footer {
                         position: absolute !important;
                         bottom: 0 !important;
                         left: 0 !important;
                         right: 0 !important;
-                        .modal_footer_left, .modal_footer_right{
+                        .modal_footer_cancel, .modal_footer_confirm {
                             width: 100% !important;
                             display: block !important;
                             margin-bottom: 14px !important;
-                            button{
+                            button {
                                 width: 100% !important;
                             }
                         }
@@ -65,7 +65,7 @@ export default class ConfirmModal extends React.Component<ConfirmModalProps, any
                 }
             }
 
-            .modal_container{
+            .modal_container {
                 background-color: rgba(0,0,0,0.2);
                 display: block;
                 position: fixed;
@@ -75,7 +75,7 @@ export default class ConfirmModal extends React.Component<ConfirmModalProps, any
                 bottom: 0;
                 z-index: 20;
                 perspective: 45px;
-                .modal_box{
+                .modal_box {
                     transform-origin: center;
                     animation: ${modal_animate_down} 0.4s both;
                     border-radius: 12px;
@@ -116,7 +116,7 @@ export default class ConfirmModal extends React.Component<ConfirmModalProps, any
                     }
                     .modal_footer{
                         padding: 20px;
-                        .modal_footer_left, .modal_footer_right{
+                        .modal_footer_cancel, .modal_footer_confirm{
                             display: inline-block;
                             width: 50%;
                             white-space: nowrap;
@@ -156,7 +156,7 @@ export default class ConfirmModal extends React.Component<ConfirmModalProps, any
             return null;
         }
         return (
-            <div className="modal_footer_left">
+            <div className="modal_footer_cancel">
                 <Button
                     big
                     filled
@@ -189,7 +189,7 @@ export default class ConfirmModal extends React.Component<ConfirmModalProps, any
                         </div>
                         <div className="modal_footer">
                             { this.renderCancelButton() }
-                            <div className="modal_footer_right">
+                            <div className="modal_footer_confirm">
                                 <Button
                                     big
                                     filled
