@@ -32,7 +32,25 @@ function getInputForm(default_components, custom_components, input_configs, cb) 
         function InputWrapper(props) {
             var _this = _super.call(this, props) || this;
             var values = {};
-            input_configs.forEach(function (input) { return values[input.key] = input.default_value; });
+            input_configs.forEach(function (input) {
+                if (input.type === "multi_select") {
+                    var selected_options = input.options.filter(function (option) { return input.default_value.includes(option.value); });
+                    if (selected_options.length !== input.default_value.length) {
+                        throw new Error("UserInput: Default values for multiselect not present in options.");
+                    }
+                    values[input.key] = selected_options;
+                }
+                else if (input.type === "select") {
+                    var selected_option = input.options.find(function (option) { return input.default_value === option.value; });
+                    if (!selected_option) {
+                        throw new Error("UserInput: Default value for select not present in options.");
+                    }
+                    values[input.key] = selected_option;
+                }
+                else {
+                    values[input.key] = input.default_value;
+                }
+            });
             _this.state = {
                 values: values,
                 inputs: input_configs,
@@ -69,7 +87,23 @@ function getInputForm(default_components, custom_components, input_configs, cb) 
             }
             var values = this.state.values;
             if (input_config.hasOwnProperty("value")) {
-                values[input_config.key] = input_config.value;
+                if (input_config.type === "multi_select") {
+                    var selected_options = input_config.options.filter(function (option) { return input_config.value.includes(option.value); });
+                    if (selected_options.length !== input_config.value.length) {
+                        throw new Error("UserInput: Values for multiselect not present in options.");
+                    }
+                    values[input_config.key] = selected_options;
+                }
+                else if (input_config.type === "select") {
+                    var selected_option = input_config.options.find(function (option) { return input_config.value === option.value; });
+                    if (!selected_option) {
+                        throw new Error("UserInput: Value for select not present in options.");
+                    }
+                    values[input_config.key] = selected_option;
+                }
+                else {
+                    values[input_config.key] = input_config.value;
+                }
             }
             inputs[input_index] = Object.assign({}, inputs[input_index], input_config);
             this.setState({
