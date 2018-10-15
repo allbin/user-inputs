@@ -108,7 +108,23 @@ function InputHOC(WrappedComponent) {
                     }
                     var values = _this.state.values;
                     if (input_config.hasOwnProperty("value")) {
-                        values[input_config.key] = input_config.value;
+                        if (input_config.type === "multi_select") {
+                            var selected_options = input_config.options.filter(function (option) { return input_config.value.includes(option.value); });
+                            if (selected_options.length !== input_config.value.length) {
+                                throw new Error("UserInput: Values for multiselect not present in options.");
+                            }
+                            values[input_config.key] = selected_options;
+                        }
+                        else if (input_config.type === "select") {
+                            var selected_option = input_config.options.find(function (option) { return input_config.value === option.value; });
+                            if (!selected_option) {
+                                throw new Error("UserInput: Value for select not present in options.");
+                            }
+                            values[input_config.key] = selected_option;
+                        }
+                        else {
+                            values[input_config.key] = input_config.value;
+                        }
                     }
                     inputs[input_index] = Object.assign({}, inputs[input_index], input_config);
                     _this.setState({
@@ -149,7 +165,25 @@ function InputHOC(WrappedComponent) {
             this.confirmCB = confirmCB || null;
             this.cancelCB = cancelCB || null;
             var values = {};
-            inputs.forEach(function (input) { return values[input.key] = input.default_value; });
+            inputs.forEach(function (input) {
+                if (input.type === "multi_select") {
+                    var selected_options = input.options.filter(function (option) { return input.default_value.includes(option.value); });
+                    if (selected_options.length !== input.default_value.length) {
+                        throw new Error("UserInput: Default values for multiselect not present in options.");
+                    }
+                    values[input.key] = selected_options;
+                }
+                else if (input.type === "select") {
+                    var selected_option = input.options.find(function (option) { return input.default_value === option.value; });
+                    if (!selected_option) {
+                        throw new Error("UserInput: Default value for select not present in options.");
+                    }
+                    values[input.key] = selected_option;
+                }
+                else {
+                    values[input.key] = input.default_value;
+                }
+            });
             this.setState({
                 show: true,
                 modal_props: props,
@@ -179,6 +213,12 @@ function InputHOC(WrappedComponent) {
                     if (typeof values[input.key] === "string") {
                         values[input.key] = values[input.key].trim();
                     }
+                }
+                if (input.type === "select") {
+                    values[input.key] = values[input.key].value;
+                }
+                if (input.type === "multi_select") {
+                    values[input.key] = values[input.key].map(function (option) { return option.value; });
                 }
             });
             if (this.confirmCB) {
