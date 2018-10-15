@@ -11,7 +11,9 @@ import GridInput from './input_components/GridInput';
 import SelectInput from './input_components/SelectInput';
 import MultiSelectInput from './input_components/MultiSelectInput';
 import TextareaInput from './input_components/TextareaInput';
+import TriStateInput from './input_components/TriStateInput';
 import Button from './input_components/Button';
+
 
 let valid_types = ["bool", "button", "confirm", "date", "grid", "number", "multi_select", "select", "text", "textarea", "tri_state"];
 
@@ -29,7 +31,7 @@ let default_components: ComponentObject = {
     select: SelectInput,
     multi_select: MultiSelectInput,
     textarea: TextareaInput,
-    tri_state: GridInput
+    tri_state: TriStateInput
 };
 let custom_components: ComponentObject = {};
 
@@ -146,7 +148,7 @@ export function InputHOC (
                 select: SelectInput,
                 multi_select: MultiSelectInput,
                 textarea: TextareaInput,
-                tri_state: GridInput
+                tri_state: TriStateInput
             };
         }
 
