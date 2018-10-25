@@ -327,7 +327,7 @@ export function InputHOC (
 
         render() {
             return (<div>
-                <WrappedComponent userInput={this.exports} {...this.props} />
+                <WrappedComponent userPrompt={this.exports} {...this.props} />
                 { this.renderPrompt() }
             </div>);
         }
