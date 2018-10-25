@@ -35,6 +35,7 @@ var GridInput_1 = require("./input_components/GridInput");
 var SelectInput_1 = require("./input_components/SelectInput");
 var MultiSelectInput_1 = require("./input_components/MultiSelectInput");
 var TextareaInput_1 = require("./input_components/TextareaInput");
+var TriStateInput_1 = require("./input_components/TriStateInput");
 var Button_1 = require("./input_components/Button");
 var valid_types = ["bool", "button", "confirm", "date", "grid", "number", "multi_select", "select", "text", "textarea", "tri_state"];
 //Add translations of this repo to OH. Prefixed with "user_input_hoc_".
@@ -47,7 +48,8 @@ var default_components = {
     select: SelectInput_1.default,
     multi_select: MultiSelectInput_1.default,
     textarea: TextareaInput_1.default,
-    tri_state: GridInput_1.default
+    tri_state: TriStateInput_1.default,
+    confirm: Button_1.default,
 };
 var custom_components = {};
 function InputHOC(WrappedComponent) {
@@ -70,7 +72,11 @@ function InputHOC(WrappedComponent) {
                     if (prompt_request.hasOwnProperty("props") === false) {
                         prompt_request.props = {};
                     }
-                    prompt_request.props.show_cancel_btn = true;
+                    var default_props = {
+                        show_cancel_btn: true,
+                        show_confirm_btn: true
+                    };
+                    prompt_request.props = Object.assign({}, default_props, prompt_request.props);
                     _this.initPrompt(prompt_request, confirmCB, cancelCB);
                 },
                 alert: function (prompt_request, confirmCB) {
@@ -80,7 +86,11 @@ function InputHOC(WrappedComponent) {
                     if (prompt_request.hasOwnProperty("props") === false) {
                         prompt_request.props = {};
                     }
-                    prompt_request.props.show_cancel_btn = false;
+                    var default_props = {
+                        show_cancel_btn: false,
+                        show_confirm_btn: true
+                    };
+                    prompt_request.props = Object.assign({}, default_props, prompt_request.props);
                     _this.initPrompt(prompt_request, confirmCB);
                 },
                 cancel: function () {
@@ -142,7 +152,9 @@ function InputHOC(WrappedComponent) {
                 select: SelectInput_1.default,
                 multi_select: MultiSelectInput_1.default,
                 textarea: TextareaInput_1.default,
-                tri_state: GridInput_1.default
+                tri_state: TriStateInput_1.default,
+                button: Button_1.default,
+                confirm: Button_1.default
             };
             return _this;
         }
@@ -150,11 +162,7 @@ function InputHOC(WrappedComponent) {
             var _this = this;
             var inputs = prompt_request.inputs;
             var props = prompt_request.props;
-            var invalid_inputs = inputs.some(function (input) { return input.type === "button" || input.type === "confirm"; });
-            if (invalid_inputs) {
-                throw new Error("UserInput: Inputs of type 'button' OR 'confirm' are not allowed in prompt.");
-            }
-            invalid_inputs = inputs.some(function (input) { return input.hasOwnProperty("default_value") === false; });
+            var invalid_inputs = inputs.some(function (input) { return input.hasOwnProperty("default_value") === false; });
             if (invalid_inputs) {
                 throw new Error("UserInput: Inputs must be configured with a 'default_value'.");
             }
@@ -256,6 +264,19 @@ function InputHOC(WrappedComponent) {
                 }
                 var input_component_props = input_request.props || {};
                 var key = input_request.key || "input_" + index;
+                if (input_request.type === "confirm") {
+                    var suppliedOnClickCB_1 = null;
+                    if (input_component_props.hasOwnProperty("onClick")) {
+                        suppliedOnClickCB_1 = input_component_props.onClick;
+                        delete input_component_props.suppliedOnClickCB;
+                    }
+                    return React.createElement(InputComponent, __assign({ key: key, config: input_request, value: _this.state.values[key], onClick: function (value) {
+                            _this.userConfirmedCB();
+                            if (suppliedOnClickCB_1) {
+                                suppliedOnClickCB_1();
+                            }
+                        } }, input_component_props));
+                }
                 return React.createElement(InputComponent, __assign({ key: key, config: input_request, value: _this.state.values[key], onChange: function (value) {
                         if (input_request.onChange) {
                             input_request.onChange(value);
@@ -277,7 +298,7 @@ function InputHOC(WrappedComponent) {
         };
         Prompt.prototype.render = function () {
             return (React.createElement("div", null,
-                React.createElement(WrappedComponent, __assign({ userPrompt: this.exports }, this.props)),
+                React.createElement(WrappedComponent, __assign({ userInput: this.exports }, this.props)),
                 this.renderPrompt()));
         };
         return Prompt;

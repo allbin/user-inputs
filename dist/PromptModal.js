@@ -45,8 +45,17 @@ var ConfirmModal = /** @class */ (function (_super) {
                     label: this.props.cancel_button_label || output_helpers_1.default.translate('user_input_hoc_cancel')
                 }, onClick: function () { return _this.props.cancelCB(); } })));
     };
-    ConfirmModal.prototype.render = function () {
+    ConfirmModal.prototype.renderConfirmButton = function () {
         var _this = this;
+        if (this.props.show_confirm_btn === false) {
+            return null;
+        }
+        return (React.createElement("div", { className: "modal_footer_confirm" },
+            React.createElement(Button_1.default, { big: true, filled: true, light: true, config: {
+                    label: this.props.confirm_button_label || output_helpers_1.default.translate('user_input_hoc_confirm')
+                }, onClick: function () { return _this.props.confirmCB(); } })));
+    };
+    ConfirmModal.prototype.render = function () {
         return (React.createElement(this.container, null,
             React.createElement("div", { className: "modal_container" },
                 React.createElement("div", { className: "modal_box" },
@@ -60,10 +69,7 @@ var ConfirmModal = /** @class */ (function (_super) {
                         this.props.renderInputs()),
                     React.createElement("div", { className: "modal_footer" },
                         this.renderCancelButton(),
-                        React.createElement("div", { className: "modal_footer_confirm" },
-                            React.createElement(Button_1.default, { big: true, filled: true, light: true, config: {
-                                    label: this.props.confirm_button_label || output_helpers_1.default.translate('user_input_hoc_confirm')
-                                }, onClick: function () { return _this.props.confirmCB(); } })))))));
+                        this.renderConfirmButton())))));
     };
     return ConfirmModal;
 }(React.Component));
