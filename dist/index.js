@@ -298,7 +298,7 @@ function InputHOC(WrappedComponent) {
         };
         Prompt.prototype.render = function () {
             return (React.createElement("div", null,
-                React.createElement(WrappedComponent, __assign({ userInput: this.exports }, this.props)),
+                React.createElement(WrappedComponent, __assign({ userPrompt: this.exports }, this.props)),
                 this.renderPrompt()));
         };
         return Prompt;
