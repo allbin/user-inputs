@@ -18,6 +18,7 @@ export interface ConfirmModalProps {
     cancelCB: () => void;
     renderInputs: () => JSX.Element;
     show_cancel_btn: boolean;
+    show_confirm_btn: boolean;
     confirm_button_label?: string;
     cancel_button_label?: string;
 }
@@ -168,6 +169,25 @@ export default class ConfirmModal extends React.Component<ConfirmModalProps, any
         );
     }
 
+    renderConfirmButton() {
+        if (this.props.show_confirm_btn === false) {
+            return null;
+        }
+        return (
+            <div className="modal_footer_confirm">
+                <Button
+                    big
+                    filled
+                    light
+                    config={{
+                        label: this.props.confirm_button_label || oh.translate('user_input_hoc_confirm')
+                    }}
+                    onClick={() => this.props.confirmCB()}
+                />
+            </div>
+        );
+    }
+
     render() {
         return (
             <this.container>
@@ -188,17 +208,7 @@ export default class ConfirmModal extends React.Component<ConfirmModalProps, any
                         </div>
                         <div className="modal_footer">
                             { this.renderCancelButton() }
-                            <div className="modal_footer_confirm">
-                                <Button
-                                    big
-                                    filled
-                                    light
-                                    config={{
-                                        label: this.props.confirm_button_label || oh.translate('user_input_hoc_confirm')
-                                    }}
-                                    onClick={() => this.props.confirmCB()}
-                                />
-                            </div>
+                            { this.renderConfirmButton() }
                         </div>
                     </div>
                 </div>

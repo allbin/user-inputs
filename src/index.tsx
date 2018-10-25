@@ -31,7 +31,8 @@ let default_components: ComponentObject = {
     select: SelectInput,
     multi_select: MultiSelectInput,
     textarea: TextareaInput,
-    tri_state: TriStateInput
+    tri_state: TriStateInput,
+    confirm: Button,
 };
 let custom_components: ComponentObject = {};
 
@@ -77,7 +78,15 @@ export function InputHOC (
                     if (prompt_request.hasOwnProperty("props") === false) {
                         prompt_request.props = {};
                     }
-                    prompt_request.props.show_cancel_btn = true;
+                    let default_props = {
+                        show_cancel_btn: true,
+                        show_confirm_btn: true
+                    };
+                    prompt_request.props = Object.assign(
+                        {},
+                        default_props,
+                        prompt_request.props
+                    );
                     this.initPrompt(prompt_request, confirmCB, cancelCB);
                 },
                 alert: (prompt_request, confirmCB) => {
@@ -87,7 +96,15 @@ export function InputHOC (
                     if (prompt_request.hasOwnProperty("props") === false) {
                         prompt_request.props = {};
                     }
-                    prompt_request.props.show_cancel_btn = false;
+                    let default_props = {
+                        show_cancel_btn: false,
+                        show_confirm_btn: true
+                    };
+                    prompt_request.props = Object.assign(
+                        {},
+                        default_props,
+                        prompt_request.props
+                    );
                     this.initPrompt(prompt_request, confirmCB);
                 },
                 cancel: () => {
@@ -148,18 +165,16 @@ export function InputHOC (
                 select: SelectInput,
                 multi_select: MultiSelectInput,
                 textarea: TextareaInput,
-                tri_state: TriStateInput
+                tri_state: TriStateInput,
+                button: Button,
+                confirm: Button
             };
         }
 
         initPrompt(prompt_request: PromptRequest, confirmCB?: (any) => void, cancelCB?: () => void) {
             let inputs = prompt_request.inputs;
             let props = prompt_request.props;
-            let invalid_inputs = inputs.some(input => input.type === "button" || input.type === "confirm");
-            if (invalid_inputs) {
-                throw new Error("UserInput: Inputs of type 'button' OR 'confirm' are not allowed in prompt.");
-            }
-            invalid_inputs = inputs.some(input => input.hasOwnProperty("default_value") === false);
+            let invalid_inputs = inputs.some(input => input.hasOwnProperty("default_value") === false);
             if (invalid_inputs) {
                 throw new Error("UserInput: Inputs must be configured with a 'default_value'.");
             }
@@ -260,6 +275,25 @@ export function InputHOC (
                 }
                 let input_component_props = input_request.props || {};
                 let key = input_request.key || "input_" + index;
+                if (input_request.type === "confirm") {
+                    let suppliedOnClickCB = null;
+                    if (input_component_props.hasOwnProperty("onClick")) {
+                        suppliedOnClickCB = input_component_props.onClick;
+                        delete input_component_props.suppliedOnClickCB;
+                    }
+                    return <InputComponent
+                        key={key}
+                        config={input_request}
+                        value={this.state.values[key]}
+                        onClick={(value) => {
+                            this.userConfirmedCB();
+                            if (suppliedOnClickCB) {
+                                suppliedOnClickCB();
+                            }
+                        }}
+                        {...input_component_props}
+                    />;
+                }
                 return <InputComponent
                     key={key}
                     config={input_request}
