@@ -95,7 +95,8 @@ var TextInput = /** @class */ (function (_super) {
             } },
             React.createElement(fa_1.FaBarcode, null),
             React.createElement("div", { className: barcode_stream_classes.join(" "), ref: function (ref) { _this.barcode_stream_target = ref; } },
-                React.createElement("div", { className: "barcode_stream_target_close_btn", onClick: function () {
+                React.createElement("div", { className: "barcode_stream_target_close_btn", onClick: function (e) {
+                        e.preventDefault();
                         Quagga.offDetected(_this.detectedCB);
                         Quagga.stop();
                         _this.setState({
