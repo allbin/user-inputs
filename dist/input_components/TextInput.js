@@ -19,7 +19,7 @@ var __makeTemplateObject = (this && this.__makeTemplateObject) || function (cook
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = require("react");
 var styled_components_1 = require("styled-components");
-var Quagga = require('quagga').default;
+var Quagga = require('quagga');
 var fa_1 = require("react-icons/fa");
 var TextInput = /** @class */ (function (_super) {
     __extends(TextInput, _super);
