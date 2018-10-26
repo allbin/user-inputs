@@ -159,7 +159,8 @@ class TextInput extends React.Component<TextInputProps, TextInputConfig> {
                 >
                     <div
                         className={"barcode_stream_target_close_btn"}
-                        onClick={() => {
+                        onClick={(e) => {
+                            e.preventDefault();
                             Quagga.offDetected(this.detectedCB);
                             Quagga.stop();
                             this.setState({
