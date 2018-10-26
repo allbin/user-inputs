@@ -1,7 +1,6 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import Quagga from 'quagga';
-import barcode from '../barcode';
 import { FaBarcode } from 'react-icons/fa';
 
 export interface TextInputConfig {
@@ -108,15 +107,15 @@ class TextInput extends React.Component<TextInputProps, TextInputConfig> {
     }
 
     detectedCB(data) {
-        barcode.removeDetectedCB(this.detectedCB);
-        barcode.stop();
+        Quagga.offDetected(this.detectedCB);
+        Quagga.stop();
 
         let result = data.codeResult.code;
         this.props.onChange(result);
     }
 
     renderBarcodeBtn(cfg) {
-        if (cfg.barcode !== true || barcode.isEnabled() === false) {
+        if (cfg.barcode !== true) {
             return null;
         }
 
