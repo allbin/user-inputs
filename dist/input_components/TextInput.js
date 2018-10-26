@@ -61,6 +61,7 @@ var TextInput = /** @class */ (function (_super) {
         };
         Quagga.init(quagga_config, function (err) {
             if (err) {
+                console.error(err);
                 throw err;
             }
             Quagga.onDetected(_this.detectedCB);
