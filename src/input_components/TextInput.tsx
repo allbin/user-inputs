@@ -43,6 +43,9 @@ class TextInput extends React.Component<TextInputProps, TextInputConfig> {
                 &:HOVER, &:FOCUS{
                     border-color: ${props => props.theme.colors.brand[2]};
                 }
+                &.small{
+                    width: 90%;
+                }
             }
             .barcode_btn{
                 width: 20px;
@@ -146,21 +149,22 @@ class TextInput extends React.Component<TextInputProps, TextInputConfig> {
         }
 
         return (
-            <div
-                className="barcode_btn"
-                onClick={() => {
-                    this.startBarcodeReading();
-                }}
-            >
-                <FaBarcode />
+            <div>
+                <div
+                    className="barcode_btn"
+                    onClick={() => {
+                        this.startBarcodeReading();
+                    }}
+                >
+                    <FaBarcode />
+                </div>
                 <div
                     className={barcode_stream_classes.join(" ")}
                     ref={(ref) => { this.barcode_stream_target = ref; }}
                 >
                     <div
                         className={"barcode_stream_target_close_btn"}
-                        onClick={(e) => {
-                            e.preventDefault();
+                        onClick={() => {
                             Quagga.offDetected(this.detectedCB);
                             Quagga.stop();
                             this.setState({
