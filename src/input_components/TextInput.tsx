@@ -20,6 +20,7 @@ export interface TextInputProps {
 class TextInput extends React.Component<TextInputProps, TextInputConfig> {
     container: typeof React.Component;
     barcode_stream_target: HTMLDivElement|null;
+    detectedCB: (data: LooseObject) => void;
 
     constructor(props) {
         super(props);
@@ -76,6 +77,16 @@ class TextInput extends React.Component<TextInputProps, TextInputConfig> {
             barcode_stream_visible: false
         };
 
+        this.detectedCB = (data) => {
+            Quagga.offDetected(this.detectedCB);
+            Quagga.stop();
+            let result = data.codeResult.code;
+            this.props.onChange(result);
+            this.setState({
+                barcode_stream_visible: false
+            });
+        };
+
     }
 
     startBarcodeReading() {
@@ -121,16 +132,7 @@ class TextInput extends React.Component<TextInputProps, TextInputConfig> {
         });
     }
 
-    detectedCB(data) {
-        Quagga.offDetected(this.detectedCB);
-        Quagga.stop();
 
-        let result = data.codeResult.code;
-        this.props.onChange(result);
-        this.setState({
-            barcode_stream_visible: false
-        });
-    }
 
     renderBarcodeBtn(cfg) {
         if (cfg.barcode !== true) {

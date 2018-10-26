@@ -9,6 +9,9 @@ interface InputConfig {
         [key: string]: any;
     };
 }
+interface LooseObject {
+    [key: string]: any;
+}
 interface InputConfigUpdate {
     [key: string]: any;
     default_value: any;
