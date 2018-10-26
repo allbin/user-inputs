@@ -19,7 +19,7 @@ var __makeTemplateObject = (this && this.__makeTemplateObject) || function (cook
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = require("react");
 var styled_components_1 = require("styled-components");
-var quagga_1 = require("quagga");
+var Quagga = require('quagga').default;
 var fa_1 = require("react-icons/fa");
 var TextInput = /** @class */ (function (_super) {
     __extends(TextInput, _super);
@@ -59,17 +59,17 @@ var TextInput = /** @class */ (function (_super) {
                 patchSize: "medium"
             }
         };
-        quagga_1.default.init(quagga_config, function (err) {
+        Quagga.init(quagga_config, function (err) {
             if (err) {
                 throw err;
             }
-            quagga_1.default.onDetected(_this.detectedCB);
-            quagga_1.default.start();
+            Quagga.onDetected(_this.detectedCB);
+            Quagga.start();
         });
     };
     TextInput.prototype.detectedCB = function (data) {
-        quagga_1.default.offDetected(this.detectedCB);
-        quagga_1.default.stop();
+        Quagga.offDetected(this.detectedCB);
+        Quagga.stop();
         var result = data.codeResult.code;
         this.props.onChange(result);
     };
