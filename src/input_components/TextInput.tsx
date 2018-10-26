@@ -57,18 +57,19 @@ class TextInput extends React.Component<TextInputProps, TextInputConfig> {
                 top: 0;
                 left: 0;
                 width: 100%;
-                height: 100%;
-                z-index: 100000000;
+                height: 93%;
+                z-index: 1000000;
                 &.show {
                     display: block;
                 }
             }
             .barcode_stream_target_close_btn{
+                z-index: 16000000;
                 position: absolute;
-                bottom: 5px;
-                left: 5%;
-                width: 90%;
-                height: 30px;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                height: 7%;
                 background-color: white;
                 border: 1px solid black;
             }
