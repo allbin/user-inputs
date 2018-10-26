@@ -1,6 +1,6 @@
 import * as React from 'react';
 import styled from 'styled-components';
-const Quagga = require('quagga').default;
+const Quagga = require('quagga');
 import { FaBarcode } from 'react-icons/fa';
 
 export interface TextInputConfig {
