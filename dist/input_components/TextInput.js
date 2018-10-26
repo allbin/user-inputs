@@ -21,11 +21,12 @@ var React = require("react");
 var styled_components_1 = require("styled-components");
 var Quagga = require('quagga');
 var fa_1 = require("react-icons/fa");
+var output_helpers_1 = require("output-helpers");
 var TextInput = /** @class */ (function (_super) {
     __extends(TextInput, _super);
     function TextInput(props) {
         var _this = _super.call(this, props) || this;
-        _this.container = styled_components_1.default.div(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n            text-align: left;\n            p{\n                color: ", ";\n                font-size: 14px;\n                margin-bottom: 12px;\n                font-weight: bold;\n            }\n            input{\n                border: 2px solid ", ";\n                border-radius: 4px;\n                font-size: 16px;\n                padding: 8px 12px;\n                width: 100%;\n                transition: all 0.3s;\n                &:HOVER, &:FOCUS{\n                    border-color: ", ";\n                }\n            }\n            .barcode_btn{\n                width: 20px;\n                height: 20px;\n            }\n            .barcode_stream_target{\n                display: none;\n                position: fixed;\n                top: 0;\n                left: 0;\n                width: 100%;\n                height: 100%;\n                z-index: 100000000;\n                &.show {\n                    display: block;\n                }\n            }\n        "], ["\n            text-align: left;\n            p{\n                color: ", ";\n                font-size: 14px;\n                margin-bottom: 12px;\n                font-weight: bold;\n            }\n            input{\n                border: 2px solid ", ";\n                border-radius: 4px;\n                font-size: 16px;\n                padding: 8px 12px;\n                width: 100%;\n                transition: all 0.3s;\n                &:HOVER, &:FOCUS{\n                    border-color: ", ";\n                }\n            }\n            .barcode_btn{\n                width: 20px;\n                height: 20px;\n            }\n            .barcode_stream_target{\n                display: none;\n                position: fixed;\n                top: 0;\n                left: 0;\n                width: 100%;\n                height: 100%;\n                z-index: 100000000;\n                &.show {\n                    display: block;\n                }\n            }\n        "])), function (props) { return props.theme.colors.dark[1]; }, function (props) { return props.theme.colors.gray[2]; }, function (props) { return props.theme.colors.brand[2]; });
+        _this.container = styled_components_1.default.div(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n            text-align: left;\n            p{\n                color: ", ";\n                font-size: 14px;\n                margin-bottom: 12px;\n                font-weight: bold;\n            }\n            input{\n                border: 2px solid ", ";\n                border-radius: 4px;\n                font-size: 16px;\n                padding: 8px 12px;\n                width: 100%;\n                transition: all 0.3s;\n                &:HOVER, &:FOCUS{\n                    border-color: ", ";\n                }\n            }\n            .barcode_btn{\n                width: 20px;\n                height: 20px;\n            }\n            .barcode_stream_target{\n                display: none;\n                position: fixed;\n                top: 0;\n                left: 0;\n                width: 100%;\n                height: 100%;\n                z-index: 100000000;\n                &.show {\n                    display: block;\n                }\n            }\n            .barcode_stream_target_close_btn{\n                position: absolute;\n                bottom: 5px;\n                left: 5%;\n                width: 90%;\n                height: 30px;\n                background-color: white;\n                border: 1px solid black;\n            }\n        "], ["\n            text-align: left;\n            p{\n                color: ", ";\n                font-size: 14px;\n                margin-bottom: 12px;\n                font-weight: bold;\n            }\n            input{\n                border: 2px solid ", ";\n                border-radius: 4px;\n                font-size: 16px;\n                padding: 8px 12px;\n                width: 100%;\n                transition: all 0.3s;\n                &:HOVER, &:FOCUS{\n                    border-color: ", ";\n                }\n            }\n            .barcode_btn{\n                width: 20px;\n                height: 20px;\n            }\n            .barcode_stream_target{\n                display: none;\n                position: fixed;\n                top: 0;\n                left: 0;\n                width: 100%;\n                height: 100%;\n                z-index: 100000000;\n                &.show {\n                    display: block;\n                }\n            }\n            .barcode_stream_target_close_btn{\n                position: absolute;\n                bottom: 5px;\n                left: 5%;\n                width: 90%;\n                height: 30px;\n                background-color: white;\n                border: 1px solid black;\n            }\n        "])), function (props) { return props.theme.colors.dark[1]; }, function (props) { return props.theme.colors.gray[2]; }, function (props) { return props.theme.colors.brand[2]; });
         _this.barcode_stream_target = null;
         _this.state = {
             barcode_stream_visible: false
@@ -59,6 +60,9 @@ var TextInput = /** @class */ (function (_super) {
                 patchSize: "medium"
             }
         };
+        this.setState({
+            barcode_stream_visible: true
+        });
         Quagga.init(quagga_config, function (err) {
             if (err) {
                 console.error(err);
@@ -73,6 +77,9 @@ var TextInput = /** @class */ (function (_super) {
         Quagga.stop();
         var result = data.codeResult.code;
         this.props.onChange(result);
+        this.setState({
+            barcode_stream_visible: false
+        });
     };
     TextInput.prototype.renderBarcodeBtn = function (cfg) {
         var _this = this;
@@ -87,7 +94,14 @@ var TextInput = /** @class */ (function (_super) {
                 _this.startBarcodeReading();
             } },
             React.createElement(fa_1.FaBarcode, null),
-            React.createElement("div", { className: barcode_stream_classes.join(" "), ref: function (ref) { _this.barcode_stream_target = ref; } })));
+            React.createElement("div", { className: barcode_stream_classes.join(" "), ref: function (ref) { _this.barcode_stream_target = ref; } },
+                React.createElement("div", { className: "barcode_stream_target_close_btn", onClick: function () {
+                        Quagga.offDetected(_this.detectedCB);
+                        Quagga.stop();
+                        _this.setState({
+                            barcode_stream_visible: false
+                        });
+                    } }, output_helpers_1.default.translate("user_input_hoc_cancel")))));
     };
     TextInput.prototype.render = function () {
         var _this = this;
