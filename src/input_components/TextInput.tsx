@@ -2,6 +2,7 @@ import * as React from 'react';
 import styled from 'styled-components';
 const Quagga = require('quagga');
 import { FaBarcode } from 'react-icons/fa';
+import oh from 'output-helpers';
 
 export interface TextInputConfig {
     label?: string;
@@ -58,6 +59,15 @@ class TextInput extends React.Component<TextInputProps, TextInputConfig> {
                     display: block;
                 }
             }
+            .barcode_stream_target_close_btn{
+                position: absolute;
+                bottom: 5px;
+                left: 5%;
+                width: 90%;
+                height: 30px;
+                background-color: white;
+                border: 1px solid black;
+            }
         `;
 
         this.barcode_stream_target = null;
@@ -95,6 +105,10 @@ class TextInput extends React.Component<TextInputProps, TextInputConfig> {
             }
         };
 
+        this.setState({
+            barcode_stream_visible: true
+        });
+
         Quagga.init(quagga_config, (err) => {
             if (err) {
                 console.error(err);
@@ -113,6 +127,9 @@ class TextInput extends React.Component<TextInputProps, TextInputConfig> {
 
         let result = data.codeResult.code;
         this.props.onChange(result);
+        this.setState({
+            barcode_stream_visible: false
+        });
     }
 
     renderBarcodeBtn(cfg) {
@@ -137,7 +154,20 @@ class TextInput extends React.Component<TextInputProps, TextInputConfig> {
                 <div
                     className={barcode_stream_classes.join(" ")}
                     ref={(ref) => { this.barcode_stream_target = ref; }}
-                />
+                >
+                    <div
+                        className={"barcode_stream_target_close_btn"}
+                        onClick={() => {
+                            Quagga.offDetected(this.detectedCB);
+                            Quagga.stop();
+                            this.setState({
+                                barcode_stream_visible: false
+                            });
+                        }}
+                    >
+                        { oh.translate("user_input_hoc_cancel") }
+                    </div>
+                </div>
             </div>
         );
     }
