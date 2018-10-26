@@ -97,6 +97,7 @@ class TextInput extends React.Component<TextInputProps, TextInputConfig> {
 
         Quagga.init(quagga_config, (err) => {
             if (err) {
+                console.error(err);
                 throw err;
             }
 
