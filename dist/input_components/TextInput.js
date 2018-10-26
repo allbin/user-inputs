@@ -31,6 +31,15 @@ var TextInput = /** @class */ (function (_super) {
         _this.state = {
             barcode_stream_visible: false
         };
+        _this.detectedCB = function (data) {
+            Quagga.offDetected(_this.detectedCB);
+            Quagga.stop();
+            var result = data.codeResult.code;
+            _this.props.onChange(result);
+            _this.setState({
+                barcode_stream_visible: false
+            });
+        };
         return _this;
     }
     TextInput.prototype.startBarcodeReading = function () {
@@ -70,15 +79,6 @@ var TextInput = /** @class */ (function (_super) {
             }
             Quagga.onDetected(_this.detectedCB);
             Quagga.start();
-        });
-    };
-    TextInput.prototype.detectedCB = function (data) {
-        Quagga.offDetected(this.detectedCB);
-        Quagga.stop();
-        var result = data.codeResult.code;
-        this.props.onChange(result);
-        this.setState({
-            barcode_stream_visible: false
         });
     };
     TextInput.prototype.renderBarcodeBtn = function (cfg) {

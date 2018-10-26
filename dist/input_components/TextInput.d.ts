@@ -14,9 +14,9 @@ export interface TextInputProps {
 declare class TextInput extends React.Component<TextInputProps, TextInputConfig> {
     container: typeof React.Component;
     barcode_stream_target: HTMLDivElement | null;
+    detectedCB: (data: LooseObject) => void;
     constructor(props: any);
     startBarcodeReading(): void;
-    detectedCB(data: any): void;
     renderBarcodeBtn(cfg: any): JSX.Element;
     render(): JSX.Element;
 }
