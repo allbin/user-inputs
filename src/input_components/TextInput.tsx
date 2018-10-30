@@ -49,22 +49,26 @@ class TextInput extends React.Component<TextInputProps, TextInputConfig> {
                     vertical-align: middle;
                 }
             }
-            .barcode_btn{
-                background-color: #1378ef;
-                margin-left: 10px;
-                width: 70px;
+            .barcode_reader{
                 display: inline-block;
-                text-align: center;
-                height: 50px;
-                vertical-align: middle;
-                border-radius: 4px;
-                svg{
+                width: 70px;
+                .barcode_btn{
+                    background-color: #1378ef;
+                    margin-left: 10px;
+                    width: 70px;
+                    text-align: center;
                     height: 50px;
-                    width: 36px;
                     vertical-align: middle;
-                    fill: #fff;
+                    border-radius: 4px;
+                    svg{
+                        height: 50px;
+                        width: 36px;
+                        vertical-align: middle;
+                        fill: #fff;
+                    }
                 }
             }
+
             .barcode_stream_target{
                 display: none;
                 position: fixed;
@@ -78,14 +82,22 @@ class TextInput extends React.Component<TextInputProps, TextInputConfig> {
                 }
             }
             .barcode_stream_target_close_btn{
+                text-align: center;
+                padding: 20px;
+                background-color: #EB4D44;
+                color: #fff;
+                font-weight: bold;
+                border-radius: 4px;
+                box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+                /* width: 100%; */
+                bottom: 20px;
+                left: 20px;
+                right: 20px;
                 z-index: 16000000;
                 position: absolute;
-                bottom: 0;
-                left: 0;
-                width: 100%;
-                height: 7%;
-                background-color: white;
-                border: 1px solid black;
+                &:HOVER{
+                    background-color: #c12a22;
+                }
             }
         `;
 
@@ -164,9 +176,8 @@ class TextInput extends React.Component<TextInputProps, TextInputConfig> {
         }
 
         return (
-            <div>
-                <div
-                    className="barcode_btn"
+            <div className="barcode_reader">
+                <div className="barcode_btn"
                     onClick={() => {
                         this.startBarcodeReading();
                     }}
