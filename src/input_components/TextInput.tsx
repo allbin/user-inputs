@@ -44,12 +44,26 @@ class TextInput extends React.Component<TextInputProps, TextInputConfig> {
                     border-color: ${props => props.theme.colors.brand[2]};
                 }
                 &.small{
-                    width: 90%;
+                    width: calc(100% - 80px);
+                    display: inline-block;
+                    vertical-align: middle;
                 }
             }
             .barcode_btn{
-                width: 20px;
-                height: 20px;
+                background-color: #1378ef;
+                margin-left: 10px;
+                width: 70px;
+                display: inline-block;
+                text-align: center;
+                height: 50px;
+                vertical-align: middle;
+                border-radius: 4px;
+                svg{
+                    height: 50px;
+                    width: 36px;
+                    vertical-align: middle;
+                    fill: #fff;
+                }
             }
             .barcode_stream_target{
                 display: none;
