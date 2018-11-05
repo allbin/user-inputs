@@ -24,7 +24,7 @@ export interface InputConfig {
     default_value: any;
     type: InputType;
     key: string;
-    onChange: (any) => void;
+    onChange?: (any) => void;
     props: {
         [key: string]: any;
     };
@@ -34,7 +34,7 @@ export interface InputConfigUpdate {
     default_value: any;
     type: InputType;
     key: string;
-    onChange: (any) => void;
+    onChange?: (any) => void;
     props: {
         [key: string]: any;
     };
@@ -71,8 +71,8 @@ export interface PromptState {
 }
 
 export interface HOCProperties {
-    confirm: (prompt_request: PromptRequest, confirmCB: (LooseObject) => void, cancelCB: () => void) => void;
-    alert: (prompt_request: PromptRequest, confirmCB: (LooseObject) => void) => void;
+    confirm: (prompt_request: PromptRequest, confirmCB?: (LooseObject) => void, cancelCB?: () => void) => void;
+    alert: (prompt_request: PromptRequest, confirmCB?: (LooseObject) => void) => void;
     cancel: () => void;
     isOpen: () => boolean;
     setTag: (tag: string) => void;
@@ -115,7 +115,15 @@ export function InputHOC (
     WrappedComponent: typeof React.Component
 ): typeof React.Component {
     class Prompt extends React.Component<any, PromptState> {
-        exports: HOCProperties;
+        exports: {
+            confirm: (prompt_request: PromptRequest, confirmCB: (any) => void, cancelCB: () => void) => void;
+            cancel: () => void;
+            setConfig: (input_config: InputConfig) => void;
+            isOpen: () => boolean;
+            alert: (prompt_request: PromptRequest, confirmCB: (any) => void) => void;
+            setTag: (tag: string) => void;
+            getTag: () => string | null;
+        };
         confirmCB: any;
         cancelCB: any;
         input_components: ComponentObject;
