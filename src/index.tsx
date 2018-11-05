@@ -35,7 +35,7 @@ export interface InputConfigUpdate {
     type: InputType;
     key: string;
     onChange?: (any) => void;
-    props: {
+    props?: {
         [key: string]: any;
     };
 }
