@@ -8,7 +8,7 @@ export interface InputConfig {
     default_value: any;
     type: InputType;
     key: string;
-    onChange: (any: any) => void;
+    onChange?: (any: any) => void;
     props: {
         [key: string]: any;
     };
@@ -18,7 +18,7 @@ export interface InputConfigUpdate {
     default_value: any;
     type: InputType;
     key: string;
-    onChange: (any: any) => void;
+    onChange?: (any: any) => void;
     props: {
         [key: string]: any;
     };
@@ -54,8 +54,8 @@ export interface PromptState {
     tag: string | null;
 }
 export interface HOCProperties {
-    confirm: (prompt_request: PromptRequest, confirmCB: (LooseObject: any) => void, cancelCB: () => void) => void;
-    alert: (prompt_request: PromptRequest, confirmCB: (LooseObject: any) => void) => void;
+    confirm: (prompt_request: PromptRequest, confirmCB?: (LooseObject: any) => void, cancelCB?: () => void) => void;
+    alert: (prompt_request: PromptRequest, confirmCB?: (LooseObject: any) => void) => void;
     cancel: () => void;
     isOpen: () => boolean;
     setTag: (tag: string) => void;
