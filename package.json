@@ -1,6 +1,6 @@
 {
     "name": "user-inputs",
-    "version": "5.2.15",
+    "version": "5.2.16",
     "description": "",
     "main": "dist/index.js",
     "scripts": {
@@ -30,7 +30,8 @@
         "tslint": "5.x",
         "tslint-eslint-rules": "5.x",
         "react-select": "2.x",
-        "styled-components": "4.x"
+        "styled-components": "4.x",
+        "moment": "2.x"
     },
     "peerDependencies": {
         "moment": "2.x",
