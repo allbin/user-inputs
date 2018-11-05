@@ -1,5 +1,5 @@
 import * as React from 'react';
-
+import { ComponentObject, InputConfig, PromptState } from './index';
 
 export function getInputForm(default_components: ComponentObject, custom_components: ComponentObject, input_configs: InputConfig[], cb: (any) => void): any {
     let mounted_forms: InputWrapper[] = [];

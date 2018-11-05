@@ -15,6 +15,75 @@ import TriStateInput from './input_components/TriStateInput';
 import Button from './input_components/Button';
 
 
+export type InputType = "bool" | "button" | "confirm" | "date" | "grid" | "number" | "multi_select" | "select" | "text" | "textarea" | "tri_state";
+export interface LooseObject {
+    [key: string]: any;
+}
+export interface InputConfig {
+    [key: string]: any;
+    default_value: any;
+    type: InputType;
+    key: string;
+    onChange: (any) => void;
+    props: {
+        [key: string]: any;
+    };
+}
+export interface InputConfigUpdate {
+    [key: string]: any;
+    default_value: any;
+    type: InputType;
+    key: string;
+    onChange: (any) => void;
+    props: {
+        [key: string]: any;
+    };
+}
+export interface PromptRequest {
+    inputs: InputConfig[];
+    props?: {
+        [key: string]: any
+    };
+}
+export interface ComponentObject {
+    bool?: typeof React.Component;
+    button?: typeof React.Component;
+    date?: typeof React.Component;
+    grid?: typeof React.Component;
+    number?: typeof React.Component;
+    select?: typeof React.Component;
+    text?: typeof React.Component;
+    textarea?: typeof React.Component;
+    multi_select?: typeof React.Component;
+    modal?: typeof React.Component;
+    confirm?: typeof React.Component;
+    tri_state?: typeof React.Component;
+}
+export interface PromptState {
+    show?: boolean;
+    modal_props?: any;
+    values?: {
+        [key: string]: any
+    };
+    inputs?: any[];
+    prompt_request: PromptRequest | null;
+    tag: string | null;
+}
+
+export interface HOCProperties {
+    confirm: (prompt_request: PromptRequest, confirmCB: (LooseObject) => void, cancelCB: () => void) => void;
+    alert: (prompt_request: PromptRequest, confirmCB: (LooseObject) => void) => void;
+    cancel: () => void;
+    isOpen: () => boolean;
+    setTag: (tag: string) => void;
+    getTag: () => string | null;
+    setConfig: (input_config: InputConfig) => void;
+}
+
+
+
+
+
 let valid_types = ["bool", "button", "confirm", "date", "grid", "number", "multi_select", "select", "text", "textarea", "tri_state"];
 
 
@@ -46,15 +115,7 @@ export function InputHOC (
     WrappedComponent: typeof React.Component
 ): typeof React.Component {
     class Prompt extends React.Component<any, PromptState> {
-        exports: {
-            confirm: (prompt_request: PromptRequest, confirmCB: (any) => void, cancelCB: () => void) => void;
-            cancel: () => void;
-            setConfig: (input_config: InputConfig) => void;
-            isOpen: () => boolean;
-            alert: (prompt_request: PromptRequest, confirmCB: (any) => void) => void;
-            setTag: (tag: string) => void;
-            getTag: () => string | null;
-        };
+        exports: HOCProperties;
         confirmCB: any;
         cancelCB: any;
         input_components: ComponentObject;

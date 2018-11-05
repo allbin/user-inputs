@@ -3,6 +3,7 @@ import styled from 'styled-components';
 const Quagga = require('quagga');
 import { FaBarcode } from 'react-icons/fa';
 import oh from 'output-helpers';
+import { LooseObject } from '../index';
 
 export interface TextInputConfig {
     label?: string;
