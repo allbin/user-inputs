@@ -62,7 +62,7 @@ var TextInput = /** @class */ (function (_super) {
             },
             frequency: 5,
             decoder: {
-                readers: ["ean_reader"]
+                readers: ["code_128_reader", "code_39_reader", "ean_reader"]
             },
             locator: {
                 halfSample: true,
