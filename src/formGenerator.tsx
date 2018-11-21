@@ -216,7 +216,7 @@ export function getInputForm(default_components: ComponentObject, custom_compone
             inputs[input_index] = Object.assign({}, inputs[input_index], updated_config);
 
             mounted_forms.forEach((form) => {
-                form.setConfig(updated_config);
+                form.setConfig(inputs[input_index]);
             });
         }
     };
