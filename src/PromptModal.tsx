@@ -49,7 +49,7 @@ export default class ConfirmModal extends React.Component<ConfirmModalProps, any
                         bottom: 0 !important;
                         border-radius: 0 !important;
                     }
-                    .modal_footer { 
+                    .modal_footer {
                         bottom: 0 !important;
                         left: 0 !important;
                         right: 0 !important;
