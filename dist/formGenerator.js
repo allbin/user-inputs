@@ -215,7 +215,7 @@ function getInputForm(default_components, custom_components, input_configs, cb) 
             }
             inputs[input_index] = Object.assign({}, inputs[input_index], updated_config);
             mounted_forms.forEach(function (form) {
-                form.setConfig(updated_config);
+                form.setConfig(inputs[input_index]);
             });
         }
     };

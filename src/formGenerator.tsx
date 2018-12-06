@@ -1,5 +1,5 @@
 import * as React from 'react';
-
+import { ComponentObject, InputConfig, PromptState } from './index';
 
 export function getInputForm(default_components: ComponentObject, custom_components: ComponentObject, input_configs: InputConfig[], cb: (any) => void): any {
     let mounted_forms: InputWrapper[] = [];
@@ -216,7 +216,7 @@ export function getInputForm(default_components: ComponentObject, custom_compone
             inputs[input_index] = Object.assign({}, inputs[input_index], updated_config);
 
             mounted_forms.forEach((form) => {
-                form.setConfig(updated_config);
+                form.setConfig(inputs[input_index]);
             });
         }
     };
