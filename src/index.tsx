@@ -410,7 +410,7 @@ export namespace InputHOC {
     export function setCustomComponents(object_with_components: ComponentObject) {
         custom_components = object_with_components;
     }
-    export function generateForm(input_configs: InputConfig[], confirmCB?: (any) => void) {
+    export function generateForm(input_configs: InputConfig[], confirmCB?: (any) => void): formGenerator.GeneratedForm {
         if (input_configs.length < 1) {
             throw new Error("UserInput: GenerateInputs requires at least one input.");
         }
