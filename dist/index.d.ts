@@ -1,4 +1,5 @@
 import * as React from 'react';
+import * as formGenerator from './formGenerator';
 export declare type InputType = "bool" | "button" | "confirm" | "date" | "grid" | "number" | "multi_select" | "select" | "text" | "textarea" | "tri_state";
 export interface LooseObject {
     [key: string]: any;
@@ -65,7 +66,7 @@ export interface HOCProperties {
 export declare function InputHOC(WrappedComponent: typeof React.Component): typeof React.Component;
 export declare namespace InputHOC {
     function setCustomComponents(object_with_components: ComponentObject): void;
-    function generateForm(input_configs: InputConfig[], confirmCB?: (any: any) => void): any;
+    function generateForm(input_configs: InputConfig[], confirmCB?: (any: any) => void): formGenerator.GeneratedForm;
 }
 export default InputHOC;
 //# sourceMappingURL=index.d.ts.map
