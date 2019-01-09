@@ -9,8 +9,6 @@ export interface BoolInputProps {
     onChange: (boolean: any) => void;
 }
 declare class BoolInput extends React.Component<BoolInputProps, any> {
-    container: typeof React.Component;
-    constructor(props: any);
     render(): JSX.Element;
 }
 export default BoolInput;

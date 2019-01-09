@@ -1,4 +1,8 @@
 "use strict";
+var __makeTemplateObject = (this && this.__makeTemplateObject) || function (cooked, raw) {
+    if (Object.defineProperty) { Object.defineProperty(cooked, "raw", { value: raw }); } else { cooked.raw = raw; }
+    return cooked;
+};
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -12,20 +16,15 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var __makeTemplateObject = (this && this.__makeTemplateObject) || function (cooked, raw) {
-    if (Object.defineProperty) { Object.defineProperty(cooked, "raw", { value: raw }); } else { cooked.raw = raw; }
-    return cooked;
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = require("react");
-var styled_components_1 = require("styled-components");
+var styled_1 = require("../styling/styled");
 var react_select_1 = require("react-select");
+var MultiSelectInputContainer = styled_1.default.div(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n    text-align: left;\n    p.multi_select_label {\n        color: ", ";\n        font-size: 14px;\n        margin-bottom: 12px;\n        font-weight: bold;\n    }\n"], ["\n    text-align: left;\n    p.multi_select_label {\n        color: ", ";\n        font-size: 14px;\n        margin-bottom: 12px;\n        font-weight: bold;\n    }\n"])), function (props) { return props.theme.colors.dark[1]; });
 var MultiSelectInput = /** @class */ (function (_super) {
     __extends(MultiSelectInput, _super);
-    function MultiSelectInput(props) {
-        var _this = _super.call(this, props) || this;
-        _this.container = styled_components_1.default.div(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n            text-align: left;\n            p.multi_select_label {\n                color: ", ";\n                font-size: 14px;\n                margin-bottom: 12px;\n                font-weight: bold;\n            }\n        "], ["\n            text-align: left;\n            p.multi_select_label {\n                color: ", ";\n                font-size: 14px;\n                margin-bottom: 12px;\n                font-weight: bold;\n            }\n        "])), function (props) { return props.theme.colors.dark[1]; });
-        return _this;
+    function MultiSelectInput() {
+        return _super !== null && _super.apply(this, arguments) || this;
     }
     MultiSelectInput.prototype.render = function () {
         var _this = this;
@@ -34,7 +33,7 @@ var MultiSelectInput = /** @class */ (function (_super) {
         if (cfg.class_name) {
             class_names += " " + cfg.class_name;
         }
-        return (React.createElement(this.container, { className: class_names },
+        return (React.createElement(MultiSelectInputContainer, { className: class_names },
             cfg.label ? React.createElement("p", { className: "multi_select_label" }, cfg.label) : null,
             React.createElement(react_select_1.default, { placeholder: cfg.placeholder ? cfg.placeholder : cfg.label ? cfg.label : '', isMulti: true, value: this.props.value, onChange: function (e) {
                     _this.props.onChange(e);

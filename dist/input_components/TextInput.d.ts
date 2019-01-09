@@ -13,7 +13,6 @@ export interface TextInputProps {
     autofocus?: boolean;
 }
 declare class TextInput extends React.Component<TextInputProps, TextInputConfig> {
-    container: typeof React.Component;
     barcode_stream_target: HTMLDivElement | null;
     detectedCB: (data: LooseObject) => void;
     constructor(props: any);

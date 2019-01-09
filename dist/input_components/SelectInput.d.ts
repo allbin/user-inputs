@@ -18,8 +18,6 @@ export interface SelectInputProps {
     onChange: (string: any) => void;
 }
 declare class SelectInput extends React.Component<SelectInputProps, SelectInputConfig> {
-    container: typeof React.Component;
-    constructor(props: any);
     render(): JSX.Element;
 }
 export default SelectInput;

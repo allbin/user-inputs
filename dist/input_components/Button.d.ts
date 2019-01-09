@@ -20,8 +20,6 @@ export interface ButtonProps {
     autofocus?: boolean;
 }
 export default class Button extends React.Component<ButtonProps, any> {
-    container: typeof React.Component;
-    constructor(props: any);
     render(): JSX.Element;
 }
 //# sourceMappingURL=Button.d.ts.map

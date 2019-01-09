@@ -18,8 +18,6 @@ export interface TriStateInputProps {
     onChange: (string: any) => void;
 }
 declare class TriStateInput extends React.Component<TriStateInputProps, TriStateInputConfig> {
-    container: typeof React.Component;
-    constructor(props: any);
     render(): JSX.Element;
 }
 export default TriStateInput;

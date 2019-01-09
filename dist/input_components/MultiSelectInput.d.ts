@@ -18,8 +18,6 @@ export interface MultiSelectInputProps {
     onChange: (string: any) => void;
 }
 declare class MultiSelectInput extends React.Component<MultiSelectInputProps, MultiSelectInputConfig> {
-    container: typeof React.Component;
-    constructor(props: any);
     render(): JSX.Element;
 }
 export default MultiSelectInput;

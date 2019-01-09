@@ -12,9 +12,6 @@ export interface GridInputProps {
     onChange: (any: any) => void;
 }
 declare class GridInput extends React.Component<GridInputProps, any> {
-    container: typeof React.Component;
-    gridItem: typeof React.Component;
-    constructor(props: any);
     render(): JSX.Element;
 }
 export default GridInput;

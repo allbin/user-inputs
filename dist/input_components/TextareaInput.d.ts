@@ -12,8 +12,6 @@ export interface TextareaInputProps {
     autofocus?: boolean;
 }
 declare class TextareaInput extends React.Component<TextareaInputProps, TextareaInputConfig> {
-    container: typeof React.Component;
-    constructor(props: any);
     render(): JSX.Element;
 }
 export default TextareaInput;
