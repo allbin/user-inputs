@@ -20,33 +20,27 @@ let default_config = {
     rows: 3
 };
 
-class TextareaInput extends React.Component<TextareaInputProps, TextareaInputConfig> {
-    container: typeof React.Component;
-
-    constructor(props) {
-        super(props);
-
-        this.container = styled.div `
-            text-align: left;
-            p {
-                color: ${props => props.theme.colors.dark[1]};
-                font-size: 14px;
-                margin-bottom: 12px;
-                font-weight: bold;
-            }
-            textarea {
-                border: 2px solid ${props => props.theme.colors.gray[2]};
-                border-radius: 4px;
-                font-size: 16px;
-                padding: 8px 12px;
-                width: 100%;
-                &:HOVER, &:FOCUS {
-                    border-color: ${props => props.theme.colors.brand[2]};
-                }
-            }
-        `;
+const TextareaInputContainer = styled.div `
+    text-align: left;
+    p {
+        color: ${props => props.theme.colors.dark[1]};
+        font-size: 14px;
+        margin-bottom: 12px;
+        font-weight: bold;
     }
+    textarea {
+        border: 2px solid ${props => props.theme.colors.gray[2]};
+        border-radius: 4px;
+        font-size: 16px;
+        padding: 8px 12px;
+        width: 100%;
+        &:HOVER, &:FOCUS {
+            border-color: ${props => props.theme.colors.brand[2]};
+        }
+    }
+`;
 
+class TextareaInput extends React.Component<TextareaInputProps, TextareaInputConfig> {
     render() {
         let cfg = Object.assign({}, default_config, this.props.config);
         let class_names = "user_input textarea_input";
@@ -55,7 +49,7 @@ class TextareaInput extends React.Component<TextareaInputProps, TextareaInputCon
         }
 
         return (
-            <this.container className={class_names}>
+            <TextareaInputContainer className={class_names}>
                 { cfg.label ? <p>{ cfg.label }</p> : null }
                 <textarea
                     rows={3}
@@ -64,7 +58,7 @@ class TextareaInput extends React.Component<TextareaInputProps, TextareaInputCon
                     value={this.props.value}
                     onChange={e => this.props.onChange(e.target.value)}>
                 </textarea>
-            </this.container>
+            </TextareaInputContainer>
         );
     }
 }

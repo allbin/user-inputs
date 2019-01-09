@@ -1,5 +1,5 @@
 import * as React from 'react';
-import styled from 'styled-components';
+import styled from '../styling/styled';
 import Select from 'react-select';
 // this.props has everything passed in to config.props as well as the full config object in this.props.config.
 
@@ -22,22 +22,17 @@ export interface MultiSelectInputProps {
     onChange: (string) => void;
 }
 
-class MultiSelectInput extends React.Component<MultiSelectInputProps, MultiSelectInputConfig> {
-    container: typeof React.Component;
-
-    constructor(props) {
-        super(props);
-
-        this.container = styled.div `
-            text-align: left;
-            p.multi_select_label {
-                color: ${props => props.theme.colors.dark[1]};
-                font-size: 14px;
-                margin-bottom: 12px;
-                font-weight: bold;
-            }
-        `;
+const MultiSelectInputContainer = styled.div `
+    text-align: left;
+    p.multi_select_label {
+        color: ${props => props.theme.colors.dark[1]};
+        font-size: 14px;
+        margin-bottom: 12px;
+        font-weight: bold;
     }
+`;
+
+class MultiSelectInput extends React.Component<MultiSelectInputProps, MultiSelectInputConfig> {
 
     render() {
         let cfg = this.props.config;
@@ -47,7 +42,7 @@ class MultiSelectInput extends React.Component<MultiSelectInputProps, MultiSelec
         }
 
         return (
-            <this.container className={class_names}>
+            <MultiSelectInputContainer className={class_names}>
                 { cfg.label ? <p className="multi_select_label">{ cfg.label }</p> : null }
                 <Select
                     placeholder={cfg.placeholder ? cfg.placeholder : cfg.label ? cfg.label : '' }
@@ -61,7 +56,7 @@ class MultiSelectInput extends React.Component<MultiSelectInputProps, MultiSelec
                     noOptionsMessage={() => cfg.no_options_message || null}
                     options={cfg.options}
                 />
-            </this.container>
+            </MultiSelectInputContainer>
         );
     }
 }
