@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { ComponentObject, InputConfig, PromptState } from './index';
 
 export interface GeneratedForm {
     component: typeof React.Component;
@@ -9,17 +8,17 @@ export interface GeneratedForm {
     setInputConfig: (updated_config: InputConfig) => void;
 }
 
-export function getInputForm(default_components: ComponentObject, custom_components: ComponentObject, input_configs: InputConfig[], cb: (any) => void): GeneratedForm {
+export function getInputForm(default_components: ComponentObject, custom_components: ComponentObject, input_configs: InputConfig[], cb?: (values: any) => void): GeneratedForm {
     let mounted_forms: InputWrapper[] = [];
 
     class InputWrapper extends React.Component<any, PromptState> {
-        confirmCB: (any) => void | null;
+        confirmCB: ((values: any) => void) | null;
         input_components: ComponentObject;
 
-        constructor(props) {
+        constructor(props: any) {
             super(props);
 
-            let values = {};
+            let values: { [key: string]: any; } = {};
             input_configs.forEach((input) => {
                 if (input.type === "multi_select") {
                     let selected_options = input.options.filter(option => input.default_value.includes(option.value));
@@ -42,7 +41,9 @@ export function getInputForm(default_components: ComponentObject, custom_compone
                 values: values,
                 inputs: input_configs,
                 prompt_request: null,
-                tag: null
+                tag: null,
+                show: true,
+                modal_props: {}
             };
             this.confirmCB = cb || null;
 
@@ -111,7 +112,7 @@ export function getInputForm(default_components: ComponentObject, custom_compone
                     values[input.key] = values[input.key].value;
                 }
                 if (input.type === "multi_select") {
-                    values[input.key] = values[input.key].map(option => option.value);
+                    values[input.key] = values[input.key].map((option: SelectionsOptions) => option.value);
                 }
             });
             return values;
@@ -134,7 +135,7 @@ export function getInputForm(default_components: ComponentObject, custom_compone
                     values[input.key] = values[input.key].value;
                 }
                 if (input.type === "multi_select") {
-                    values[input.key] = values[input.key].map(option => option.value);
+                    values[input.key] = values[input.key].map((option: SelectionsOptions) => option.value);
                 }
             });
             if (this.confirmCB) {
@@ -143,7 +144,7 @@ export function getInputForm(default_components: ComponentObject, custom_compone
             }
         }
 
-        inputValueChangeCB(key, value) {
+        inputValueChangeCB(key: string, value: any) {
             let values = Object.assign({}, this.state.values);
             values[key] = value;
             this.setState({
@@ -153,9 +154,9 @@ export function getInputForm(default_components: ComponentObject, custom_compone
 
         renderInputs() {
             return this.state.inputs.map((input_request, index) => {
-                let InputComponent = this.input_components[input_request.type];
+                let InputComponent = this.input_components[input_request.type] as typeof React.Component;
                 if (custom_components && custom_components.hasOwnProperty(input_request.type)) {
-                    InputComponent = custom_components[input_request.type];
+                    InputComponent = custom_components[input_request.type] as typeof React.Component;
                 }
                 let input_component_props = input_request.props || {};
                 let key = input_request.key || "input_" + index;
@@ -164,7 +165,7 @@ export function getInputForm(default_components: ComponentObject, custom_compone
                         key={key}
                         config={input_request}
                         value={this.state.values[key]}
-                        onClick={(value) => {
+                        onClick={(value: any) => {
                             this.userConfirmedCB();
                         }}
                         {...input_component_props}
@@ -174,7 +175,7 @@ export function getInputForm(default_components: ComponentObject, custom_compone
                     key={key}
                     config={input_request}
                     value={this.state.values[key]}
-                    onChange={(value) => {
+                    onChange={(value: any) => {
                         if (input_request.onChange) {
                             input_request.onChange(value);
                         }

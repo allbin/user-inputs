@@ -24,7 +24,6 @@ interface ThemeInterface {
     };
 }
 
-
 const {
     default: styled,
     css,

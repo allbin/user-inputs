@@ -8,11 +8,12 @@ export interface TextareaInputConfig {
     rows?: number;
     placeholder?: string;
     class_name?: string;
+    trim?: boolean;
 }
 export interface TextareaInputProps {
     value: string;
     config: TextareaInputConfig;
-    onChange: (string) => void;
+    onChange: (value: string) => void;
     autofocus?: boolean;
 }
 

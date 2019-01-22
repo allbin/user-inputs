@@ -3,18 +3,18 @@ import styled from 'styled-components';
 const Quagga = require('quagga');
 import { FaBarcode } from 'react-icons/fa';
 import oh from 'output-helpers';
-import { LooseObject } from '../index';
 
 export interface TextInputConfig {
     label?: string;
     class_name?: string;
     barcode?: boolean;
     barcode_stream_visible: boolean;
+    trim?: boolean;
 }
 export interface TextInputProps {
     value: string;
     config: TextInputConfig;
-    onChange: (string) => void;
+    onChange: (value: string) => void;
     autofocus?: boolean;
 }
 

@@ -1,12 +1,14 @@
 import * as React from 'react';
 import styled from '../styling/styled';
 import Select from 'react-select';
+import { ValueType } from 'react-select/lib/types';
 // this.props has everything passed in to config.props as well as the full config object in this.props.config.
 
 export interface MultiSelectOptions {
-    value: any;
+    value: string;
     label: string;
 }
+
 export interface MultiSelectInputConfig {
     label?: string;
     placeholder?: string;
@@ -17,12 +19,12 @@ export interface MultiSelectInputConfig {
     searchable?: boolean;
 }
 export interface MultiSelectInputProps {
-    value: string;
+    value: MultiSelectOptions;
     config: MultiSelectInputConfig;
-    onChange: (string) => void;
+    onChange: (options: ValueType<MultiSelectOptions>) => void;
 }
 
-const MultiSelectInputContainer = styled.div `
+const MultiSelectInputContainer = styled("div") `
     text-align: left;
     p.multi_select_label {
         color: ${props => props.theme.colors.dark[1]};
@@ -32,7 +34,7 @@ const MultiSelectInputContainer = styled.div `
     }
 `;
 
-class MultiSelectInput extends React.Component<MultiSelectInputProps, MultiSelectInputConfig> {
+class MultiSelectInput extends React.Component<MultiSelectInputProps> {
 
     render() {
         let cfg = this.props.config;
@@ -42,7 +44,9 @@ class MultiSelectInput extends React.Component<MultiSelectInputProps, MultiSelec
         }
 
         return (
-            <MultiSelectInputContainer className={class_names}>
+            <MultiSelectInputContainer
+                className={class_names}
+            >
                 { cfg.label ? <p className="multi_select_label">{ cfg.label }</p> : null }
                 <Select
                     placeholder={cfg.placeholder ? cfg.placeholder : cfg.label ? cfg.label : '' }

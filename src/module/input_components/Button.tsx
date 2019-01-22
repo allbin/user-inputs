@@ -111,13 +111,13 @@ export default class Button extends React.Component<ButtonProps, any> {
         return (
             <ButtonContainer
                 onMouseEnter={() => this.props.onMouseEnter ? this.props.onMouseEnter() : null}
-                onMouseLeave={() => this.props.onMouseEnter ? this.props.onMouseLeave() : null}
-                block={this.props.block}
-                filled={this.props.filled}
+                onMouseLeave={() => this.props.onMouseLeave ? this.props.onMouseLeave() : null}
+                block={(this.props.block) ? true : false}
+                filled={(this.props.filled) ? true : false}
                 disabled={this.props.disabled || false}
                 autoFocus={this.props.autofocus || false}
                 className={class_names}
-                onClick={e => this.props.onClick ? this.props.onClick() : null}
+                onClick={(e: any) => this.props.onClick ? this.props.onClick() : null}
             >
                 {cfg.label}
             </ButtonContainer>
