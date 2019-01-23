@@ -1,5 +1,5 @@
 import * as React from 'react';
-import styled from '../styling/styled';
+import styled from '../styling';
 import Select from 'react-select';
 // this.props has everything passed in to config.props as well as the full config object in this.props.config.
 
@@ -17,9 +17,9 @@ export interface SelectInputConfig {
     disabled?: boolean;
 }
 export interface SelectInputProps {
-    value?: string;
+    value?: SelectInputOptions;
     config: SelectInputConfig;
-    onChange: (string) => void;
+    onChange: (value: SelectInputOptions) => void;
 }
 
 const SelectInputContainer = styled.div `
@@ -47,7 +47,7 @@ class SelectInput extends React.Component<SelectInputProps, SelectInputConfig> {
                     placeholder={cfg.placeholder ? cfg.placeholder : cfg.label ? cfg.label : '' }
                     value={this.props.value}
                     onChange={(e) => {
-                        this.props.onChange(e);
+                        this.props.onChange(e as SelectInputOptions);
                     }}
                     isDisabled={cfg.disabled || false}
                     isSearchable={cfg.searchable || false}

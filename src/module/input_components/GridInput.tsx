@@ -1,10 +1,9 @@
 import * as React from 'react';
-import styled from '../styling/styled';
+import styled from '../styling';
 
 export type GridType = "icons" | "colors";
 interface GridInputStyleProps {
     grid_type: GridType;
-    presentation: string;
 }
 export interface GridInputConfig {
     label?: string;
@@ -15,7 +14,7 @@ export interface GridInputConfig {
 export interface GridInputProps {
     value: any;
     config: GridInputConfig;
-    onChange: (any) => void;
+    onChange: (value: any) => void;
 }
 
 const GridInputContainer = styled.div<GridInputStyleProps>`
@@ -88,7 +87,7 @@ class GridInput extends React.Component<GridInputProps, any> {
                 { cfg.label ? <p>{ cfg.label }</p> : null }
                 <div className="grid_block">
                     {
-                        cfg.options.map((item, i) => {
+                        cfg.options.map((item: any, i: number) => {
                             return (
                                 <StyledGridItem
                                     color={item.color}

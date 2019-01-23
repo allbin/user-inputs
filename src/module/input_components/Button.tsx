@@ -1,5 +1,5 @@
 import * as React from 'react';
-import styled from '../styling/styled';
+import styled from '../styling';
 export interface ButtonConfig {
     label: string;
     class_name?: string;

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import styled from 'styled-components';
+import styled from '../styling';
 
 export interface BoolInputConfig {
     label: string;
@@ -8,7 +8,7 @@ export interface BoolInputConfig {
 export interface BoolInputProps {
     value: boolean;
     config: BoolInputConfig;
-    onChange: (boolean) => void;
+    onChange: (checked: boolean) => void;
 }
 
 interface BoolInputContainerProps {

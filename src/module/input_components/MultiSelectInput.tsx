@@ -1,5 +1,5 @@
 import * as React from 'react';
-import styled from '../styling/styled';
+import styled from '../styling';
 import Select from 'react-select';
 import { ValueType } from 'react-select/lib/types';
 // this.props has everything passed in to config.props as well as the full config object in this.props.config.
