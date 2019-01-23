@@ -21,12 +21,7 @@ let valid_types = ["bool", "button", "confirm", "date", "grid", "number", "multi
 //Add translations of this repo to OH. Prefixed with "user_input_hoc_".
 oh.addDictionary(translations);
 
-
-export type ComponentLib = {
-    [key in InputType]: typeof React.Component;
-};
-
-let default_components: ComponentLib = {
+let default_components: ComponentObject = {
     text: TextInput,
     bool: BoolInput,
     grid: GridInput,
@@ -36,89 +31,25 @@ let default_components: ComponentLib = {
     textarea: TextareaInput,
     tri_state: TriStateInput,
     confirm: Button,
-    number: TextInput,
-    date: TextInput
 };
-let custom_components: Partial<ComponentLib> = {};
+let custom_components: ComponentObject = {};
 
 
 
-export function renderInputs(inputs: InputConfig2[], values: LooseObject, inputValueChangeCB: (key: string, value: any) => void, confirmClickCB?: (() => void)) {
-    return inputs.map((input_config) => {
-        const props: LooseObject = input_config.props || {};
-        const key = input_config.key;
-        const InputComp: typeof React.Component = custom_components[input_config.type] || default_components[input_config.type];
 
-        if (input_config.type === "confirm") {
-            let suppliedOnClickCB: (() => void) | null = null;
-            if (props.hasOwnProperty("onClick")) {
-                suppliedOnClickCB = props.onClick;
-                delete props.suppliedOnClickCB;
-            }
-            return <InputComp
-                key={key}
-                config={input_config}
-                value={values[key]}
-                onClick={() => {
-                    if (confirmClickCB) {
-                        confirmClickCB();
-                    }
-                    if (suppliedOnClickCB) {
-                        suppliedOnClickCB();
-                    }
-                }}
-                {...props}
-            />;
-        }
-        return <InputComp
-            key={key}
-            config={input_config}
-            value={values[key]}
-            onChange={(value: any) => {
-                if (input_config.onChange) {
-                    input_config.onChange(value);
-                }
-                inputValueChangeCB(key, value);
-            }}
-            {...props}
-        />;
-    });
-}
 
-export function renderPrompt(
-            show: boolean,
-            inputs: InputConfig2[],
-            values: LooseObject,
-            modal_props: LooseObject,
-            valueChangeCB: (key: string, value: any) => void,
-            userConfirmedCB: (values: LooseObject) => void,
-            userCancelledCB: () => void
-) {
-    if (show !== true) {
-        return null;
-    }
-    let Modal: typeof React.Component = PromptModal;
 
-    return (
-        <Modal
-            confirmCB={(values: LooseObject) => { userConfirmedCB(values); }}
-            cancelCB={() => { userCancelledCB(); }}
-            renderInputs={() => { return renderInputs(inputs, values, valueChangeCB); }}
-            {...modal_props}
-        />
-    );
-}
 
-export function InputHOC (
-    WrappedComponent: typeof React.Component
-): typeof React.Component {
-    class Prompt extends React.Component<any, PromptState> {
+export function InputHOC(
+    WrappedComponent: React.ComponentClass<any>
+): React.ComponentClass<any> {
+    class Prompt extends React.Component<HOCProps, PromptState> {
         exports: {
-            confirm: (prompt_request: PromptRequest, confirmCB: (values: any) => void, cancelCB: () => void) => void;
+            confirm: (prompt_request: PromptRequest, confirmCB: (value: any) => void, cancelCB: () => void) => void;
             cancel: () => void;
             setConfig: (input_config: InputConfig) => void;
             isOpen: () => boolean;
-            alert: (prompt_request: PromptRequest, confirmCB: (values: any) => void) => void;
+            alert: (prompt_request: PromptRequest, confirmCB: (value: any) => void) => void;
             setTag: (tag: string) => void;
             getTag: () => string | null;
         };
@@ -126,16 +57,16 @@ export function InputHOC (
         cancelCB: any;
         input_components: ComponentObject;
 
-        constructor(props: any) {
+        constructor(props: HOCProps) {
             super(props);
 
             this.state = {
+                inputs: [],
                 show: false,
                 modal_props: {},
                 values: {},
                 prompt_request: null,
-                tag: null,
-                inputs: []
+                tag: null
             };
 
             this.exports = {
@@ -291,9 +222,23 @@ export function InputHOC (
             });
         }
 
-        userConfirmedCB(values: LooseObject) {
+        userConfirmedCB() {
             this.setState({
                 show: false
+            });
+            let values = Object.assign({}, this.state.values);
+            this.state.inputs.forEach((input) => {
+                if ((input.type === "text" || input.type === "textarea") && (!input.hasOwnProperty("trim") || input.trim === true)) {
+                    if (typeof values[input.key] === "string") {
+                        values[input.key] = values[input.key].trim();
+                    }
+                }
+                if (input.type === "select") {
+                    values[input.key] = values[input.key].value;
+                }
+                if (input.type === "multi_select") {
+                    values[input.key] = values[input.key].map((option: any) => option.value);
+                }
             });
             if (this.confirmCB) {
                 this.confirmCB(values);
@@ -320,20 +265,69 @@ export function InputHOC (
             });
         }
 
+        renderInputs() {
+            if (!this.state.inputs) { return null; }
+            return this.state.inputs.map((input_request, index) => {
+                let InputComponent = this.input_components[input_request.type] as typeof React.Component;
+                if (custom_components && custom_components.hasOwnProperty(input_request.type)) {
+                    InputComponent = custom_components[input_request.type] as typeof React.Component;
+                }
+                let input_component_props = input_request.props || {};
+                let key = input_request.key || "input_" + index;
+                if (input_request.type === "confirm") {
+                    let suppliedOnClickCB: (() => void) | null = null;
+                    if (input_component_props.hasOwnProperty("onClick")) {
+                        suppliedOnClickCB = input_component_props.onClick;
+                        delete input_component_props.suppliedOnClickCB;
+                    }
+                    return <InputComponent
+                        key={key}
+                        config={input_request}
+                        value={this.state.values[key]}
+                        onClick={(value: any) => {
+                            this.userConfirmedCB();
+                            if (suppliedOnClickCB) {
+                                suppliedOnClickCB();
+                            }
+                        }}
+                        {...input_component_props}
+                    />;
+                }
+                return <InputComponent
+                    key={key}
+                    config={input_request}
+                    value={this.state.values[key]}
+                    onChange={(value: any) => {
+                        if (input_request.onChange) {
+                            input_request.onChange(value);
+                        }
+                        this.inputValueChangeCB(key, value);
+                    }}
+                    {...input_component_props}
+                />;
+            });
+        }
+
+        renderPrompt() {
+            if (!this.state.show) { return null; }
+            let Modal: React.ComponentClass<any> = PromptModal;
+            if (custom_components && custom_components.hasOwnProperty("modal") && custom_components.modal) {
+                Modal = custom_components.modal;
+            }
+            return (
+                <Modal
+                    confirmCB={() => { this.userConfirmedCB(); }}
+                    cancelCB={() => { this.userCancelledCB(); }}
+                    renderInputs={() => { return this.renderInputs(); }}
+                    {...this.state.modal_props}
+                />
+            );
+        }
+
         render() {
             return (<div>
-                <WrappedComponent userInputs={this.exports} {...this.props} />
-                {
-                    renderPrompt(
-                        this.state.show,
-                        this.state.inputs,
-                        this.state.values,
-                        this.state.modal_props,
-                        (key: string, value: any) => { this.inputValueChangeCB(key, value); },
-                        (values: LooseObject) => { this.userConfirmedCB(values); },
-                        () => { this.userCancelledCB(); }
-                    )
-                }
+                <WrappedComponent userPrompt={this.exports} {...this.props} />
+                {this.renderPrompt()}
             </div>);
         }
     }

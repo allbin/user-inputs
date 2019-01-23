@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { renderInputs } from './index2';
+import { renderInputs } from '.';
 
 import { MultiSelectInputConfig } from './input_components/MultiSelectInput';
 import { SelectInputConfig } from './input_components/SelectInput';

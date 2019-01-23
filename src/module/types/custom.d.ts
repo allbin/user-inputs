@@ -4,6 +4,8 @@ declare module "*.svg" {
 }
 declare module "quagga" {}
 
+type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
+
 type InputType = "bool" | "button" | "confirm" | "date" | "grid" | "number" | "multi_select" | "select" | "text" | "textarea" | "tri_state";
 interface LooseObject {
     [key: string]: any;
@@ -76,14 +78,4 @@ interface PromptState {
     inputs: any[];
     prompt_request: PromptRequest | null;
     tag: string | null;
-}
-
-interface HOCProps {
-    confirm: (prompt_request: PromptRequest, confirmCB?: (values: LooseObject) => void, cancelCB?: () => void) => void;
-    alert: (prompt_request: PromptRequest, confirmCB?: (values: LooseObject) => void) => void;
-    cancel: () => void;
-    isOpen: () => boolean;
-    setTag: (tag: string) => void;
-    getTag: () => string | null;
-    setConfig: (input_config: InputConfig) => void;
 }
