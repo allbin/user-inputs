@@ -1,15 +1,10 @@
 import * as React from 'react';
 
-import { renderInputs } from '.';
-
-import { MultiSelectInputConfig } from './input_components/MultiSelectInput';
-import { SelectInputConfig } from './input_components/SelectInput';
-import { TextInputConfig } from './input_components/TextInput';
-import { TextareaInputConfig } from './input_components/TextareaInput';
+import { renderInputs, FormInputConfigArray } from '.';
 
 interface FormProps {
     confirmCB?: (values: LooseObject) => void;
-    input_configs: InputConfig2[];
+    input_configs: FormInputConfigArray;
     refCB?: (form: Form) => void;
 }
 interface FormState {
@@ -23,14 +18,14 @@ export default class Form extends React.Component<FormProps, FormState> {
         let values: { [key: string]: any; } = {};
         props.input_configs.forEach((input) => {
             if (input.type === "multi_select") {
-                let multi_select = input as InputConfig2 & MultiSelectInputConfig;
+                let multi_select = input;
                 let selected_options = multi_select.options.filter(option => input.default_value.includes(option.value));
                 if (selected_options.length !== input.default_value.length) {
                     throw new Error("UserInput: Default values for multiselect not present in options.");
                 }
                 values[input.key] = selected_options;
             } else if (input.type === "select") {
-                let select = input as InputConfig2 & SelectInputConfig;
+                let select = input;
                 let selected_option = select.options.find(option => input.default_value === option.value);
                 if (!selected_option) {
                     throw new Error("UserInput: Default value for select not present in options.");
@@ -54,16 +49,14 @@ export default class Form extends React.Component<FormProps, FormState> {
         let values = Object.assign({}, this.state.values);
         this.props.input_configs.forEach((input) => {
             if (input.type === "text" || input.type === "textarea") {
-                let text_input = (input as TextInputConfig | TextareaInputConfig);
+                let text_input = input;
                 if ((!input.hasOwnProperty("trim") || text_input.trim === true) && typeof values[input.key] === "string") {
                     values[input.key] = values[input.key].trim();
                 }
-            }
-            if (input.type === "select") {
+            } else if (input.type === "select") {
                 values[input.key] = values[input.key].value;
-            }
-            if (input.type === "multi_select") {
-                values[input.key] = (values[input.key] as SelectionsOptions[]).map(option => option.value);
+            } else if (input.type === "multi_select") {
+                values[input.key] = (values[input.key] as SelectOption[]).map(option => option.value);
             }
         });
         if (this.props.confirmCB) {
@@ -83,7 +76,7 @@ export default class Form extends React.Component<FormProps, FormState> {
         let values = Object.assign({}, this.state.values);
         this.props.input_configs.forEach((input) => {
             if (input.type === "text" || input.type === "textarea") {
-                let text_input = (input as TextInputConfig | TextareaInputConfig);
+                let text_input = input;
                 if ((!input.hasOwnProperty("trim") || text_input.trim === true) && typeof values[input.key] === "string") {
                     values[input.key] = values[input.key].trim();
                 }
@@ -92,7 +85,7 @@ export default class Form extends React.Component<FormProps, FormState> {
                 values[input.key] = values[input.key].value;
             }
             if (input.type === "multi_select") {
-                values[input.key] = values[input.key].map((option: SelectionsOptions) => option.value);
+                values[input.key] = values[input.key].map((option: SelectOption) => option.value);
             }
         });
         return values;

@@ -2,19 +2,26 @@ import * as React from 'react';
 import styled from '../styling';
 
 export type GridType = "icons" | "colors";
-interface GridInputStyleProps {
-    grid_type: GridType;
-}
+
 export interface GridInputConfig {
+    type: "grid";
+    key: string;
+    default_value: string;
     label?: string;
     grid_type: GridType;
     options: any;
     class_name?: string;
+    onChange?: (value: string|number) => void;
 }
 export interface GridInputProps {
     value: any;
     config: GridInputConfig;
-    onChange: (value: any) => void;
+    onChange: (value: string|number) => void;
+}
+
+interface GridInputStyleProps {
+    grid_type: GridType;
+    color?: string;
 }
 
 const GridInputContainer = styled.div<GridInputStyleProps>`
@@ -72,7 +79,13 @@ const StyledGridItem = styled.div<GridInputStyleProps>`
 `;
 
 class GridInput extends React.Component<GridInputProps, any> {
-
+    onChange(value: string|number) {
+        const cfg = this.props.config;
+        this.props.onChange(value);
+        if (cfg.onChange) {
+            cfg.onChange(value);
+        }
+    }
     render() {
         let cfg = this.props.config;
         let class_names = "user_input grid_input";
@@ -87,7 +100,7 @@ class GridInput extends React.Component<GridInputProps, any> {
                 { cfg.label ? <p>{ cfg.label }</p> : null }
                 <div className="grid_block">
                     {
-                        cfg.options.map((item: any, i: number) => {
+                        cfg.options.map((item: GridSelectOption, i: number) => {
                             return (
                                 <StyledGridItem
                                     color={item.color}
@@ -95,11 +108,10 @@ class GridInput extends React.Component<GridInputProps, any> {
                                     key={i}
                                     className={`grid_item ${this.props.value === item.value ? 'active' : ''}`}
                                     onClick={() => {
-                                        this.props.onChange(item.value);
+                                        this.onChange(item.value);
                                     }}
-                                    >
+                                >
                                     { cfg.grid_type === 'icons' ? null : <span>{item.label}</span> }
-
                                 </StyledGridItem>
                             );
                         })

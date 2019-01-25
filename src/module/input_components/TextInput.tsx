@@ -5,17 +5,24 @@ import { FaBarcode } from 'react-icons/fa';
 import oh from 'output-helpers';
 
 export interface TextInputConfig {
+    type: "text";
+    key: string;
+    default_value: string;
     label?: string;
     class_name?: string;
     barcode?: boolean;
-    barcode_stream_visible: boolean;
     trim?: boolean;
+    onChange?: (value: string) => void;
 }
 export interface TextInputProps {
     value: string;
     config: TextInputConfig;
     onChange: (value: string) => void;
     autofocus?: boolean;
+}
+
+interface TextInputState {
+    barcode_stream_visible: boolean;
 }
 
 const TextInputContainer = styled.div `
@@ -93,11 +100,11 @@ const TextInputContainer = styled.div `
         }
     }
 `;
-class TextInput extends React.Component<TextInputProps, TextInputConfig> {
+class TextInput extends React.Component<TextInputProps, TextInputState> {
     barcode_stream_target: HTMLDivElement|null;
     detectedCB: (data: LooseObject) => void;
 
-    constructor(props) {
+    constructor(props: TextInputProps) {
         super(props);
 
         this.barcode_stream_target = null;
@@ -149,7 +156,7 @@ class TextInput extends React.Component<TextInputProps, TextInputConfig> {
             barcode_stream_visible: true
         });
 
-        Quagga.init(quagga_config, (err) => {
+        Quagga.init(quagga_config, (err: any) => {
             if (err) {
                 console.error(err);
                 throw err;
@@ -163,7 +170,7 @@ class TextInput extends React.Component<TextInputProps, TextInputConfig> {
 
 
 
-    renderBarcodeBtn(cfg) {
+    renderBarcodeBtn(cfg: TextInputConfig) {
         if (cfg.barcode !== true) {
             return null;
         }
@@ -204,7 +211,17 @@ class TextInput extends React.Component<TextInputProps, TextInputConfig> {
         );
     }
 
-
+    onChange(value: string) {
+        const cfg = this.props.config;
+        this.props.onChange(value);
+        if (cfg.onChange) {
+            if (cfg.trim) {
+                cfg.onChange(value.trim());
+            } else {
+                cfg.onChange(value);
+            }
+        }
+    }
 
     render() {
         let cfg = this.props.config;
@@ -226,7 +243,7 @@ class TextInput extends React.Component<TextInputProps, TextInputConfig> {
                     autoFocus={this.props.autofocus || false}
                     type="text"
                     value={this.props.value}
-                    onChange={e => this.props.onChange(e.target.value)}
+                    onChange={e => this.onChange(e.target.value)}
                 />
                 { this.renderBarcodeBtn(cfg) }
             </TextInputContainer>

@@ -1,25 +1,25 @@
 import * as React from 'react';
 import styled from '../styling';
 import Select from 'react-select';
-// this.props has everything passed in to config.props as well as the full config object in this.props.config.
 
-export interface SelectInputOptions {
-    value: any;
-    label: string;
-}
+
 export interface SelectInputConfig {
+    type: "select";
+    key: string;
+    default_value: string|number;
     label?: string;
-    options: SelectInputOptions[];
+    options: SelectOption[];
     placeholder?: string;
     class_name?: string;
     no_options_message?: string;
     searchable?: boolean;
     disabled?: boolean;
+    onChange?: (value: string|number) => void;
 }
 export interface SelectInputProps {
-    value?: SelectInputOptions;
+    value?: SelectOption;
     config: SelectInputConfig;
-    onChange: (value: SelectInputOptions) => void;
+    onChange: (value: SelectOption) => void;
 }
 
 const SelectInputContainer = styled.div `
@@ -32,7 +32,15 @@ const SelectInputContainer = styled.div `
     }
 `;
 
-class SelectInput extends React.Component<SelectInputProps, SelectInputConfig> {
+class SelectInput extends React.Component<SelectInputProps> {
+
+    onChange(value: SelectOption) {
+        const cfg = this.props.config;
+        this.props.onChange(value);
+        if (cfg.onChange) {
+            cfg.onChange(value.value);
+        }
+    }
     render() {
         let cfg = this.props.config;
         let class_names = "user_input select_input";
@@ -47,7 +55,7 @@ class SelectInput extends React.Component<SelectInputProps, SelectInputConfig> {
                     placeholder={cfg.placeholder ? cfg.placeholder : cfg.label ? cfg.label : '' }
                     value={this.props.value}
                     onChange={(e) => {
-                        this.props.onChange(e as SelectInputOptions);
+                        this.onChange(e as SelectOption);
                     }}
                     isDisabled={cfg.disabled || false}
                     isSearchable={cfg.searchable || false}

@@ -1,17 +1,19 @@
 import * as React from 'react';
 
+import { FormState, FormInputConfigArray, AnyInputConfig, AnyInputConfigWithValue } from '.';
+
 export interface GeneratedForm {
     component: typeof React.Component;
     reset: () => void;
     getForms: () => void;
     getValues: () => any[];
-    setInputConfig: (updated_config: InputConfig) => void;
+    setInputConfig: (updated_config: Partial<AnyInputConfig>) => void;
 }
 
-export function getInputForm(default_components: ComponentObject, custom_components: ComponentObject, input_configs: InputConfig[], cb?: (values: any) => void): GeneratedForm {
+export function getInputForm(default_components: ComponentObject, custom_components: ComponentObject, input_configs: FormInputConfigArray, cb?: (values: any) => void): GeneratedForm {
     let mounted_forms: InputWrapper[] = [];
 
-    class InputWrapper extends React.Component<any, PromptState> {
+    class InputWrapper extends React.Component<any, FormState> {
         confirmCB: ((values: any) => void) | null;
         input_components: ComponentObject;
 
@@ -40,10 +42,7 @@ export function getInputForm(default_components: ComponentObject, custom_compone
             this.state = {
                 values: values,
                 inputs: input_configs,
-                prompt_request: null,
                 tag: null,
-                show: true,
-                modal_props: {}
             };
             this.confirmCB = cb || null;
 
@@ -69,7 +68,7 @@ export function getInputForm(default_components: ComponentObject, custom_compone
             mounted_forms.splice(mount_index, 1);
         }
 
-        setConfig(input_config: InputConfig) {
+        setConfig(input_config: AnyInputConfigWithValue) {
             let inputs = this.state.inputs;
             let input_index = inputs.findIndex(input => input.key === input_config.key);
             if (input_index < 0) {
@@ -112,7 +111,7 @@ export function getInputForm(default_components: ComponentObject, custom_compone
                     values[input.key] = values[input.key].value;
                 }
                 if (input.type === "multi_select") {
-                    values[input.key] = values[input.key].map((option: SelectionsOptions) => option.value);
+                    values[input.key] = values[input.key].map((option: MultiSelectOption) => option.value);
                 }
             });
             return values;
@@ -135,7 +134,7 @@ export function getInputForm(default_components: ComponentObject, custom_compone
                     values[input.key] = values[input.key].value;
                 }
                 if (input.type === "multi_select") {
-                    values[input.key] = values[input.key].map((option: SelectionsOptions) => option.value);
+                    values[input.key] = values[input.key].map((option: MultiSelectOption) => option.value);
                 }
             });
             if (this.confirmCB) {
@@ -158,17 +157,15 @@ export function getInputForm(default_components: ComponentObject, custom_compone
                 if (custom_components && custom_components.hasOwnProperty(input_request.type)) {
                     InputComponent = custom_components[input_request.type] as typeof React.Component;
                 }
-                let input_component_props = input_request.props || {};
                 let key = input_request.key || "input_" + index;
-                if (input_request.type === "confirm") {
+                if (input_request.type === "confirm" || input_request.type === "button") {
                     return <InputComponent
                         key={key}
                         config={input_request}
                         value={this.state.values[key]}
-                        onClick={(value: any) => {
+                        onClick={() => {
                             this.userConfirmedCB();
                         }}
-                        {...input_component_props}
                     />;
                 }
                 return <InputComponent
@@ -176,12 +173,8 @@ export function getInputForm(default_components: ComponentObject, custom_compone
                     config={input_request}
                     value={this.state.values[key]}
                     onChange={(value: any) => {
-                        if (input_request.onChange) {
-                            input_request.onChange(value);
-                        }
                         this.inputValueChangeCB(key, value);
                     }}
-                    {...input_component_props}
                 />;
             });
         }
@@ -213,7 +206,7 @@ export function getInputForm(default_components: ComponentObject, custom_compone
                 };
             });
         },
-        setInputConfig: (updated_config: InputConfig) => {
+        setInputConfig: (updated_config: Partial<AnyInputConfigWithValue>) => {
             if (updated_config.hasOwnProperty("key") === false) {
                 throw new Error("UserInput: input_config must contain 'key' property.");
             }

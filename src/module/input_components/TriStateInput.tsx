@@ -1,24 +1,23 @@
 import * as React from 'react';
 import styled from 'styled-components';
-// this.props has everything passed in to config.props as well as the full config object in this.props.config.
 
-export interface TriStateInputOptions {
-    value: any;
-    label: string;
-}
 export interface TriStateInputConfig {
+    type: "tri_state";
+    key: string;
+    default_value: string|number;
     label?: string;
-    options: TriStateInputOptions[];
+    options: TriStateInputOption[];
     placeholder?: string;
     class_name?: string;
     no_options_message?: string;
     searchable?: boolean;
     disabled?: boolean;
+    onChange?: (value: string|number) => void;
 }
 export interface TriStateInputProps {
     value?: string;
     config: TriStateInputConfig;
-    onChange: (string) => void;
+    onChange: (value: string|number) => void;
 }
 
 const TriStateInputContainer = styled.div `
@@ -59,6 +58,13 @@ const TriStateInputContainer = styled.div `
 `;
 
 class TriStateInput extends React.Component<TriStateInputProps, TriStateInputConfig> {
+    onChange(value: string|number) {
+        const cfg = this.props.config;
+        this.props.onChange(value);
+        if (cfg.onChange) {
+            cfg.onChange(value);
+        }
+    }
     render() {
         let cfg = this.props.config;
         let class_names = "user_input tri_state_input";
@@ -80,7 +86,7 @@ class TriStateInput extends React.Component<TriStateInputProps, TriStateInputCon
                                     key={i}
                                     className={`grid_item ${this.props.value === item.value ? 'active' : ''}`}
                                     onClick={() => {
-                                        this.props.onChange(item.value);
+                                        this.onChange(item.value);
                                     }}
                                     >
                                     <span>{item.label}</span>

@@ -1,8 +1,14 @@
 import * as React from 'react';
 import styled from '../styling';
 export interface ButtonConfig {
-    label: string;
+    type: "button"|"confirm";
+    key: string;
     class_name?: string;
+    default_value: any;
+    label: string;
+    disabled?: boolean;
+    onClick?: () => void;
+    onChange?: () => void;
 }
 export interface ButtonProps {
     config: ButtonConfig;
@@ -117,7 +123,7 @@ export default class Button extends React.Component<ButtonProps, any> {
                 disabled={this.props.disabled || false}
                 autoFocus={this.props.autofocus || false}
                 className={class_names}
-                onClick={(e: any) => this.props.onClick ? this.props.onClick() : null}
+                onClick={() => this.props.onClick()}
             >
                 {cfg.label}
             </ButtonContainer>

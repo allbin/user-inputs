@@ -10,11 +10,25 @@ type InputType = "bool" | "button" | "confirm" | "date" | "grid" | "number" | "m
 interface LooseObject {
     [key: string]: any;
 }
-interface SelectionsOptions {
+interface SelectOption {
     value: string|number;
     label: string;
 }
-interface InputConfig {
+interface TriStateInputOption {
+    value: string|number;
+    label: string;
+}
+interface MultiSelectOption {
+    value: string|number;
+    label: string;
+}
+interface GridSelectOption {
+    value: string|number;
+    label: string;
+    color?: string;
+}
+
+interface InputConfigOld2 {
     [key: string]: any;
     default_value: any;
     type: InputType;
@@ -23,17 +37,22 @@ interface InputConfig {
     props: {
         [key: string]: any;
     };
-    options: SelectionsOptions[];
+    options: SelectOption[];
 }
-interface InputConfig2 {
-    default_value: any;
-    type: InputType;
-    key: string;
-    onChange?: (value: any) => void;
-    props?: {
-        [key: string]: any;
-    };
-    options?: SelectionsOptions[];
+
+interface Test1 {
+    type: "text";
+    onChange: (value: string) => void;
+    aa: boolean;
+}
+interface Test2 {
+    type: "select";
+    onChange: (value: SelectOption) => void;
+    bb: string;
+}
+
+interface Test4 {
+    func: (inputs: (Test1|Test2)[]) => void;
 }
 
 interface ComponentObject {
@@ -62,20 +81,4 @@ interface InputConfigUpdate {
         [key: string]: any;
     };
 }
-interface PromptRequest {
-    inputs: InputConfig[];
-    props?: {
-        [key: string]: any
-    };
-}
 
-interface PromptState {
-    show: boolean;
-    modal_props: any;
-    values: {
-        [key: string]: any
-    };
-    inputs: any[];
-    prompt_request: PromptRequest | null;
-    tag: string | null;
-}

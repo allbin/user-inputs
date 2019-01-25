@@ -3,6 +3,7 @@ import styled, { keyframes } from 'styled-components';
 import oh from 'output-helpers';
 import Button from './input_components/Button';
 import Form from './Form';
+import { PromptInputConfigArray } from '.';
 
 //These are require because build engine doesn't like 'import ... .svg'.
 let SymbolClone = require('./img/symbol_clone.svg');
@@ -17,7 +18,7 @@ export interface ModalProps {
     class: string;
     confirmCB: () => void;
     cancelCB: () => void;
-    input_configs: InputConfig2[];
+    input_configs: PromptInputConfigArray;
     show_cancel_btn: boolean;
     show_confirm_btn: boolean;
     confirm_button_label?: string;
@@ -155,7 +156,10 @@ export default class Modal extends React.Component<ModalProps, any> {
                     big
                     filled
                     config={{
-                        label: this.props.cancel_button_label || oh.translate('user_input_hoc_cancel')
+                        label: this.props.cancel_button_label || oh.translate('user_input_hoc_cancel'),
+                        default_value: "",
+                        key: "cancel",
+                        type: "button"
                     }}
                     onClick={() => this.props.cancelCB()}
                 />
@@ -174,7 +178,10 @@ export default class Modal extends React.Component<ModalProps, any> {
                     filled
                     light
                     config={{
-                        label: this.props.confirm_button_label || oh.translate('user_input_hoc_confirm')
+                        label: this.props.confirm_button_label || oh.translate('user_input_hoc_confirm'),
+                        default_value: "",
+                        key: "confirm",
+                        type: "button"
                     }}
                     onClick={() => this.props.confirmCB()}
                 />

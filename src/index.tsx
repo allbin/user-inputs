@@ -2,9 +2,14 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
 import Main from './Main';
+import StyledBase from './theme/StyledBase';
 
 
 ReactDOM.render(
-  <Main />,
-  document.getElementById('root') as HTMLElement
+    <StyledBase>
+        <Main
+            required_test_prop={true}
+        />
+    </StyledBase>,
+    document.getElementById('root') as HTMLElement
 );

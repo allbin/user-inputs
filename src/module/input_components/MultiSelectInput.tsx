@@ -1,27 +1,24 @@
 import * as React from 'react';
 import styled from '../styling';
 import Select from 'react-select';
-import { ValueType } from 'react-select/lib/types';
-// this.props has everything passed in to config.props as well as the full config object in this.props.config.
-
-export interface MultiSelectOptions {
-    value: string;
-    label: string;
-}
 
 export interface MultiSelectInputConfig {
+    type: "multi_select";
+    key: string;
+    default_value: (string|number)[];
     label?: string;
     placeholder?: string;
-    options: MultiSelectOptions[];
+    options: MultiSelectOption[];
     class_name?: string;
     no_options_message?: string;
     disabled?: boolean;
     searchable?: boolean;
+    onChange?: (value: (string|number)[]) => void;
 }
 export interface MultiSelectInputProps {
-    value: MultiSelectOptions;
+    value: MultiSelectOption;
     config: MultiSelectInputConfig;
-    onChange: (options: ValueType<MultiSelectOptions>) => void;
+    onChange: (options: MultiSelectOption[]) => void;
 }
 
 const MultiSelectInputContainer = styled("div") `
@@ -35,6 +32,14 @@ const MultiSelectInputContainer = styled("div") `
 `;
 
 class MultiSelectInput extends React.Component<MultiSelectInputProps> {
+
+    onChange(values: MultiSelectOption[]) {
+        const cfg = this.props.config;
+        this.props.onChange(values);
+        if (cfg.onChange) {
+            cfg.onChange(values.map(x => x.value));
+        }
+    }
 
     render() {
         let cfg = this.props.config;
@@ -53,7 +58,7 @@ class MultiSelectInput extends React.Component<MultiSelectInputProps> {
                     isMulti={true}
                     value={this.props.value}
                     onChange={(e) => {
-                        this.props.onChange(e);
+                        this.onChange(e as MultiSelectOption[]);
                     }}
                     isSearchable={cfg.searchable || false}
                     isDisabled={cfg.disabled || false}

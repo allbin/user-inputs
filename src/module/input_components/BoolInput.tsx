@@ -2,16 +2,23 @@ import * as React from 'react';
 import styled from '../styling';
 
 export interface BoolInputConfig {
-    label: string;
+    type: "bool";
+    key: string;
+    default_value: string;
+    label?: string;
     class_name?: string;
+    onChange?: (value: boolean) => void;
 }
 export interface BoolInputProps {
+    type: "bool";
+    key: string;
     value: boolean;
     config: BoolInputConfig;
     onChange: (checked: boolean) => void;
 }
 
 interface BoolInputContainerProps {
+    //TODO: What is thing_size?
     thing_size: number;
 }
 
@@ -77,6 +84,13 @@ const BoolInputContainer = styled("div")<BoolInputContainerProps> `
 `;
 
 class BoolInput extends React.Component<BoolInputProps, any> {
+    onChange(value: boolean) {
+        const cfg = this.props.config;
+        this.props.onChange(value);
+        if (cfg.onChange) {
+            cfg.onChange(value);
+        }
+    }
     render() {
         let cfg = this.props.config;
         let class_names = "user_input bool_input";
@@ -94,7 +108,7 @@ class BoolInput extends React.Component<BoolInputProps, any> {
                     <div
                         className={`bool_input ${this.props.value === true ? 'active' : ''}`}
                         onClick={() => {
-                            this.props.onChange(!this.props.value);
+                            this.onChange(!this.props.value);
                         }}>
                         <div className="bool_input_thing">
 
