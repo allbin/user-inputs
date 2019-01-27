@@ -2,7 +2,7 @@ import * as React from 'react';
 import oh from 'output-helpers';
 import translations from './translations';
 
-import * as formGenerator from './formGenerator';
+import formGenerator, { GeneratedForm } from './formGenerator';
 
 import PromptModal from './PromptModal';
 import TextInput, { TextInputConfig } from './input_components/TextInput';
@@ -48,25 +48,14 @@ export type ValueInterface = {
 };
 export type AnyInputConfig = ButtonConfig|TextInputConfig|BoolInputConfig|GridInputConfig|SelectInputConfig|MultiSelectInputConfig|TextareaInputConfig|TriStateInputConfig;
 export type AnyInputConfigWithValue = AnyInputConfig & ValueInterface;
-export type PromptInputConfigArray = Array<TextInputConfig|BoolInputConfig|GridInputConfig|SelectInputConfig|MultiSelectInputConfig|TextareaInputConfig|TriStateInputConfig>;
+export type PromptInputConfigArray = Array<ButtonConfig|TextInputConfig|BoolInputConfig|GridInputConfig|SelectInputConfig|MultiSelectInputConfig|TextareaInputConfig|TriStateInputConfig>;
 export type FormInputConfigArray = Array<ButtonConfig|TextInputConfig|BoolInputConfig|GridInputConfig|SelectInputConfig|MultiSelectInputConfig|TextareaInputConfig|TriStateInputConfig>;
 
-interface PromptRequest {
-    inputs: PromptInputConfigArray;
-    props?: {
-        [key: string]: any
-    };
-}
 
 export interface PromptState {
-    show: boolean;
-    modal_props: any;
-    values: {
-        [key: string]: any
-    };
-    inputs: PromptInputConfigArray;
-    prompt_request: PromptRequest | null;
+    prompt_config: PromptConfig | null;
     tag: string | null;
+    form: GeneratedForm | null;
 }
 export interface FormState {
     values: {
@@ -76,19 +65,23 @@ export interface FormState {
     tag: string | null;
 }
 export interface UserInputPromptConfig {
-    /** Props sent to the PromptModal component. */
-    prompt_props: {
-        title: string;
-        message?: string;
-        classes?: string;
-        confirmCB?: () => void;
-        cancelCB?: () => void;
-    };
+    title: string;
     inputs: PromptInputConfigArray;
+    message?: string;
+    classes?: string;
+    confirmCB?: () => void;
+    cancelCB?: () => void;
+    confirm_button_label?: string;
+    cancel_button_label?: string;
 }
 
 export interface UserInputProps {
     userInputs: HOCProps;
+}
+
+export interface PromptConfig extends UserInputPromptConfig {
+    show_cancel_btn: boolean;
+    show_confirm_btn: boolean;
 }
 
 let default_components: ComponentLib = {
@@ -108,53 +101,17 @@ let custom_components: Partial<ComponentLib> = {};
 
 
 
-export function renderInputs(inputs: FormInputConfigArray, values: LooseObject, inputValueChangeCB: (key: string, value: any) => void, confirmClickCB?: (() => void)) {
-    return inputs.map((input_config) => {
-        const key = input_config.key;
-        const InputComp: typeof React.Component = custom_components[input_config.type] || default_components[input_config.type];
 
-        if (input_config.type === "confirm") {
-            let suppliedOnClickCB: (() => void) | undefined;
-            if (input_config.hasOwnProperty("onClick")) {
-                suppliedOnClickCB = input_config.onClick;
-            }
-            return <InputComp
-                key={key}
-                config={input_config}
-                value={values[key]}
-                onClick={() => {
-                    if (confirmClickCB) {
-                        confirmClickCB();
-                    }
-                    if (suppliedOnClickCB) {
-                        suppliedOnClickCB();
-                    }
-                }}
-            />;
-        }
-        return <InputComp
-            key={key}
-            config={input_config}
-            value={values[key]}
-            onChange={(value: any) => {
-                inputValueChangeCB(key, value);
-            }}
-        />;
-    });
-}
-
-export function renderPrompt(show: boolean, inputs: PromptInputConfigArray, values: LooseObject, modal_props: LooseObject, valueChangeCB: (key: string, value: any) => void, userConfirmedCB: (values: LooseObject) => void, userCancelledCB: () => void) {
-    if (show !== true) {
+export function renderPrompt(form: GeneratedForm | null, prompt_config: PromptConfig | null, userCancelledCB: () => void) {
+    if (!form || !prompt_config) {
         return null;
     }
-    let Modal: typeof React.Component = PromptModal;
 
     return (
-        <Modal
-            confirmCB={(values: LooseObject) => { userConfirmedCB(values); }}
+        <PromptModal
             cancelCB={() => { userCancelledCB(); }}
-            renderInputs={() => { return renderInputs(inputs, values, valueChangeCB); }}
-            {...modal_props}
+            config={prompt_config}
+            form={form}
         />
     );
 }
@@ -164,45 +121,39 @@ export function renderPrompt(show: boolean, inputs: PromptInputConfigArray, valu
 export function InputHOC<P extends UserInputProps>(WrappedComponent: React.ComponentType<P>): React.ComponentClass<Omit<P, keyof UserInputProps>> {
     class Prompt extends React.Component<P, PromptState> {
         exports: HOCProps = {
-            confirm: (prompt_request, confirmCB, cancelCB) => {
-                if (prompt_request.hasOwnProperty("inputs") === false) {
-                    prompt_request.inputs = [];
+            confirm: (user_prompt_request, confirmCB, cancelCB) => {
+                if (user_prompt_request.hasOwnProperty("inputs") === false) {
+                    user_prompt_request.inputs = [];
                 }
-                if (prompt_request.hasOwnProperty("prompt_props") === false) {
-                    throw new Error("prompt_props are required in config for alert.");
-                }
-                if (!prompt_request.prompt_props.title) {
+                if (!user_prompt_request.title) {
                     throw new Error("prompt_props requires 'title' property.");
                 }
-                let default_props = {
+                let default_settings = {
                     show_cancel_btn: true,
                     show_confirm_btn: true
                 };
-                prompt_request.prompt_props = Object.assign(
+                let prompt_request: PromptConfig = Object.assign(
                     {},
-                    default_props,
-                    prompt_request.prompt_props
+                    user_prompt_request,
+                    default_settings
                 );
                 this.initPrompt(prompt_request, confirmCB, cancelCB);
             },
-            alert: (prompt_request, confirmCB) => {
-                if (prompt_request.hasOwnProperty("inputs") === false) {
-                    prompt_request.inputs = [];
+            alert: (user_prompt_request, confirmCB) => {
+                if (user_prompt_request.hasOwnProperty("inputs") === false) {
+                    user_prompt_request.inputs = [];
                 }
-                if (prompt_request.hasOwnProperty("prompt_props") === false) {
-                    throw new Error("prompt_props are required in config for alert.");
-                }
-                if (!prompt_request.prompt_props.title) {
+                if (!user_prompt_request.title) {
                     throw new Error("prompt_props requires 'title' property.");
                 }
-                let default_props = {
+                let default_settings = {
                     show_cancel_btn: false,
                     show_confirm_btn: true
                 };
-                prompt_request.prompt_props = Object.assign(
+                let prompt_request: PromptConfig = Object.assign(
                     {},
-                    default_props,
-                    prompt_request.prompt_props
+                    user_prompt_request,
+                    default_settings
                 );
                 this.initPrompt(prompt_request, confirmCB);
             },
@@ -210,7 +161,7 @@ export function InputHOC<P extends UserInputProps>(WrappedComponent: React.Compo
                 this.resetPrompt();
             },
             isOpen: () => {
-                return this.state.show;
+                return this.state.prompt_config !== null;
             },
             setTag: (tag) => {
                 this.setState({
@@ -221,37 +172,11 @@ export function InputHOC<P extends UserInputProps>(WrappedComponent: React.Compo
                 return this.state.tag;
             },
             setConfig: (input_config: AnyInputConfigWithValue) => {
-                if (input_config.hasOwnProperty("key") === false) {
-                    throw new Error("UserInput: input_config must contain 'key' property.");
+                if (this.state.form) {
+                    this.state.form.setInputConfig(input_config);
+                } else {
+                    throw new Error("UserInput: Cannot setConfig without an open prompt.");
                 }
-                let inputs = this.state.inputs;
-                let input_index = inputs.findIndex(input => input.key === input_config.key);
-                if (input_index < 0) {
-                    throw new Error("UserInput: Key not found in existing inputs. Key must match an input created with 'promp()'.");
-                }
-                let values = this.state.values;
-                if (input_config.hasOwnProperty("value")) {
-                    if (input_config.type === "multi_select") {
-                        let selected_options = input_config.options.filter(option => input_config.value.includes(option.value));
-                        if (selected_options.length !== input_config.value.length) {
-                            throw new Error("UserInput: Values for multiselect not present in options.");
-                        }
-                        values[input_config.key] = selected_options;
-                    } else if (input_config.type === "select") {
-                        let selected_option = input_config.options.find(option => input_config.value === option.value);
-                        if (!selected_option) {
-                            throw new Error("UserInput: Value for select not present in options.");
-                        }
-                        values[input_config.key] = selected_option;
-                    } else {
-                        values[input_config.key] = input_config.value;
-                    }
-                }
-                inputs[input_index] = Object.assign({}, inputs[input_index], input_config);
-                this.setState({
-                    inputs: inputs,
-                    values: values
-                });
             }
         };
 
@@ -273,18 +198,14 @@ export function InputHOC<P extends UserInputProps>(WrappedComponent: React.Compo
             super(props);
 
             this.state = {
-                show: false,
-                modal_props: {},
-                values: {},
-                prompt_request: null,
-                tag: null,
-                inputs: []
+                prompt_config: null,
+                form: null,
+                tag: null
             };
         }
 
-        initPrompt(prompt_request: UserInputPromptConfig, confirmCB?: (value: any) => void, cancelCB?: () => void) {
-            let inputs = prompt_request.inputs;
-            let props = prompt_request.prompt_props;
+        initPrompt(prompt_config: PromptConfig, confirmCB?: (value: any) => void, cancelCB?: () => void) {
+            let inputs = [...prompt_config.inputs];
             let invalid_inputs = inputs.some(input => input.hasOwnProperty("default_value") === false);
             if (invalid_inputs) {
                 throw new Error("UserInput: Inputs must be configured with a 'default_value'.");
@@ -295,30 +216,30 @@ export function InputHOC<P extends UserInputProps>(WrappedComponent: React.Compo
             }
             this.confirmCB = confirmCB || null;
             this.cancelCB = cancelCB || null;
-            let values: { [key: string]: any; } = {};
-            inputs.forEach((input) => {
-                if (input.type === "multi_select") {
-                    let selected_options = input.options.filter(option => input.default_value.includes(option.value));
-                    if (selected_options.length !== input.default_value.length) {
-                        throw new Error("UserInput: Default values for multiselect not present in options.");
-                    }
-                    values[input.key] = selected_options;
-                } else if (input.type === "select") {
-                    let selected_option = input.options.find(option => input.default_value === option.value);
-                    if (!selected_option) {
-                        throw new Error("UserInput: Default value for select not present in options.");
-                    }
-                    values[input.key] = selected_option;
-                } else {
-                    values[input.key] = input.default_value;
-                }
-            });
+
+            let confirm_config: ButtonConfig = {
+                label: prompt_config.confirm_button_label || oh.translate('user_input_hoc_confirm'),
+                key: "confirm",
+                type: "confirm",
+                default_value: "",
+                filled: true,
+                big: true
+            };
+            let cancel_config: ButtonConfig = {
+                label: prompt_config.confirm_button_label || oh.translate('user_input_hoc_cancel'),
+                key: "cancel",
+                type: "button",
+                default_value: "",
+                onClick: () => this.userCancelledCB(),
+                filled: true,
+                big: true
+            };
+
+            inputs.push(confirm_config, cancel_config);
+
             this.setState({
-                show: true,
-                modal_props: props,
-                inputs: inputs,
-                values: values,
-                prompt_request: prompt_request
+                form: formGenerator(default_components, custom_components, inputs, (values: LooseObject) => this.userConfirmedCB(values)),
+                prompt_config: prompt_config
             });
         }
 
@@ -326,10 +247,8 @@ export function InputHOC<P extends UserInputProps>(WrappedComponent: React.Compo
             this.confirmCB = null;
             this.cancelCB = null;
             this.setState({
-                show: false,
-                inputs: [],
-                values: [],
-                prompt_request: null,
+                form: null,
+                prompt_config: null,
                 tag: null
             });
         }
@@ -350,25 +269,13 @@ export function InputHOC<P extends UserInputProps>(WrappedComponent: React.Compo
             this.resetPrompt();
         }
 
-        inputValueChangeCB(key: string, value: any) {
-            let values = Object.assign({}, this.state.values);
-            values[key] = value;
-            this.setState({
-                values: values
-            });
-        }
-
         render() {
             return (<div>
                 <WrappedComponent userInputs={this.exports} {...this.props} />
                 {
                     renderPrompt(
-                        this.state.show,
-                        this.state.inputs,
-                        this.state.values,
-                        this.state.modal_props,
-                        (key: string, value: any) => { this.inputValueChangeCB(key, value); },
-                        (values: LooseObject) => { this.userConfirmedCB(values); },
+                        this.state.form,
+                        this.state.prompt_config,
                         () => { this.userCancelledCB(); }
                     )
                 }
@@ -384,7 +291,7 @@ export namespace InputHOC {
     export function setCustomComponents(object_with_components: ComponentObject) {
         custom_components = object_with_components;
     }
-    export function generateForm(input_configs: FormInputConfigArray, confirmCB?: (value: any) => void): formGenerator.GeneratedForm {
+    export function generateForm(input_configs: FormInputConfigArray, confirmCB?: (value: any) => void): GeneratedForm {
         if (input_configs.length < 1) {
             throw new Error("UserInput: GenerateInputs requires at least one input.");
         }
@@ -413,7 +320,7 @@ export namespace InputHOC {
         if (invalid_inputs) {
             throw new Error("UserInput: Inputs that are not type 'button' or 'confirm' must be configured with a 'key' property. ");
         }
-        return formGenerator.getInputForm(default_components, custom_components, input_configs, confirmCB);
+        return formGenerator(default_components, custom_components, input_configs, confirmCB);
     }
 }
 

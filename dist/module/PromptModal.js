@@ -1,22 +1,15 @@
 import * as React from 'react';
 import styled, { keyframes } from 'styled-components';
-import { GeneratedForm } from './formGenerator';
-import { PromptConfig } from '.';
-
+import oh from 'output-helpers';
+import Button from './input_components/Button';
+import Form from './Form';
 //These are require because build engine doesn't like 'import ... .svg'.
 let SymbolClone = require('./img/symbol_clone.svg');
 let SymbolDelete = require('./img/symbol_delete.svg');
 let SymbolArchive = require('./img/symbol_archive.svg');
 let SymbolNewDoc = require('./img/symbol_new_doc.svg');
 let SymbolNewFolder = require('./img/symbol_new_folder.svg');
-
-export interface ModalProps {
-    config: PromptConfig;
-    cancelCB: () => void;
-    form: GeneratedForm;
-}
-
-const modal_animate_down = keyframes`
+const modal_animate_down = keyframes `
     from {
         transform: rotateX(1deg) translateY(-30px);
     }
@@ -25,7 +18,6 @@ const modal_animate_down = keyframes`
         transform: rotateX(0) translateY(0);
     }
 `;
-
 const ModalContainer = styled.div `
     @media (max-width: 700px) {
         .modal_container {
@@ -133,24 +125,51 @@ const ModalContainer = styled.div `
         }
     }
 `;
-
-export default class Modal extends React.Component<ModalProps, any> {
-
+export default class Modal extends React.Component {
+    constructor() {
+        super(...arguments);
+        this.form = null;
+    }
+    renderCancelButton() {
+        if (this.props.show_cancel_btn === false) {
+            return null;
+        }
+        return (React.createElement("div", { className: "modal_footer_cancel" },
+            React.createElement(Button, { big: true, filled: true, config: {
+                    label: this.props.cancel_button_label || oh.translate('user_input_hoc_cancel'),
+                    default_value: "",
+                    key: "cancel",
+                    type: "button"
+                }, onClick: () => this.props.cancelCB() })));
+    }
+    renderConfirmButton() {
+        if (this.props.show_confirm_btn === false) {
+            return null;
+        }
+        return (React.createElement("div", { className: "modal_footer_confirm" },
+            React.createElement(Button, { big: true, filled: true, light: true, config: {
+                    label: this.props.confirm_button_label || oh.translate('user_input_hoc_confirm'),
+                    default_value: "",
+                    key: "confirm",
+                    type: "button"
+                }, onClick: () => this.props.confirmCB() })));
+    }
     render() {
-        return (
-            <ModalContainer>
-                <div className={`modal_container`}>
-                    <div className="modal_box">
-                        <div className="modal_title">
-                            { this.props.config.title }
-                        </div>
-                        <div className="modal_body">
-                            { this.props.config.message }
-                            <this.props.form.component />
-                        </div>
-                    </div>
-                </div>
-            </ModalContainer>
-        );
+        return (React.createElement(ModalContainer, null,
+            React.createElement("div", { className: `modal_container` },
+                React.createElement("div", { className: "modal_box" },
+                    this.props.class ?
+                        React.createElement("div", { className: `modal_image symbol symbol_${this.props.class}` }, " ")
+                        :
+                            null,
+                    React.createElement("div", { className: "modal_title" }, this.props.title),
+                    React.createElement("div", { className: "modal_body" },
+                        this.props.message,
+                        React.createElement(Form, { input_configs: this.props.input_configs, refCB: (form) => { this.form = form; } })),
+                    React.createElement("div", { className: "modal_footer" },
+                        this.renderCancelButton(),
+                        this.renderConfirmButton())))));
     }
 }
+
+//# sourceMappingURL=PromptModal.js.map

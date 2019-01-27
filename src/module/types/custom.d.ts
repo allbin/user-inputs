@@ -40,21 +40,6 @@ interface InputConfigOld2 {
     options: SelectOption[];
 }
 
-interface Test1 {
-    type: "text";
-    onChange: (value: string) => void;
-    aa: boolean;
-}
-interface Test2 {
-    type: "select";
-    onChange: (value: SelectOption) => void;
-    bb: string;
-}
-
-interface Test4 {
-    func: (inputs: (Test1|Test2)[]) => void;
-}
-
 interface ComponentObject {
     [key: string]: React.ComponentClass<any> | undefined;
     bool?: React.ComponentClass<any>;

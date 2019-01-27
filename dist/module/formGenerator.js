@@ -1,25 +1,10 @@
 import * as React from 'react';
-
-import { FormState, FormInputConfigArray, AnyInputConfig, AnyInputConfigWithValue } from '.';
-
-export interface GeneratedForm {
-    component: typeof React.Component;
-    reset: () => void;
-    getValues: () => LooseObject;
-    setInputConfig: (updated_config: Partial<AnyInputConfig>) => void;
-}
-
-export default function getInputForm(default_components: ComponentObject, custom_components: ComponentObject, input_configs: FormInputConfigArray, cb?: (values: any) => void): GeneratedForm {
-    let mounted_form: InputWrapper | null;
-
-    class InputWrapper extends React.Component<any, FormState> {
-        confirmCB: ((values: any) => void) | null;
-        input_components: ComponentObject;
-
-        constructor(props: any) {
+export function getInputForm(default_components, custom_components, input_configs, cb) {
+    let mounted_forms = [];
+    class InputWrapper extends React.Component {
+        constructor(props) {
             super(props);
-
-            let values: { [key: string]: any; } = {};
+            let values = {};
             input_configs.forEach((input) => {
                 if (input.type === "multi_select") {
                     let selected_options = input.options.filter(option => input.default_value.includes(option.value));
@@ -27,24 +12,24 @@ export default function getInputForm(default_components: ComponentObject, custom
                         throw new Error("UserInput: Default values for multiselect not present in options.");
                     }
                     values[input.key] = selected_options;
-                } else if (input.type === "select") {
+                }
+                else if (input.type === "select") {
                     let selected_option = input.options.find(option => input.default_value === option.value);
                     if (!selected_option) {
                         throw new Error("UserInput: Default value for select not present in options.");
                     }
                     values[input.key] = selected_option;
-                } else {
+                }
+                else {
                     values[input.key] = input.default_value;
                 }
             });
-
             this.state = {
                 values: values,
                 inputs: input_configs,
                 tag: null,
             };
             this.confirmCB = cb || null;
-
             this.input_components = {
                 text: default_components.text,
                 textarea: default_components.textarea,
@@ -57,24 +42,18 @@ export default function getInputForm(default_components: ComponentObject, custom
                 tri_state: default_components.tri_state
             };
         }
-
         componentDidMount() {
-            mounted_form = this;
+            mounted_forms.push(this);
         }
-
         componentWillUnmount() {
-            if (mounted_form === this) {
-                //If another instance of this form has already been mounted
-                //the mounted_form will have changed. Check before resetting it.
-                mounted_form = null;
-            }
+            let mount_index = mounted_forms.findIndex(form => form === this);
+            mounted_forms.splice(mount_index, 1);
         }
-
-        setConfig(input_config: AnyInputConfigWithValue) {
+        setConfig(input_config) {
             let inputs = this.state.inputs;
             let input_index = inputs.findIndex(input => input.key === input_config.key);
             if (input_index < 0) {
-                throw new Error("UserInput: Key not found in existing inputs.");
+                throw new Error("UserInput: Key not found in existing inputs. Key must match an input created with 'generateForm()'.");
             }
             let values = this.state.values;
             if (input_config.hasOwnProperty("value")) {
@@ -84,13 +63,15 @@ export default function getInputForm(default_components: ComponentObject, custom
                         throw new Error("UserInput: Values for multiselect not present in options.");
                     }
                     values[input_config.key] = selected_options;
-                } else if (input_config.type === "select") {
+                }
+                else if (input_config.type === "select") {
                     let selected_option = input_config.options.find(option => input_config.value === option.value);
                     if (!selected_option) {
                         throw new Error("UserInput: Value for select not present in options.");
                     }
                     values[input_config.key] = selected_option;
-                } else {
+                }
+                else {
                     values[input_config.key] = input_config.value;
                 }
             }
@@ -100,111 +81,108 @@ export default function getInputForm(default_components: ComponentObject, custom
                 values: values
             });
         }
-
         getValues() {
-            let values: LooseObject = {};
+            let values = Object.assign({}, this.state.values);
             this.state.inputs.forEach((input) => {
-                if (input.type === "button" || input.type === "confirm") {
-                    return;
-                } else if ((input.type === "text" || input.type === "textarea") && (!input.hasOwnProperty("trim") || input.trim === true)) {
-                    if (typeof this.state.values[input.key] === "string") {
-                        values[input.key] = this.state.values[input.key].trim();
-                    } else {
-                        values[input.key] = this.state.values[input.key];
+                if ((input.type === "text" || input.type === "textarea") && (!input.hasOwnProperty("trim") || input.trim === true)) {
+                    if (typeof values[input.key] === "string") {
+                        values[input.key] = values[input.key].trim();
                     }
-                } else if (input.type === "select") {
-                    values[input.key] = this.state.values[input.key].value;
-                } else if (input.type === "multi_select") {
-                    values[input.key] = this.state.values[input.key].map((option: MultiSelectOption) => option.value);
-                } else {
-                    values[input.key] = this.state.values[input.key];
+                }
+                if (input.type === "select") {
+                    values[input.key] = values[input.key].value;
+                }
+                if (input.type === "multi_select") {
+                    values[input.key] = values[input.key].map((option) => option.value);
                 }
             });
             return values;
         }
-
         resetValues() {
             let default_values = input_configs.map(input => input.default_value);
             this.setState({ values: default_values });
         }
-
         userConfirmedCB() {
+            let values = Object.assign({}, this.state.values);
+            this.state.inputs.forEach((input) => {
+                if ((input.type === "text" || input.type === "textarea") && (!input.hasOwnProperty("trim") || input.trim === true)) {
+                    if (typeof values[input.key] === "string") {
+                        values[input.key] = values[input.key].trim();
+                    }
+                }
+                if (input.type === "select") {
+                    values[input.key] = values[input.key].value;
+                }
+                if (input.type === "multi_select") {
+                    values[input.key] = values[input.key].map((option) => option.value);
+                }
+            });
             if (this.confirmCB) {
-                this.confirmCB(this.getValues());
+                this.confirmCB(values);
+                this.confirmCB = null;
             }
         }
-
-        inputValueChangeCB(key: string, value: any) {
+        inputValueChangeCB(key, value) {
             let values = Object.assign({}, this.state.values);
             values[key] = value;
             this.setState({
                 values: values
             });
         }
-
         renderInputs() {
             return this.state.inputs.map((input_request, index) => {
-                let InputComponent = this.input_components[input_request.type] as typeof React.Component;
+                let InputComponent = this.input_components[input_request.type];
                 if (custom_components && custom_components.hasOwnProperty(input_request.type)) {
-                    InputComponent = custom_components[input_request.type] as typeof React.Component;
+                    InputComponent = custom_components[input_request.type];
                 }
                 let key = input_request.key || "input_" + index;
                 if (input_request.type === "confirm" || input_request.type === "button") {
-                    return <InputComponent
-                        key={key}
-                        config={input_request}
-                        value={this.state.values[key]}
-                        onClick={() => {
+                    return React.createElement(InputComponent, { key: key, config: input_request, value: this.state.values[key], onClick: () => {
                             this.userConfirmedCB();
-                        }}
-                    />;
+                        } });
                 }
-                return <InputComponent
-                    key={key}
-                    config={input_request}
-                    value={this.state.values[key]}
-                    onChange={(value: any) => {
+                return React.createElement(InputComponent, { key: key, config: input_request, value: this.state.values[key], onChange: (value) => {
                         this.inputValueChangeCB(key, value);
-                    }}
-                />;
+                    } });
             });
         }
-
         render() {
-            return (
-                <div>
-                    { this.renderInputs() }
-                </div>
-            );
+            return (React.createElement("div", null, this.renderInputs()));
         }
     }
-
     return {
         component: InputWrapper,
         reset: () => {
-            if (mounted_form) {
-                mounted_form.resetValues();
-            }
+            mounted_forms.forEach((form) => {
+                form.resetValues();
+            });
         },
-        getValues: (): LooseObject => {
-            if (!mounted_form) {
-                return {};
-            }
-            return mounted_form.getValues();
+        getForms: () => {
+            return mounted_forms;
         },
-        setInputConfig: (updated_config: Partial<AnyInputConfigWithValue>) => {
+        getValues: () => {
+            return mounted_forms.map((form) => {
+                return {
+                    values: form.getValues(),
+                    ref: form
+                };
+            });
+        },
+        setInputConfig: (updated_config) => {
             if (updated_config.hasOwnProperty("key") === false) {
                 throw new Error("UserInput: input_config must contain 'key' property.");
             }
             let inputs = input_configs;
-            let input_index = input_configs.findIndex(input => input.key === updated_config.key);
+            let input_index = inputs.findIndex(input => input.key === updated_config.key);
             if (input_index < 0) {
-                throw new Error("UserInput: Key not found in existing inputs.");
+                throw new Error("UserInput: Key not found in existing inputs. Key must match an input created with 'generateForm()'.");
             }
-            input_configs[input_index] = Object.assign({}, input_configs[input_index], updated_config);
-            if (mounted_form) {
-                mounted_form.setConfig(inputs[input_index]);
-            }
+            inputs[input_index] = Object.assign({}, inputs[input_index], updated_config);
+            mounted_forms.forEach((form) => {
+                form.setConfig(inputs[input_index]);
+            });
         }
     };
 }
+
+//# sourceMappingURL=formGenerator.js.map

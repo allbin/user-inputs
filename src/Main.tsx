@@ -11,13 +11,12 @@ interface MainState {
 class Main extends React.Component<MainProps, MainState> {
 
     alert_prompt: UserInputPromptConfig = {
-        prompt_props: {
-            title: "Title of Alert prompt."
-        },
+        title: "Title of Alert prompt",
         inputs: [{
-            key: "text-input",
             type: "text",
-            default_value: ""
+            key: "text_input_test",
+            default_value: "",
+            class_name: "text_input_test_class"
         }]
     };
     render() {
@@ -27,7 +26,9 @@ class Main extends React.Component<MainProps, MainState> {
                 MAIN
                 <div
                     onClick={() => {
-
+                        this.props.userInputs.alert(this.alert_prompt, (values) => {
+                            console.log("Alert Prompt values:", values);
+                        });
                     }}
                 >
                     Open Alert

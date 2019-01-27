@@ -1,36 +1,6 @@
 import * as React from 'react';
 import styled from '../styling';
-export interface ButtonConfig {
-    type: "button"|"confirm";
-    key: string;
-    label: string;
-    default_value: any;
-    class_name?: string;
-    big?: boolean;
-    filled?: boolean;
-    disabled?: boolean;
-    onClick?: () => void;
-    onChange?: () => void;
-    dark?: boolean;
-    light?: boolean;
-    red?: boolean;
-    green?: boolean;
-    teal?: boolean;
-    block?: boolean;
-    autofocus?: boolean;
-}
-export interface ButtonProps {
-    config: ButtonConfig;
-    onMouseEnter?: () => void;
-    onMouseLeave?: () => void;
-    onClick: () => void;
-}
-interface ContainerStyleProps {
-    filled: boolean;
-    block: boolean;
-}
-
-const ButtonContainer = styled("button")<ContainerStyleProps> `
+const ButtonContainer = styled("button") `
     font-size: 14px;
     user-select: none;
     border: ${props => props.filled ? 'none' : '1px solid ' + props.theme.colors.brand[0]};
@@ -93,10 +63,7 @@ const ButtonContainer = styled("button")<ContainerStyleProps> `
         box-shadow: 0 4px 5px rgba(0,0,0,0.1);
     }
 `;
-
-
-export default class Button extends React.Component<ButtonProps, any> {
-
+export default class Button extends React.Component {
     render() {
         let cfg = this.props.config;
         let class_names = "user_input button_input";
@@ -104,28 +71,30 @@ export default class Button extends React.Component<ButtonProps, any> {
             class_names += " " + cfg.class_name;
         }
         let classes = [];
-        if (cfg.dark) { classes.push('dark'); }
-        if (cfg.light) { classes.push('light'); }
-        if (cfg.red) { classes.push('red'); }
-        if (cfg.green) { classes.push('green'); }
-        if (cfg.teal) { classes.push('teal'); }
-        if (cfg.disabled) { classes.push('disabled'); }
-        if (cfg.big) { classes.push('big'); }
+        if (this.props.dark) {
+            classes.push('dark');
+        }
+        if (this.props.light) {
+            classes.push('light');
+        }
+        if (this.props.red) {
+            classes.push('red');
+        }
+        if (this.props.green) {
+            classes.push('green');
+        }
+        if (this.props.teal) {
+            classes.push('teal');
+        }
+        if (this.props.disabled) {
+            classes.push('disabled');
+        }
+        if (this.props.big) {
+            classes.push('big');
+        }
         class_names += " " + classes.join(" ");
-
-        return (
-            <ButtonContainer
-                onMouseEnter={() => this.props.onMouseEnter ? this.props.onMouseEnter() : null}
-                onMouseLeave={() => this.props.onMouseLeave ? this.props.onMouseLeave() : null}
-                block={(cfg.block) ? true : false}
-                filled={(cfg.filled) ? true : false}
-                disabled={cfg.disabled || false}
-                autoFocus={cfg.autofocus || false}
-                className={class_names}
-                onClick={() => this.props.onClick()}
-            >
-                {cfg.label}
-            </ButtonContainer>
-        );
+        return (React.createElement(ButtonContainer, { onMouseEnter: () => this.props.onMouseEnter ? this.props.onMouseEnter() : null, onMouseLeave: () => this.props.onMouseLeave ? this.props.onMouseLeave() : null, block: (this.props.block) ? true : false, filled: (this.props.filled) ? true : false, disabled: this.props.disabled || false, autoFocus: this.props.autofocus || false, className: class_names, onClick: () => this.props.onClick() }, cfg.label));
     }
 }
+
+//# sourceMappingURL=Button.js.map
