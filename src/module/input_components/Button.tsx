@@ -7,6 +7,7 @@ export interface ButtonConfig {
     default_value: any;
     class_name?: string;
     big?: boolean;
+    /** Should the buttons background color be filled in or transparent? Default true */
     filled?: boolean;
     disabled?: boolean;
     onClick?: () => void;
@@ -118,7 +119,7 @@ export default class Button extends React.Component<ButtonProps, any> {
                 onMouseEnter={() => this.props.onMouseEnter ? this.props.onMouseEnter() : null}
                 onMouseLeave={() => this.props.onMouseLeave ? this.props.onMouseLeave() : null}
                 block={(cfg.block) ? true : false}
-                filled={(cfg.filled) ? true : false}
+                filled={(cfg.filled === false) ? false : true}
                 disabled={cfg.disabled || false}
                 autoFocus={cfg.autofocus || false}
                 className={class_names}
