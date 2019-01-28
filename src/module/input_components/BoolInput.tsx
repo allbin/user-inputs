@@ -7,7 +7,7 @@ export interface BoolInputConfig {
     default_value: boolean;
     label?: string;
     class_name?: string;
-    onChange?: (value: boolean) => void;
+    onValueChange?: (value: boolean) => void;
     message?: string;
     tooltip?: string;
 }
@@ -96,8 +96,8 @@ export class Input extends React.Component<BoolInputProps, any> {
     onChange(value: boolean) {
         const cfg = this.props.config;
         this.props.onChange(value);
-        if (cfg.onChange) {
-            cfg.onChange(value);
+        if (cfg.onValueChange) {
+            cfg.onValueChange(getParsedValue(cfg, value));
         }
     }
     render() {
@@ -130,12 +130,12 @@ export class Input extends React.Component<BoolInputProps, any> {
     }
 }
 
-export function validate(cfg: BoolInputConfig, value: boolean): boolean {
-    return true;
+export function validate(cfg: BoolInputConfig, value: boolean): null|string {
+    return null;
 }
 
 export function validateConfig(cfg: BoolInputConfig): true|string {
-    if (!validate(cfg, cfg.default_value)) {
+    if (validate(cfg, cfg.default_value)) {
         return "UserInput: Invalid default_value for Bool.";
     }
 

@@ -80,18 +80,28 @@ class Alert1 extends React.Component<Form1Props, Form1State> {
             class_name: "form_boolean_test_class",
         },
         {
+            key: "numeric_input_test",
+            type: "numeric",
+            number_type: "integer",
+            default_value: 0,
+            label: "Form numeric integer label",
+            message: "Please enter an integer between 0 and 50.",
+            min: 0,
+            max: 50,
+            class_name: "form_boolean_test_class",
+        },
+        {
             type: "confirm",
             key: "confirm_input_test",
             label: "Confirm label",
             default_value: "",
             class_name: "confirm_button_test_class",
-        },
+        }
     ];
 
     form = userInputs.generateForm(this.form_inputs, (values) => {
         console.log("confirm callback values:", values);
     });
-
 
     render() {
         return (

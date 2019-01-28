@@ -11,7 +11,7 @@ export interface GridInputConfig {
     grid_type: GridType;
     options: any;
     class_name?: string;
-    onChange?: (value: string|number) => void;
+    onValueChange?: (value: string|number) => void;
     message?: string;
     tooltip?: string;
 }
@@ -91,8 +91,8 @@ export class Input extends React.Component<GridInputProps, any> {
     onChange(value: string|number) {
         const cfg = this.props.config;
         this.props.onChange(value);
-        if (cfg.onChange) {
-            cfg.onChange(value);
+        if (cfg.onValueChange) {
+            cfg.onValueChange(getParsedValue(cfg, value));
         }
     }
     render() {
@@ -133,18 +133,18 @@ export class Input extends React.Component<GridInputProps, any> {
     }
 }
 
-export function validate(cfg: GridInputConfig, value: string): boolean {
-    return true;
+export function validate(cfg: GridInputConfig, value: string): null|string {
+    return null;
 }
 
 export function validateConfig(cfg: GridInputConfig): true|string {
-    if (!validate(cfg, cfg.default_value)) {
+    if (validate(cfg, cfg.default_value)) {
         return "UserInput: Invalid default_value for Grid.";
     }
 
     return true;
 }
 
-export function getParsedValue(cfg: GridInputConfig, value: string): string {
+export function getParsedValue(cfg: GridInputConfig, value: string|number): string|number {
     return value;
 }

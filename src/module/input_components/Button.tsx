@@ -7,11 +7,11 @@ export interface ButtonConfig {
     default_value: any;
     class_name?: string;
     big?: boolean;
-    /** Should the buttons background color be filled in or transparent? Default true */
+    /** Should the buttons background color be filled in or transparent? Default true. */
     filled?: boolean;
     disabled?: boolean;
     onClick?: () => void;
-    onChange?: () => void;
+    onValueChange?: () => void;
     dark?: boolean;
     light?: boolean;
     red?: boolean;
@@ -131,12 +131,12 @@ export class Input extends React.Component<ButtonProps, any> {
     }
 }
 
-export function validate(cfg: ButtonConfig, value: any): boolean {
-    return true;
+export function validate(cfg: ButtonConfig, value: any): null|string {
+    return null;
 }
 
 export function validateConfig(cfg: ButtonConfig): true|string {
-    if (!validate(cfg, cfg.default_value)) {
+    if (validate(cfg, cfg.default_value)) {
         return "UserInput: Invalid default_value for Button.";
     }
 

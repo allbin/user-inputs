@@ -12,7 +12,7 @@ export interface TriStateInputConfig {
     no_options_message?: string;
     searchable?: boolean;
     disabled?: boolean;
-    onChange?: (value: string|number) => void;
+    onValueChange?: (value: string|number) => void;
     message?: string;
     tooltip?: string;
 }
@@ -70,8 +70,8 @@ export class Input extends React.Component<TriStateInputProps, TriStateInputConf
     onChange(value: string|number) {
         const cfg = this.props.config;
         this.props.onChange(value);
-        if (cfg.onChange) {
-            cfg.onChange(value);
+        if (cfg.onValueChange) {
+            cfg.onValueChange(getParsedValue(cfg, value));
         }
     }
     render() {
@@ -110,12 +110,12 @@ export class Input extends React.Component<TriStateInputProps, TriStateInputConf
     }
 }
 
-export function validate(cfg: TriStateInputConfig, value: string|number): boolean {
-    return true;
+export function validate(cfg: TriStateInputConfig, value: string|number): null|string {
+    return null;
 }
 
 export function validateConfig(cfg: TriStateInputConfig): true|string {
-    if (!validate(cfg, cfg.default_value)) {
+    if (validate(cfg, cfg.default_value)) {
         return "UserInput: Invalid default_value for TriState.";
     }
 

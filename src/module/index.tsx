@@ -2,7 +2,7 @@ import * as React from 'react';
 import oh from 'output-helpers';
 import translations from './translations';
 
-import formGenerator, { GeneratedForm } from './formGenerator';
+import formGenerator, { GeneratedForm, validateFormGeneratorInputs } from './formGenerator';
 
 import PromptModal from './PromptModal';
 import * as TextImport from './input_components/TextInput';
@@ -16,10 +16,10 @@ import * as NumericImport from './input_components/NumericInput';
 import * as ButtonImport from './input_components/Button';
 
 
-let valid_types = ["bool", "button", "confirm", "date", "grid", "number", "multi_select", "select", "text", "textarea", "tri_state"];
+export let valid_types = ["bool", "button", "confirm", "date", "grid", "numeric", "multi_select", "select", "text", "textarea", "tri_state"];
 
 
-//Add translations of this repo to OH. Prefixed with "user_input_hoc_".
+//Add translations of this repo to OH. Prefixed with "user_input_".
 oh.addDictionary(translations);
 
 export interface HOCProps {
@@ -42,10 +42,10 @@ export interface HOCProps {
 export type ValueInterface = {
     value?: any;
 };
-export type AnyInputConfig = ButtonImport.ButtonConfig|TextImport.TextInputConfig|BoolImport.BoolInputConfig|GridImport.GridInputConfig|SelectImport.SelectInputConfig|MultiSelectImport.MultiSelectInputConfig|TextareaImport.TextareaInputConfig|TriStateImport.TriStateInputConfig;
+export type AnyInputConfig = ButtonImport.ButtonConfig|TextImport.TextInputConfig|BoolImport.BoolInputConfig|GridImport.GridInputConfig|SelectImport.SelectInputConfig|MultiSelectImport.MultiSelectInputConfig|NumericImport.NumericInputConfig|TextareaImport.TextareaInputConfig|TriStateImport.TriStateInputConfig;
 export type AnyInputConfigWithValue = AnyInputConfig & ValueInterface;
-export type PromptInputConfigArray = Array<ButtonImport.ButtonConfig|TextImport.TextInputConfig|BoolImport.BoolInputConfig|GridImport.GridInputConfig|SelectImport.SelectInputConfig|MultiSelectImport.MultiSelectInputConfig|TextareaImport.TextareaInputConfig|TriStateImport.TriStateInputConfig>;
-export type FormInputConfigArray = Array<ButtonImport.ButtonConfig|TextImport.TextInputConfig|BoolImport.BoolInputConfig|GridImport.GridInputConfig|SelectImport.SelectInputConfig|MultiSelectImport.MultiSelectInputConfig|TextareaImport.TextareaInputConfig|TriStateImport.TriStateInputConfig>;
+export type PromptInputConfigArray = Array<ButtonImport.ButtonConfig|TextImport.TextInputConfig|BoolImport.BoolInputConfig|GridImport.GridInputConfig|SelectImport.SelectInputConfig|MultiSelectImport.MultiSelectInputConfig|NumericImport.NumericInputConfig|TextareaImport.TextareaInputConfig|TriStateImport.TriStateInputConfig>;
+export type FormInputConfigArray = Array<ButtonImport.ButtonConfig|TextImport.TextInputConfig|BoolImport.BoolInputConfig|GridImport.GridInputConfig|SelectImport.SelectInputConfig|MultiSelectImport.MultiSelectInputConfig|NumericImport.NumericInputConfig|TextareaImport.TextareaInputConfig|TriStateImport.TriStateInputConfig>;
 
 
 export interface PromptState {
@@ -84,7 +84,7 @@ interface InputComponentExports {
     Input: React.ComponentClass<any>;
     getParsedValue: (cfg: any, value: any) => any;
     validateConfig: (cfg: any) => true|string;
-    validate: (cfg: any, value: any) => boolean;
+    validate: (cfg: any, value: any) => null|string;
 }
 
 export interface ComponentObject {
@@ -105,7 +105,7 @@ export interface ComponentObject {
 
 
 
-let default_components: ComponentObject = {
+let input_imports: ComponentObject = {
     text: TextImport,
     bool: BoolImport,
     grid: GridImport,
@@ -219,7 +219,7 @@ export function InputHOC<P extends UserInputProps>(WrappedComponent: React.Compo
             if (invalid_inputs) {
                 throw new Error("UserInput: Inputs must be configured with a 'default_value'.");
             }
-            invalid_inputs = inputs.some(input => !default_components[input.type]);
+            invalid_inputs = inputs.some(input => !input_imports[input.type]);
             if (invalid_inputs) {
                 throw new Error("UserInput: Inputs must be configured with a valid 'type'. " + valid_types.join(','));
             }
@@ -227,7 +227,7 @@ export function InputHOC<P extends UserInputProps>(WrappedComponent: React.Compo
             this.cancelCB = cancelCB || null;
 
             let confirm_config: ButtonImport.ButtonConfig = {
-                label: prompt_config.confirm_button_label || oh.translate('user_input_hoc_confirm'),
+                label: prompt_config.confirm_button_label || oh.translate('user_input_confirm'),
                 key: "confirm",
                 type: "confirm",
                 default_value: "",
@@ -235,7 +235,7 @@ export function InputHOC<P extends UserInputProps>(WrappedComponent: React.Compo
                 big: true
             };
             let cancel_config: ButtonImport.ButtonConfig = {
-                label: prompt_config.confirm_button_label || oh.translate('user_input_hoc_cancel'),
+                label: prompt_config.confirm_button_label || oh.translate('user_input_cancel'),
                 key: "cancel",
                 type: "button",
                 default_value: "",
@@ -247,7 +247,7 @@ export function InputHOC<P extends UserInputProps>(WrappedComponent: React.Compo
             inputs.push(cancel_config, confirm_config);
 
             this.setState({
-                form: formGenerator(default_components, inputs, (values: LooseObject) => this.userConfirmedCB(values)),
+                form: formGenerator(input_imports, inputs, (values: LooseObject) => this.userConfirmedCB(values)),
                 prompt_config: prompt_config
             });
         }
@@ -298,35 +298,8 @@ export function InputHOC<P extends UserInputProps>(WrappedComponent: React.Compo
 
 export namespace InputHOC {
     export function generateForm(input_configs: FormInputConfigArray, confirmCB?: (value: any) => void): GeneratedForm {
-        if (input_configs.length < 1) {
-            throw new Error("UserInput: GenerateInputs requires at least one input.");
-        }
-        if (!confirmCB) {
-            let inputs_missing_cb = input_configs.filter(input => !input.onChange);
-            if (inputs_missing_cb.length > 0) {
-                throw new Error("UserInput: GenerateInputs without a confirmCB requires every input to specify a onChange callback.");
-            }
-        } else {
-            let confirm_buttons = input_configs.some(input => input.type === "confirm");
-            if (!confirm_buttons) {
-                throw new Error("UserInput: GenerateInputs with a confirmCB is required to have at least one input of type 'confirm'.");
-            }
-        }
-        let invalid_inputs = input_configs.some((input) => {
-            return (input.type !== "confirm" && input.type !== "button") && input.hasOwnProperty("default_value") === false;
-        });
-        if (invalid_inputs) {
-            throw new Error("UserInput: Every input that is not a 'button' or 'confirm' must be configured with a 'default_value'.");
-        }
-        invalid_inputs = input_configs.some(input => !valid_types.includes(input.type));
-        if (invalid_inputs) {
-            throw new Error("UserInput: Inputs must be configured with a valid 'type'. " + valid_types.join(','));
-        }
-        invalid_inputs = input_configs.some(input => (input.type !== 'button' && input.type !== 'confirm') && !input.hasOwnProperty('key'));
-        if (invalid_inputs) {
-            throw new Error("UserInput: Inputs that are not type 'button' or 'confirm' must be configured with a 'key' property. ");
-        }
-        return formGenerator(default_components, input_configs, confirmCB);
+        validateFormGeneratorInputs(input_imports, input_configs, confirmCB);
+        return formGenerator(input_imports, input_configs, confirmCB);
     }
 }
 

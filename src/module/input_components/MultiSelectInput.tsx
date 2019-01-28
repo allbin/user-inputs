@@ -14,7 +14,7 @@ export interface MultiSelectInputConfig {
     disabled?: boolean;
     /** Is the multi_select searchable? Default true */
     searchable?: boolean;
-    onChange?: (value: (string|number)[]) => void;
+    onValueChange?: (value: (string|number)[]) => void;
     message?: string;
     tooltip?: string;
 }
@@ -46,8 +46,8 @@ export class Input extends React.Component<MultiSelectInputProps> {
     onChange(values: MultiSelectOption[]) {
         const cfg = this.props.config;
         this.props.onChange(values);
-        if (cfg.onChange) {
-            cfg.onChange(values.map(x => x.value));
+        if (cfg.onValueChange) {
+            cfg.onValueChange(getParsedValue(cfg, values));
         }
     }
 
@@ -81,18 +81,18 @@ export class Input extends React.Component<MultiSelectInputProps> {
     }
 }
 
-export function validate(cfg: MultiSelectInputConfig, value: (number|string)[]): boolean {
-    return true;
+export function validate(cfg: MultiSelectInputConfig, value: (number|string)[]): null|string {
+    return null;
 }
 
 export function validateConfig(cfg: MultiSelectInputConfig): true|string {
-    if (!validate(cfg, cfg.default_value)) {
+    if (validate(cfg, cfg.default_value)) {
         return "UserInput: Invalid default_value for MultiSelect.";
     }
 
     return true;
 }
 
-export function getParsedValue(cfg: MultiSelectInputConfig, value: string|number): string|number {
-    return value;
+export function getParsedValue(cfg: MultiSelectInputConfig, values: MultiSelectOption[]): (string|number)[] {
+    return values.map(x => x.value);
 }

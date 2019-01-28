@@ -20,7 +20,8 @@ interface ThemeInterface {
         red: string[],
         yellow: string[],
         green: string[],
-        teal: string[]
+        teal: string[],
+        error: string
     };
 }
 

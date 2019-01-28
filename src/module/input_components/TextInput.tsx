@@ -14,7 +14,7 @@ export interface TextInputConfig {
     message?: string;
     tooltip?: string;
     trim?: boolean;
-    onChange?: (value: string) => void;
+    onValueChange?: (value: string) => void;
 }
 export interface TextInputProps {
     value: string;
@@ -213,7 +213,7 @@ export class Input extends React.Component<TextInputProps, TextInputState> {
                             });
                         }}
                     >
-                        { oh.translate("user_input_hoc_cancel") }
+                        { oh.translate("user_input_cancel") }
                     </div>
                 </div>
             </div>
@@ -223,12 +223,8 @@ export class Input extends React.Component<TextInputProps, TextInputState> {
     onChange(value: string) {
         const cfg = this.props.config;
         this.props.onChange(value);
-        if (cfg.onChange) {
-            if (cfg.trim) {
-                cfg.onChange(value.trim());
-            } else {
-                cfg.onChange(value);
-            }
+        if (cfg.onValueChange) {
+            cfg.onValueChange(getParsedValue(cfg, value));
         }
     }
 
@@ -261,12 +257,12 @@ export class Input extends React.Component<TextInputProps, TextInputState> {
     }
 }
 
-export function validate(cfg: TextInputConfig, value: string): boolean {
-    return true;
+export function validate(cfg: TextInputConfig, value: string): null|string {
+    return null;
 }
 
 export function validateConfig(cfg: TextInputConfig): true|string {
-    if (!validate(cfg, cfg.default_value)) {
+    if (validate(cfg, cfg.default_value)) {
         return "UserInput: Invalid default_value for TextState.";
     }
 
@@ -274,5 +270,8 @@ export function validateConfig(cfg: TextInputConfig): true|string {
 }
 
 export function getParsedValue(cfg: TextInputConfig, value: string): string {
-    return value;
+    if (!cfg.trim) {
+        return value;
+    }
+    return value.trim();
 }

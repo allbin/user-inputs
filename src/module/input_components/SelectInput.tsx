@@ -14,7 +14,7 @@ export interface SelectInputConfig {
     no_options_message?: string;
     searchable?: boolean;
     disabled?: boolean;
-    onChange?: (value: string|number) => void;
+    onValueChange?: (value: string|number) => void;
     message?: string;
     tooltip?: string;
 }
@@ -46,8 +46,8 @@ export class Input extends React.Component<SelectInputProps> {
     onChange(value: SelectOption) {
         const cfg = this.props.config;
         this.props.onChange(value);
-        if (cfg.onChange) {
-            cfg.onChange(value.value);
+        if (cfg.onValueChange) {
+            cfg.onValueChange(value.value);
         }
     }
     render() {
@@ -77,18 +77,18 @@ export class Input extends React.Component<SelectInputProps> {
     }
 }
 
-export function validate(cfg: SelectInputConfig, value: string|number): boolean {
-    return true;
+export function validate(cfg: SelectInputConfig, value: string|number): string|null {
+    return null;
 }
 
 export function validateConfig(cfg: SelectInputConfig): true|string {
-    if (!validate(cfg, cfg.default_value)) {
+    if (validate(cfg, cfg.default_value)) {
         return "UserInput: Invalid default_value for Select.";
     }
 
     return true;
 }
 
-export function getParsedValue(cfg: SelectInputConfig, value: string|number): string|number {
-    return value;
+export function getParsedValue(cfg: SelectInputConfig, value: SelectOption): string|number {
+    return value.value;
 }

@@ -1,8 +1,6 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
-// this.props has everything passed in to config.props as well as the full config object in this.props.config.
-
 export interface TextareaInputConfig {
     type: "textarea";
     key: string;
@@ -12,7 +10,7 @@ export interface TextareaInputConfig {
     placeholder?: string;
     class_name?: string;
     trim?: boolean;
-    onChange?: (value: string) => void;
+    onValueChange?: (value: string) => void;
     message?: string;
     tooltip?: string;
 }
@@ -59,11 +57,11 @@ export class Input extends React.Component<TextareaInputProps, TextareaInputConf
     onChange(value: string) {
         const cfg = this.props.config;
         this.props.onChange(value);
-        if (cfg.onChange) {
+        if (cfg.onValueChange) {
             if (cfg.trim) {
-                cfg.onChange(value.trim());
+                cfg.onValueChange(value.trim());
             } else {
-                cfg.onChange(value);
+                cfg.onValueChange(value);
             }
         }
     }
@@ -91,12 +89,12 @@ export class Input extends React.Component<TextareaInputProps, TextareaInputConf
     }
 }
 
-export function validate(cfg: TextareaInputConfig, value: string): boolean {
-    return true;
+export function validate(cfg: TextareaInputConfig, value: string): null|string {
+    return null;
 }
 
 export function validateConfig(cfg: TextareaInputConfig): true|string {
-    if (!validate(cfg, cfg.default_value)) {
+    if (validate(cfg, cfg.default_value)) {
         return "UserInput: Invalid default_value for Textarea.";
     }
 

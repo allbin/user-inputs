@@ -17,7 +17,8 @@ export interface ThemeInterface {
         red: string[],
         yellow: string[],
         green: string[],
-        teal: string[]
+        teal: string[],
+        error: string
     };
 }
 
@@ -71,7 +72,8 @@ let main_theme: ThemeInterface = {
             '#32ab49',
             '#3fb742',
             '#57d547'
-        ]
+        ],
+        error: 'red'
     }
 };
 
