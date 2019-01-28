@@ -12,6 +12,7 @@ import SelectInput, { SelectInputConfig } from './input_components/SelectInput';
 import MultiSelectInput, { MultiSelectInputConfig } from './input_components/MultiSelectInput';
 import TextareaInput, { TextareaInputConfig } from './input_components/TextareaInput';
 import TriStateInput, { TriStateInputConfig } from './input_components/TriStateInput';
+// import * as NumericInput from './input_components/NumericInput';
 import Button, { ButtonConfig } from './input_components/Button';
 
 
@@ -97,7 +98,6 @@ let default_components: ComponentLib = {
     number: TextInput,
     date: TextInput
 };
-let custom_components: Partial<ComponentLib> = {};
 
 
 
@@ -238,7 +238,7 @@ export function InputHOC<P extends UserInputProps>(WrappedComponent: React.Compo
             inputs.push(cancel_config, confirm_config);
 
             this.setState({
-                form: formGenerator(default_components, custom_components, inputs, (values: LooseObject) => this.userConfirmedCB(values)),
+                form: formGenerator(default_components, inputs, (values: LooseObject) => this.userConfirmedCB(values)),
                 prompt_config: prompt_config
             });
         }
@@ -288,9 +288,6 @@ export function InputHOC<P extends UserInputProps>(WrappedComponent: React.Compo
 
 
 export namespace InputHOC {
-    export function setCustomComponents(object_with_components: ComponentObject) {
-        custom_components = object_with_components;
-    }
     export function generateForm(input_configs: FormInputConfigArray, confirmCB?: (value: any) => void): GeneratedForm {
         if (input_configs.length < 1) {
             throw new Error("UserInput: GenerateInputs requires at least one input.");
@@ -320,7 +317,7 @@ export namespace InputHOC {
         if (invalid_inputs) {
             throw new Error("UserInput: Inputs that are not type 'button' or 'confirm' must be configured with a 'key' property. ");
         }
-        return formGenerator(default_components, custom_components, input_configs, confirmCB);
+        return formGenerator(default_components, input_configs, confirmCB);
     }
 }
 

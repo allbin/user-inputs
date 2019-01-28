@@ -9,7 +9,7 @@ export interface GeneratedForm {
     setInputConfig: (updated_config: Partial<AnyInputConfig>) => void;
 }
 
-export default function getInputForm(default_components: ComponentObject, custom_components: ComponentObject, input_configs: FormInputConfigArray, cb?: (values: any) => void): GeneratedForm {
+export default function getInputForm(default_components: ComponentObject, input_configs: FormInputConfigArray, cb?: (values: any) => void): GeneratedForm {
     let mounted_form: InputWrapper | null;
 
     class InputWrapper extends React.Component<any, FormState> {
@@ -145,9 +145,6 @@ export default function getInputForm(default_components: ComponentObject, custom
         renderInputs() {
             return this.state.inputs.map((input_request, index) => {
                 let InputComponent = this.input_components[input_request.type] as typeof React.Component;
-                if (custom_components && custom_components.hasOwnProperty(input_request.type)) {
-                    InputComponent = custom_components[input_request.type] as typeof React.Component;
-                }
                 let key = input_request.key || "input_" + index;
                 if (input_request.type === "confirm" || input_request.type === "button") {
                     return <InputComponent
