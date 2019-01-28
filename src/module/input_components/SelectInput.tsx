@@ -15,6 +15,8 @@ export interface SelectInputConfig {
     searchable?: boolean;
     disabled?: boolean;
     onChange?: (value: string|number) => void;
+    message?: string;
+    tooltip?: string;
 }
 export interface SelectInputProps {
     value?: SelectOption;
@@ -24,6 +26,13 @@ export interface SelectInputProps {
 
 const SelectInputContainer = styled.div `
     text-align: left;
+    p.message{
+        color: ${props => props.theme.colors.dark[2]};
+        font-size: 12px;
+        margin-bottom: 6px;
+        font-weight: normal;
+        font-style: italic;
+    }
     p.select_label {
         color: ${props => props.theme.colors.dark[1]};
         font-size: 14px;
@@ -51,6 +60,7 @@ class SelectInput extends React.Component<SelectInputProps> {
         return (
             <SelectInputContainer className={class_names}>
                 { cfg.label ? <p className="select_label">{ cfg.label }</p> : null }
+                { cfg.message ? <p className="message">{ cfg.message }</p> : null }
                 <Select
                     placeholder={cfg.placeholder ? cfg.placeholder : cfg.label ? cfg.label : '' }
                     value={this.props.value}

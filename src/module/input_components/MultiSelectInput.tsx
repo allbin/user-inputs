@@ -15,6 +15,8 @@ export interface MultiSelectInputConfig {
     /** Is the multi_select searchable? Default true */
     searchable?: boolean;
     onChange?: (value: (string|number)[]) => void;
+    message?: string;
+    tooltip?: string;
 }
 export interface MultiSelectInputProps {
     value: MultiSelectOption;
@@ -24,6 +26,13 @@ export interface MultiSelectInputProps {
 
 const MultiSelectInputContainer = styled("div") `
     text-align: left;
+    p.message{
+        color: ${props => props.theme.colors.dark[2]};
+        font-size: 12px;
+        margin-bottom: 6px;
+        font-weight: normal;
+        font-style: italic;
+    }
     p.multi_select_label {
         color: ${props => props.theme.colors.dark[1]};
         font-size: 14px;
@@ -54,6 +63,7 @@ class MultiSelectInput extends React.Component<MultiSelectInputProps> {
                 className={class_names}
             >
                 { cfg.label ? <p className="multi_select_label">{ cfg.label }</p> : null }
+                { cfg.message ? <p className="message">{ cfg.message }</p> : null }
                 <Select
                     placeholder={cfg.placeholder ? cfg.placeholder : cfg.label ? cfg.label : '' }
                     isMulti={true}

@@ -12,6 +12,8 @@ export interface GridInputConfig {
     options: any;
     class_name?: string;
     onChange?: (value: string|number) => void;
+    message?: string;
+    tooltip?: string;
 }
 export interface GridInputProps {
     value: any;
@@ -36,6 +38,13 @@ const GridInputContainer = styled.div<GridInputStyleProps>`
         font-size: 14px;
         margin-bottom: 12px;
         font-weight: bold;
+    }
+    p.message{
+        color: ${props => props.theme.colors.dark[2]};
+        font-size: 12px;
+        margin-bottom: 6px;
+        font-weight: normal;
+        font-style: italic;
     }
     .grid_block{
         border-radius: 4px;
@@ -96,8 +105,10 @@ class GridInput extends React.Component<GridInputProps, any> {
         return (
             <GridInputContainer
                 grid_type={cfg.grid_type}
-                className={class_names}>
+                className={class_names}
+            >
                 { cfg.label ? <p>{ cfg.label }</p> : null }
+                { cfg.message ? <p className="message">{ cfg.message }</p> : null }
                 <div className="grid_block">
                     {
                         cfg.options.map((item: GridSelectOption, i: number) => {

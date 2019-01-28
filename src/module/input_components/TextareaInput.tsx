@@ -13,6 +13,8 @@ export interface TextareaInputConfig {
     class_name?: string;
     trim?: boolean;
     onChange?: (value: string) => void;
+    message?: string;
+    tooltip?: string;
 }
 export interface TextareaInputProps {
     value: string;
@@ -32,6 +34,13 @@ const TextareaInputContainer = styled.div `
         font-size: 14px;
         margin-bottom: 12px;
         font-weight: bold;
+    }
+    p.message{
+        color: ${props => props.theme.colors.dark[2]};
+        font-size: 12px;
+        margin-bottom: 6px;
+        font-weight: normal;
+        font-style: italic;
     }
     textarea {
         border: 2px solid ${props => props.theme.colors.gray[2]};
@@ -69,6 +78,7 @@ class TextareaInput extends React.Component<TextareaInputProps, TextareaInputCon
         return (
             <TextareaInputContainer className={class_names}>
                 { cfg.label ? <p>{ cfg.label }</p> : null }
+                { cfg.message ? <p className="message">{ cfg.message }</p> : null }
                 <textarea
                     rows={cfg.rows || 3}
                     autoFocus={this.props.autofocus || false}

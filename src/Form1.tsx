@@ -72,6 +72,14 @@ class Alert1 extends React.Component<Form1Props, Form1State> {
             ]
         },
         {
+            type: "bool",
+            key: "bool_input_test",
+            label: "Form bool label",
+            message: "This is a boolean input message text.",
+            default_value: false,
+            class_name: "form_boolean_test_class",
+        },
+        {
             type: "confirm",
             key: "confirm_input_test",
             label: "Confirm label",

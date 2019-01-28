@@ -13,6 +13,8 @@ export interface TriStateInputConfig {
     searchable?: boolean;
     disabled?: boolean;
     onChange?: (value: string|number) => void;
+    message?: string;
+    tooltip?: string;
 }
 export interface TriStateInputProps {
     value?: string;
@@ -27,6 +29,13 @@ const TriStateInputContainer = styled.div `
         font-size: 14px;
         margin-bottom: 12px;
         font-weight: bold;
+    }
+    p.message{
+        color: ${props => props.theme.colors.dark[2]};
+        font-size: 12px;
+        margin-bottom: 6px;
+        font-weight: normal;
+        font-style: italic;
     }
     .grid_block{
         background-color: ${props => props.theme.colors.gray[3]};
@@ -77,6 +86,7 @@ class TriStateInput extends React.Component<TriStateInputProps, TriStateInputCon
         return (
             <TriStateInputContainer className={class_names}>
                 { cfg.label ? <p className="tri_state_label">{ cfg.label }</p> : null }
+                { cfg.message ? <p className="message">{ cfg.message }</p> : null }
                 <div className="grid_block">
                     <div className="grid_block_bg" style={{left: 33.333333333333 * LEFT_POSITION + '%'}}></div>
                     {

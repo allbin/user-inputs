@@ -4,10 +4,12 @@ import styled from '../styling';
 export interface BoolInputConfig {
     type: "bool";
     key: string;
-    default_value: string;
+    default_value: boolean;
     label?: string;
     class_name?: string;
     onChange?: (value: boolean) => void;
+    message?: string;
+    tooltip?: string;
 }
 export interface BoolInputProps {
     type: "bool";
@@ -35,6 +37,13 @@ const BoolInputContainer = styled("div")<BoolInputContainerProps> `
         font-weight: bold;
         width: 60%;
         overflow: hidden;
+    }
+    p.message{
+        color: ${props => props.theme.colors.dark[2]};
+        font-size: 12px;
+        margin-bottom: 6px;
+        font-weight: normal;
+        font-style: italic;
     }
     .bool_block{
         width: 40%;
@@ -104,6 +113,7 @@ class BoolInput extends React.Component<BoolInputProps, any> {
                 thing_size={30}
             >
                 { cfg.label ? <p>{ cfg.label }</p> : null }
+                { cfg.message ? <p className="message">{ cfg.message }</p> : null }
                 <div className="bool_block">
                     <div
                         className={`bool_input ${this.props.value === true ? 'active' : ''}`}
