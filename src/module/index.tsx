@@ -235,7 +235,7 @@ export function InputHOC<P extends UserInputProps>(WrappedComponent: React.Compo
                 big: true
             };
 
-            inputs.push(confirm_config, cancel_config);
+            inputs.push(cancel_config, confirm_config);
 
             this.setState({
                 form: formGenerator(default_components, custom_components, inputs, (values: LooseObject) => this.userConfirmedCB(values)),

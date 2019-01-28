@@ -22,7 +22,7 @@ export interface TriStateInputProps {
 
 const TriStateInputContainer = styled.div `
     text-align: left;
-    p.multi_select_label {
+    p.tri_state_label {
         color: ${props => props.theme.colors.dark[1]};
         font-size: 14px;
         margin-bottom: 12px;
@@ -76,7 +76,7 @@ class TriStateInput extends React.Component<TriStateInputProps, TriStateInputCon
 
         return (
             <TriStateInputContainer className={class_names}>
-                { cfg.label ? <p className="multi_select_label">{ cfg.label }</p> : null }
+                { cfg.label ? <p className="tri_state_label">{ cfg.label }</p> : null }
                 <div className="grid_block">
                     <div className="grid_block_bg" style={{left: 33.333333333333 * LEFT_POSITION + '%'}}></div>
                     {

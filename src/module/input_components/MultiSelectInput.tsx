@@ -12,6 +12,7 @@ export interface MultiSelectInputConfig {
     class_name?: string;
     no_options_message?: string;
     disabled?: boolean;
+    /** Is the multi_select searchable? Default true */
     searchable?: boolean;
     onChange?: (value: (string|number)[]) => void;
 }

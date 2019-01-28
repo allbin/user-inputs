@@ -155,7 +155,13 @@ export default function getInputForm(default_components: ComponentObject, custom
                         config={input_request}
                         value={this.state.values[key]}
                         onClick={() => {
-                            this.userConfirmedCB();
+                            if (input_request.type === "confirm") {
+                                this.userConfirmedCB();
+                            } else {
+                                if (input_request.onClick) {
+                                    input_request.onClick();
+                                }
+                            }
                         }}
                     />;
                 }

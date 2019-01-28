@@ -24,7 +24,7 @@ export interface SelectInputProps {
 
 const SelectInputContainer = styled.div `
     text-align: left;
-    p.multi_select_label {
+    p.select_label {
         color: ${props => props.theme.colors.dark[1]};
         font-size: 14px;
         margin-bottom: 12px;
@@ -50,7 +50,7 @@ class SelectInput extends React.Component<SelectInputProps> {
 
         return (
             <SelectInputContainer className={class_names}>
-                { cfg.label ? <p className="multi_select_label">{ cfg.label }</p> : null }
+                { cfg.label ? <p className="select_label">{ cfg.label }</p> : null }
                 <Select
                     placeholder={cfg.placeholder ? cfg.placeholder : cfg.label ? cfg.label : '' }
                     value={this.props.value}
