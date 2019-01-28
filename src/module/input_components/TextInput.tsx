@@ -8,9 +8,11 @@ export interface TextInputConfig {
     type: "text";
     key: string;
     default_value: string;
-    label?: string;
-    class_name?: string;
     barcode?: boolean;
+    class_name?: string;
+    label?: string;
+    message?: string;
+    tooltip?: string;
     trim?: boolean;
     onChange?: (value: string) => void;
 }
@@ -30,8 +32,15 @@ const TextInputContainer = styled.div `
     p{
         color: ${props => props.theme.colors.dark[1]};
         font-size: 14px;
-        margin-bottom: 12px;
+        margin-bottom: 8px;
         font-weight: bold;
+    }
+    p.message{
+        color: ${props => props.theme.colors.dark[2]};
+        font-size: 12px;
+        margin-bottom: 6px;
+        font-weight: normal;
+        font-style: italic;
     }
     input{
         border: 2px solid ${props => props.theme.colors.gray[2]};
@@ -238,6 +247,7 @@ class TextInput extends React.Component<TextInputProps, TextInputState> {
         return (
             <TextInputContainer className={class_names}>
                 { cfg.label ? <p>{ cfg.label }</p> : null }
+                { cfg.message ? <p className="message">{ cfg.message }</p> : null }
                 <input
                     className={input_class_name}
                     autoFocus={this.props.autofocus || false}
