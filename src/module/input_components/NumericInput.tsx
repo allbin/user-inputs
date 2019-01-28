@@ -159,7 +159,7 @@ export function validate(cfg: NumericInputConfig, value: string): null|string {
     return oh.translate("user_input_invalid_float");
 }
 
-export function validateConfig(cfg: NumericInputConfig): true|string {
+export function validateConfig(cfg: NumericInputConfig): null|string {
     if (cfg.number_type !== "integer" && cfg.number_type !== "float") {
         return "UserInput: Numeric input config 'number_type' must be 'float' or 'integer'.";
     }
@@ -167,7 +167,7 @@ export function validateConfig(cfg: NumericInputConfig): true|string {
         return "UserInput: Invalid default_value for numeric input.";
     }
 
-    return true;
+    return null;
 }
 
 export function getParsedValue(cfg: NumericInputConfig, value: string): number {

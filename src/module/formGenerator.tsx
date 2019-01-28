@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { valid_types, FormState, FormInputConfigArray, AnyInputConfig, AnyInputConfigWithValue, ComponentObject } from '.';
+import { valid_types, input_imports, FormState, FormInputConfigArray, AnyInputConfig, AnyInputConfigWithValue } from '.';
 
 export interface GeneratedForm {
     component: typeof React.Component;
@@ -9,7 +9,7 @@ export interface GeneratedForm {
     setInputConfig: (updated_config: Partial<AnyInputConfig>) => void;
 }
 
-export default function getInputForm(input_components: ComponentObject, input_configs: FormInputConfigArray, cb?: (values: any) => void): GeneratedForm {
+export default function getInputForm(input_configs: FormInputConfigArray, cb?: (values: any) => void): GeneratedForm {
     let mounted_form: InputWrapper | null;
 
     class InputWrapper extends React.Component<any, FormState> {
@@ -94,7 +94,7 @@ export default function getInputForm(input_components: ComponentObject, input_co
                 if (input.type === "button" || input.type === "confirm") {
                     return;
                 } else {
-                    return values[input.key] = input_components[input.type].getParsedValue(input, this.state.values[input.key]);
+                    return values[input.key] = input_imports[input.type].getParsedValue(input, this.state.values[input.key]);
                 }
             });
             return values;
@@ -119,22 +119,37 @@ export default function getInputForm(input_components: ComponentObject, input_co
             });
         }
 
+        isValid() {
+            return this.state.inputs.some((input_config) => {
+                let valid_error = input_imports[input_config.type].validate(input_config, this.state.values[input_config.key]);
+                return valid_error !== null;
+            });
+        }
+
         renderInputs() {
             return this.state.inputs.map((input_request, index) => {
-                let InputComponent = input_components[input_request.type].Input as typeof React.Component;
+                let InputComponent = input_imports[input_request.type].Input as typeof React.Component;
                 let key = input_request.key || "input_" + index;
-                if (input_request.type === "confirm" || input_request.type === "button") {
+                if (input_request.type === "confirm") {
+                    return <InputComponent
+                        key={key}
+                        config={input_request}
+                        value={this.state.values[key]}
+                        disabled={this.isValid()}
+                        onClick={() => {
+                            if (input_request.type === "confirm") {
+                                this.userConfirmedCB();
+                            }
+                        }}
+                    />;
+                } else if (input_request.type === "button") {
                     return <InputComponent
                         key={key}
                         config={input_request}
                         value={this.state.values[key]}
                         onClick={() => {
-                            if (input_request.type === "confirm") {
-                                this.userConfirmedCB();
-                            } else {
-                                if (input_request.onClick) {
-                                    input_request.onClick();
-                                }
+                            if (input_request.onClick) {
+                                input_request.onClick();
                             }
                         }}
                     />;
@@ -189,7 +204,7 @@ export default function getInputForm(input_components: ComponentObject, input_co
     };
 }
 
-export function validateFormGeneratorInputs(input_imports: ComponentObject, input_configs: FormInputConfigArray, confirmCB?: (value: any) => void): void {
+export function validateFormGeneratorInputs(input_configs: FormInputConfigArray, confirmCB?: (value: any) => void): void {
     if (input_configs.length < 1) {
         throw new Error("UserInput: GenerateForm requires at least one input.");
     }
@@ -243,7 +258,7 @@ export function validateFormGeneratorInputs(input_imports: ComponentObject, inpu
     let errors: string[] = [];
     input_configs.forEach((input) => {
         let valid = input_imports[input.type].validateConfig(input);
-        if (valid !== true) { errors.push(valid); }
+        if (valid) { errors.push(valid); }
     });
     if (errors.length > 0) {
         throw new Error(errors.join('\n'));

@@ -25,6 +25,7 @@ export interface ButtonProps {
     onMouseEnter?: () => void;
     onMouseLeave?: () => void;
     onClick: () => void;
+    disabled: boolean;
 }
 interface ContainerStyleProps {
     filled: boolean;
@@ -110,7 +111,7 @@ export class Input extends React.Component<ButtonProps, any> {
         if (cfg.red) { classes.push('red'); }
         if (cfg.green) { classes.push('green'); }
         if (cfg.teal) { classes.push('teal'); }
-        if (cfg.disabled) { classes.push('disabled'); }
+        if (cfg.disabled || this.props.disabled) { classes.push('disabled'); }
         if (cfg.big) { classes.push('big'); }
         class_names += " " + classes.join(" ");
 
@@ -120,7 +121,7 @@ export class Input extends React.Component<ButtonProps, any> {
                 onMouseLeave={() => this.props.onMouseLeave ? this.props.onMouseLeave() : null}
                 block={(cfg.block) ? true : false}
                 filled={(cfg.filled === false) ? false : true}
-                disabled={cfg.disabled || false}
+                disabled={this.props.disabled || cfg.disabled || false}
                 autoFocus={cfg.autofocus || false}
                 className={class_names}
                 onClick={() => this.props.onClick()}
@@ -135,12 +136,12 @@ export function validate(cfg: ButtonConfig, value: any): null|string {
     return null;
 }
 
-export function validateConfig(cfg: ButtonConfig): true|string {
+export function validateConfig(cfg: ButtonConfig): null|string {
     if (validate(cfg, cfg.default_value)) {
         return "UserInput: Invalid default_value for Button.";
     }
 
-    return true;
+    return null;
 }
 
 export function getParsedValue(cfg: ButtonConfig, value: any): any {

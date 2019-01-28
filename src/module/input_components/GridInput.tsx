@@ -137,12 +137,12 @@ export function validate(cfg: GridInputConfig, value: string): null|string {
     return null;
 }
 
-export function validateConfig(cfg: GridInputConfig): true|string {
+export function validateConfig(cfg: GridInputConfig): null|string {
     if (validate(cfg, cfg.default_value)) {
         return "UserInput: Invalid default_value for Grid.";
     }
 
-    return true;
+    return null;
 }
 
 export function getParsedValue(cfg: GridInputConfig, value: string|number): string|number {

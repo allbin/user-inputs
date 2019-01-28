@@ -93,12 +93,12 @@ export function validate(cfg: TextareaInputConfig, value: string): null|string {
     return null;
 }
 
-export function validateConfig(cfg: TextareaInputConfig): true|string {
+export function validateConfig(cfg: TextareaInputConfig): null|string {
     if (validate(cfg, cfg.default_value)) {
         return "UserInput: Invalid default_value for Textarea.";
     }
 
-    return true;
+    return null;
 }
 
 export function getParsedValue(cfg: TextareaInputConfig, value: string): string|number {

@@ -114,12 +114,12 @@ export function validate(cfg: TriStateInputConfig, value: string|number): null|s
     return null;
 }
 
-export function validateConfig(cfg: TriStateInputConfig): true|string {
+export function validateConfig(cfg: TriStateInputConfig): null|string {
     if (validate(cfg, cfg.default_value)) {
         return "UserInput: Invalid default_value for TriState.";
     }
 
-    return true;
+    return null;
 }
 
 export function getParsedValue(cfg: TriStateInputConfig, value: string|number): string|number {

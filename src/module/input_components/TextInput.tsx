@@ -261,12 +261,12 @@ export function validate(cfg: TextInputConfig, value: string): null|string {
     return null;
 }
 
-export function validateConfig(cfg: TextInputConfig): true|string {
+export function validateConfig(cfg: TextInputConfig): null|string {
     if (validate(cfg, cfg.default_value)) {
         return "UserInput: Invalid default_value for TextState.";
     }
 
-    return true;
+    return null;
 }
 
 export function getParsedValue(cfg: TextInputConfig, value: string): string {

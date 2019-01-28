@@ -134,12 +134,12 @@ export function validate(cfg: BoolInputConfig, value: boolean): null|string {
     return null;
 }
 
-export function validateConfig(cfg: BoolInputConfig): true|string {
+export function validateConfig(cfg: BoolInputConfig): null|string {
     if (validate(cfg, cfg.default_value)) {
         return "UserInput: Invalid default_value for Bool.";
     }
 
-    return true;
+    return null;
 }
 
 export function getParsedValue(cfg: BoolInputConfig, value: boolean): boolean {

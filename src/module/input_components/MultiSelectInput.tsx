@@ -85,12 +85,12 @@ export function validate(cfg: MultiSelectInputConfig, value: (number|string)[]):
     return null;
 }
 
-export function validateConfig(cfg: MultiSelectInputConfig): true|string {
+export function validateConfig(cfg: MultiSelectInputConfig): null|string {
     if (validate(cfg, cfg.default_value)) {
         return "UserInput: Invalid default_value for MultiSelect.";
     }
 
-    return true;
+    return null;
 }
 
 export function getParsedValue(cfg: MultiSelectInputConfig, values: MultiSelectOption[]): (string|number)[] {

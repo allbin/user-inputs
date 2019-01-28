@@ -83,7 +83,7 @@ export interface PromptConfig extends UserInputPromptConfig {
 interface InputComponentExports {
     Input: React.ComponentClass<any>;
     getParsedValue: (cfg: any, value: any) => any;
-    validateConfig: (cfg: any) => true|string;
+    validateConfig: (cfg: any) => null|string;
     validate: (cfg: any, value: any) => null|string;
 }
 
@@ -105,7 +105,7 @@ export interface ComponentObject {
 
 
 
-let input_imports: ComponentObject = {
+export const input_imports: ComponentObject = {
     text: TextImport,
     bool: BoolImport,
     grid: GridImport,
@@ -247,7 +247,7 @@ export function InputHOC<P extends UserInputProps>(WrappedComponent: React.Compo
             inputs.push(cancel_config, confirm_config);
 
             this.setState({
-                form: formGenerator(input_imports, inputs, (values: LooseObject) => this.userConfirmedCB(values)),
+                form: formGenerator(inputs, (values: LooseObject) => this.userConfirmedCB(values)),
                 prompt_config: prompt_config
             });
         }
@@ -298,8 +298,8 @@ export function InputHOC<P extends UserInputProps>(WrappedComponent: React.Compo
 
 export namespace InputHOC {
     export function generateForm(input_configs: FormInputConfigArray, confirmCB?: (value: any) => void): GeneratedForm {
-        validateFormGeneratorInputs(input_imports, input_configs, confirmCB);
-        return formGenerator(input_imports, input_configs, confirmCB);
+        validateFormGeneratorInputs(input_configs, confirmCB);
+        return formGenerator(input_configs, confirmCB);
     }
 }
 

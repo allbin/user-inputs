@@ -81,12 +81,12 @@ export function validate(cfg: SelectInputConfig, value: string|number): string|n
     return null;
 }
 
-export function validateConfig(cfg: SelectInputConfig): true|string {
+export function validateConfig(cfg: SelectInputConfig): null|string {
     if (validate(cfg, cfg.default_value)) {
         return "UserInput: Invalid default_value for Select.";
     }
 
-    return true;
+    return null;
 }
 
 export function getParsedValue(cfg: SelectInputConfig, value: SelectOption): string|number {
