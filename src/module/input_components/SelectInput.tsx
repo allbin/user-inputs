@@ -41,7 +41,7 @@ const SelectInputContainer = styled.div `
     }
 `;
 
-class SelectInput extends React.Component<SelectInputProps> {
+export class Input extends React.Component<SelectInputProps> {
 
     onChange(value: SelectOption) {
         const cfg = this.props.config;
@@ -77,4 +77,18 @@ class SelectInput extends React.Component<SelectInputProps> {
     }
 }
 
-export default SelectInput;
+export function validate(cfg: SelectInputConfig, value: string|number): boolean {
+    return true;
+}
+
+export function validateConfig(cfg: SelectInputConfig): true|string {
+    if (!validate(cfg, cfg.default_value)) {
+        return "UserInput: Invalid default_value for Select.";
+    }
+
+    return true;
+}
+
+export function getParsedValue(cfg: SelectInputConfig, value: string|number): string|number {
+    return value;
+}

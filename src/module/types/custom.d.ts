@@ -40,22 +40,6 @@ interface InputConfigOld2 {
     options: SelectOption[];
 }
 
-interface ComponentObject {
-    [key: string]: React.ComponentClass<any> | undefined;
-    bool?: React.ComponentClass<any>;
-    button?: React.ComponentClass<any>;
-    date?: React.ComponentClass<any>;
-    grid?: React.ComponentClass<any>;
-    number?: React.ComponentClass<any>;
-    select?: React.ComponentClass<any>;
-    text?: React.ComponentClass<any>;
-    textarea?: React.ComponentClass<any>;
-    multi_select?: React.ComponentClass<any>;
-    modal?: React.ComponentClass<any>;
-    confirm?: React.ComponentClass<any>;
-    tri_state?: React.ComponentClass<any>;
-}
-
 interface InputConfigUpdate {
     [key: string]: any;
     default_value: any;

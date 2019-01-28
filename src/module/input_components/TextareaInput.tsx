@@ -54,7 +54,7 @@ const TextareaInputContainer = styled.div `
     }
 `;
 
-class TextareaInput extends React.Component<TextareaInputProps, TextareaInputConfig> {
+export class Input extends React.Component<TextareaInputProps, TextareaInputConfig> {
 
     onChange(value: string) {
         const cfg = this.props.config;
@@ -91,4 +91,18 @@ class TextareaInput extends React.Component<TextareaInputProps, TextareaInputCon
     }
 }
 
-export default TextareaInput;
+export function validate(cfg: TextareaInputConfig, value: string): boolean {
+    return true;
+}
+
+export function validateConfig(cfg: TextareaInputConfig): true|string {
+    if (!validate(cfg, cfg.default_value)) {
+        return "UserInput: Invalid default_value for Textarea.";
+    }
+
+    return true;
+}
+
+export function getParsedValue(cfg: TextareaInputConfig, value: string): string|number {
+    return value;
+}

@@ -109,7 +109,7 @@ const TextInputContainer = styled.div `
         }
     }
 `;
-class TextInput extends React.Component<TextInputProps, TextInputState> {
+export class Input extends React.Component<TextInputProps, TextInputState> {
     barcode_stream_target: HTMLDivElement|null;
     detectedCB: (data: LooseObject) => void;
 
@@ -261,4 +261,18 @@ class TextInput extends React.Component<TextInputProps, TextInputState> {
     }
 }
 
-export default TextInput;
+export function validate(cfg: TextInputConfig, value: string): boolean {
+    return true;
+}
+
+export function validateConfig(cfg: TextInputConfig): true|string {
+    if (!validate(cfg, cfg.default_value)) {
+        return "UserInput: Invalid default_value for TextState.";
+    }
+
+    return true;
+}
+
+export function getParsedValue(cfg: TextInputConfig, value: string): string {
+    return value;
+}

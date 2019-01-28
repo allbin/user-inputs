@@ -111,7 +111,7 @@ const NumericInputContainer = styled.div `
         }
     }
 `;
-export class NumericInput extends React.Component<NumericInputProps, NumericInputState> {
+export class Input extends React.Component<NumericInputProps, NumericInputState> {
 
     onChange(value: string) {
         this.props.onChange(value);
@@ -139,7 +139,7 @@ export class NumericInput extends React.Component<NumericInputProps, NumericInpu
     }
 }
 
-export function validateNumeric(cfg: NumericInputConfig, value: string): boolean {
+export function validate(cfg: NumericInputConfig, value: string): boolean {
     if (cfg.onValidate) {
         return cfg.onValidate(value);
     }
@@ -158,7 +158,7 @@ export function validateNumeric(cfg: NumericInputConfig, value: string): boolean
     return false;
 }
 
-export function validateNumericConfig(cfg: NumericInputConfig): true|string {
+export function validateConfig(cfg: NumericInputConfig): true|string {
     if (cfg.number_type !== "integer" && cfg.number_type !== "float") {
         return "UserInput: Numeric input config 'numer_type' must be 'float' or 'integer'.";
     }

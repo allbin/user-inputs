@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { FormState, FormInputConfigArray, AnyInputConfig, AnyInputConfigWithValue } from '.';
+import { FormState, FormInputConfigArray, AnyInputConfig, AnyInputConfigWithValue, ComponentObject } from '.';
 
 export interface GeneratedForm {
     component: typeof React.Component;
@@ -14,7 +14,6 @@ export default function getInputForm(default_components: ComponentObject, input_
 
     class InputWrapper extends React.Component<any, FormState> {
         confirmCB: ((values: any) => void) | null;
-        input_components: ComponentObject;
 
         constructor(props: any) {
             super(props);
@@ -44,18 +43,6 @@ export default function getInputForm(default_components: ComponentObject, input_
                 tag: null,
             };
             this.confirmCB = cb || null;
-
-            this.input_components = {
-                text: default_components.text,
-                textarea: default_components.textarea,
-                grid: default_components.grid,
-                bool: default_components.bool,
-                multi_select: default_components.multi_select,
-                select: default_components.select,
-                button: default_components.button,
-                confirm: default_components.button,
-                tri_state: default_components.tri_state
-            };
         }
 
         componentDidMount() {
@@ -144,7 +131,7 @@ export default function getInputForm(default_components: ComponentObject, input_
 
         renderInputs() {
             return this.state.inputs.map((input_request, index) => {
-                let InputComponent = this.input_components[input_request.type] as typeof React.Component;
+                let InputComponent = default_components[input_request.type].Input as typeof React.Component;
                 let key = input_request.key || "input_" + index;
                 if (input_request.type === "confirm" || input_request.type === "button") {
                     return <InputComponent

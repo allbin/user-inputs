@@ -87,7 +87,7 @@ const StyledGridItem = styled.div<GridInputStyleProps>`
     }
 `;
 
-class GridInput extends React.Component<GridInputProps, any> {
+export class Input extends React.Component<GridInputProps, any> {
     onChange(value: string|number) {
         const cfg = this.props.config;
         this.props.onChange(value);
@@ -133,4 +133,18 @@ class GridInput extends React.Component<GridInputProps, any> {
     }
 }
 
-export default GridInput;
+export function validate(cfg: GridInputConfig, value: string): boolean {
+    return true;
+}
+
+export function validateConfig(cfg: GridInputConfig): true|string {
+    if (!validate(cfg, cfg.default_value)) {
+        return "UserInput: Invalid default_value for Grid.";
+    }
+
+    return true;
+}
+
+export function getParsedValue(cfg: GridInputConfig, value: string): string {
+    return value;
+}

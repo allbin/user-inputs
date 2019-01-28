@@ -41,7 +41,7 @@ const MultiSelectInputContainer = styled("div") `
     }
 `;
 
-class MultiSelectInput extends React.Component<MultiSelectInputProps> {
+export class Input extends React.Component<MultiSelectInputProps> {
 
     onChange(values: MultiSelectOption[]) {
         const cfg = this.props.config;
@@ -81,4 +81,18 @@ class MultiSelectInput extends React.Component<MultiSelectInputProps> {
     }
 }
 
-export default MultiSelectInput;
+export function validate(cfg: MultiSelectInputConfig, value: (number|string)[]): boolean {
+    return true;
+}
+
+export function validateConfig(cfg: MultiSelectInputConfig): true|string {
+    if (!validate(cfg, cfg.default_value)) {
+        return "UserInput: Invalid default_value for MultiSelect.";
+    }
+
+    return true;
+}
+
+export function getParsedValue(cfg: MultiSelectInputConfig, value: string|number): string|number {
+    return value;
+}

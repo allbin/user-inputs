@@ -96,7 +96,7 @@ const ButtonContainer = styled("button")<ContainerStyleProps> `
 `;
 
 
-export default class Button extends React.Component<ButtonProps, any> {
+export class Input extends React.Component<ButtonProps, any> {
 
     render() {
         let cfg = this.props.config;
@@ -129,4 +129,20 @@ export default class Button extends React.Component<ButtonProps, any> {
             </ButtonContainer>
         );
     }
+}
+
+export function validate(cfg: ButtonConfig, value: any): boolean {
+    return true;
+}
+
+export function validateConfig(cfg: ButtonConfig): true|string {
+    if (!validate(cfg, cfg.default_value)) {
+        return "UserInput: Invalid default_value for Button.";
+    }
+
+    return true;
+}
+
+export function getParsedValue(cfg: ButtonConfig, value: any): any {
+    return null;
 }

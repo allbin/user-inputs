@@ -66,7 +66,7 @@ const TriStateInputContainer = styled.div `
     }
 `;
 
-class TriStateInput extends React.Component<TriStateInputProps, TriStateInputConfig> {
+export class Input extends React.Component<TriStateInputProps, TriStateInputConfig> {
     onChange(value: string|number) {
         const cfg = this.props.config;
         this.props.onChange(value);
@@ -110,4 +110,18 @@ class TriStateInput extends React.Component<TriStateInputProps, TriStateInputCon
     }
 }
 
-export default TriStateInput;
+export function validate(cfg: TriStateInputConfig, value: string|number): boolean {
+    return true;
+}
+
+export function validateConfig(cfg: TriStateInputConfig): true|string {
+    if (!validate(cfg, cfg.default_value)) {
+        return "UserInput: Invalid default_value for TriState.";
+    }
+
+    return true;
+}
+
+export function getParsedValue(cfg: TriStateInputConfig, value: string|number): string|number {
+    return value;
+}

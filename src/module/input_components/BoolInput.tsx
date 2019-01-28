@@ -92,7 +92,7 @@ const BoolInputContainer = styled("div")<BoolInputContainerProps> `
     }
 `;
 
-class BoolInput extends React.Component<BoolInputProps, any> {
+export class Input extends React.Component<BoolInputProps, any> {
     onChange(value: boolean) {
         const cfg = this.props.config;
         this.props.onChange(value);
@@ -130,4 +130,18 @@ class BoolInput extends React.Component<BoolInputProps, any> {
     }
 }
 
-export default BoolInput;
+export function validate(cfg: BoolInputConfig, value: boolean): boolean {
+    return true;
+}
+
+export function validateConfig(cfg: BoolInputConfig): true|string {
+    if (!validate(cfg, cfg.default_value)) {
+        return "UserInput: Invalid default_value for Bool.";
+    }
+
+    return true;
+}
+
+export function getParsedValue(cfg: BoolInputConfig, value: boolean): boolean {
+    return value;
+}
