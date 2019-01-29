@@ -67,7 +67,7 @@ gulp.task('build:scripts', function () {
 });
 
 gulp.task('build:static', () => {
-    return gulp.src(['./img/**/*']).pipe(gulp.dest('dist/module/img'));
+    return gulp.src(['./src/img/**/*']).pipe(gulp.dest('dist/img'));
 });
 
 gulp.task('build', gulp.series("clean", gulp.parallel("build:static", "build:scripts")));
