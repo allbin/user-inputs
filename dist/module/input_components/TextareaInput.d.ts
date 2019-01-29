@@ -8,7 +8,11 @@ export interface TextareaInputConfig {
     placeholder?: string;
     class_name?: string;
     trim?: boolean;
-    onChange?: (value: string) => void;
+    message?: string;
+    /** TODO: Implement tooltip */
+    tooltip?: string;
+    onValueChange?: (value: string) => void;
+    onValidate?: (value: string) => null | string;
 }
 export interface TextareaInputProps {
     value: string;
@@ -16,8 +20,10 @@ export interface TextareaInputProps {
     onChange: (value: string) => void;
     autofocus?: boolean;
 }
-declare class TextareaInput extends React.Component<TextareaInputProps, TextareaInputConfig> {
+export declare class Input extends React.Component<TextareaInputProps, TextareaInputConfig> {
     onChange(value: string): void;
     render(): JSX.Element;
 }
-export default TextareaInput;
+export declare function validate(cfg: TextareaInputConfig, value: string): null | string;
+export declare function validateConfig(cfg: TextareaInputConfig): null | string;
+export declare function getParsedValue(cfg: TextareaInputConfig, value: string): string | number;

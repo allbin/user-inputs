@@ -13,6 +13,13 @@ const GridInputContainer = styled.div `
         margin-bottom: 12px;
         font-weight: bold;
     }
+    p.message{
+        color: ${props => props.theme.colors.dark[2]};
+        font-size: 12px;
+        margin-bottom: 6px;
+        font-weight: normal;
+        font-style: italic;
+    }
     .grid_block{
         border-radius: 4px;
         background-color: ${props => props.theme.colors.border};
@@ -52,12 +59,12 @@ const StyledGridItem = styled.div `
         height: 30px;
     }
 `;
-class GridInput extends React.Component {
+export class Input extends React.Component {
     onChange(value) {
         const cfg = this.props.config;
         this.props.onChange(value);
-        if (cfg.onChange) {
-            cfg.onChange(value);
+        if (cfg.onValueChange) {
+            cfg.onValueChange(getParsedValue(cfg, value));
         }
     }
     render() {
@@ -68,6 +75,7 @@ class GridInput extends React.Component {
         }
         return (React.createElement(GridInputContainer, { grid_type: cfg.grid_type, className: class_names },
             cfg.label ? React.createElement("p", null, cfg.label) : null,
+            cfg.message ? React.createElement("p", { className: "message" }, cfg.message) : null,
             React.createElement("div", { className: "grid_block" }, cfg.options.map((item, i) => {
                 return (React.createElement(StyledGridItem, { color: item.color, grid_type: cfg.grid_type, key: i, className: `grid_item ${this.props.value === item.value ? 'active' : ''}`, onClick: () => {
                         this.onChange(item.value);
@@ -75,6 +83,17 @@ class GridInput extends React.Component {
             }))));
     }
 }
-export default GridInput;
+export function validate(cfg, value) {
+    return null;
+}
+export function validateConfig(cfg) {
+    if (validate(cfg, cfg.default_value)) {
+        return "UserInput: Invalid default_value for Grid.";
+    }
+    return null;
+}
+export function getParsedValue(cfg, value) {
+    return value;
+}
 
 //# sourceMappingURL=GridInput.js.map

@@ -3,11 +3,15 @@ export interface TextInputConfig {
     type: "text";
     key: string;
     default_value: string;
-    label?: string;
-    class_name?: string;
     barcode?: boolean;
+    class_name?: string;
+    label?: string;
+    message?: string;
+    /** TODO: Implement tooltip */
+    tooltip?: string;
     trim?: boolean;
-    onChange?: (value: string) => void;
+    onValueChange?: (value: string) => void;
+    onValidate?: (value: string) => null | string;
 }
 export interface TextInputProps {
     value: string;
@@ -18,7 +22,7 @@ export interface TextInputProps {
 interface TextInputState {
     barcode_stream_visible: boolean;
 }
-declare class TextInput extends React.Component<TextInputProps, TextInputState> {
+export declare class Input extends React.Component<TextInputProps, TextInputState> {
     barcode_stream_target: HTMLDivElement | null;
     detectedCB: (data: LooseObject) => void;
     constructor(props: TextInputProps);
@@ -27,4 +31,7 @@ declare class TextInput extends React.Component<TextInputProps, TextInputState> 
     onChange(value: string): void;
     render(): JSX.Element;
 }
-export default TextInput;
+export declare function validate(cfg: TextInputConfig, value: string): null | string;
+export declare function validateConfig(cfg: TextInputConfig): null | string;
+export declare function getParsedValue(cfg: TextInputConfig, value: string): string;
+export {};

@@ -14,6 +14,13 @@ const BoolInputContainer = styled("div") `
         width: 60%;
         overflow: hidden;
     }
+    p.message{
+        color: ${props => props.theme.colors.dark[2]};
+        font-size: 12px;
+        margin-bottom: 6px;
+        font-weight: normal;
+        font-style: italic;
+    }
     .bool_block{
         width: 40%;
         text-align: right;
@@ -60,12 +67,12 @@ const BoolInputContainer = styled("div") `
         }
     }
 `;
-class BoolInput extends React.Component {
+export class Input extends React.Component {
     onChange(value) {
         const cfg = this.props.config;
         this.props.onChange(value);
-        if (cfg.onChange) {
-            cfg.onChange(value);
+        if (cfg.onValueChange) {
+            cfg.onValueChange(getParsedValue(cfg, value));
         }
     }
     render() {
@@ -76,6 +83,7 @@ class BoolInput extends React.Component {
         }
         return (React.createElement(BoolInputContainer, { className: class_names, thing_size: 30 },
             cfg.label ? React.createElement("p", null, cfg.label) : null,
+            cfg.message ? React.createElement("p", { className: "message" }, cfg.message) : null,
             React.createElement("div", { className: "bool_block" },
                 React.createElement("div", { className: `bool_input ${this.props.value === true ? 'active' : ''}`, onClick: () => {
                         this.onChange(!this.props.value);
@@ -83,6 +91,17 @@ class BoolInput extends React.Component {
                     React.createElement("div", { className: "bool_input_thing" })))));
     }
 }
-export default BoolInput;
+export function validate(cfg, value) {
+    return null;
+}
+export function validateConfig(cfg) {
+    if (validate(cfg, cfg.default_value)) {
+        return "UserInput: Invalid default_value for Bool.";
+    }
+    return null;
+}
+export function getParsedValue(cfg, value) {
+    return value;
+}
 
 //# sourceMappingURL=BoolInput.js.map

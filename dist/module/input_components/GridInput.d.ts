@@ -8,15 +8,20 @@ export interface GridInputConfig {
     grid_type: GridType;
     options: any;
     class_name?: string;
-    onChange?: (value: string | number) => void;
+    message?: string;
+    /** TODO: Implement tooltip */
+    tooltip?: string;
+    onValueChange?: (value: string | number) => void;
 }
 export interface GridInputProps {
     value: any;
     config: GridInputConfig;
     onChange: (value: string | number) => void;
 }
-declare class GridInput extends React.Component<GridInputProps, any> {
+export declare class Input extends React.Component<GridInputProps, any> {
     onChange(value: string | number): void;
     render(): JSX.Element;
 }
-export default GridInput;
+export declare function validate(cfg: GridInputConfig, value: string): null | string;
+export declare function validateConfig(cfg: GridInputConfig): null | string;
+export declare function getParsedValue(cfg: GridInputConfig, value: string | number): string | number;

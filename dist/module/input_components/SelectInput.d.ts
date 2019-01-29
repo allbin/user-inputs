@@ -10,15 +10,21 @@ export interface SelectInputConfig {
     no_options_message?: string;
     searchable?: boolean;
     disabled?: boolean;
-    onChange?: (value: string | number) => void;
+    message?: string;
+    /** TODO: Implement tooltip */
+    tooltip?: string;
+    onValueChange?: (value: string | number) => void;
+    onValidate?: (value: string | number) => null | string;
 }
 export interface SelectInputProps {
-    value?: SelectOption;
+    value: SelectOption;
     config: SelectInputConfig;
     onChange: (value: SelectOption) => void;
 }
-declare class SelectInput extends React.Component<SelectInputProps> {
+export declare class Input extends React.Component<SelectInputProps> {
     onChange(value: SelectOption): void;
     render(): JSX.Element;
 }
-export default SelectInput;
+export declare function validate(cfg: SelectInputConfig, value: string | number): string | null;
+export declare function validateConfig(cfg: SelectInputConfig): null | string;
+export declare function getParsedValue(cfg: SelectInputConfig, value: SelectOption): string | number;

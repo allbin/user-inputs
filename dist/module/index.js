@@ -1,107 +1,77 @@
 import * as React from 'react';
 import oh from 'output-helpers';
 import translations from './translations';
-import * as formGenerator from './formGenerator';
+import formGenerator, { validateFormGeneratorInputs } from './formGenerator';
 import PromptModal from './PromptModal';
-import TextInput from './input_components/TextInput';
-import BoolInput from './input_components/BoolInput';
-import GridInput from './input_components/GridInput';
-import SelectInput from './input_components/SelectInput';
-import MultiSelectInput from './input_components/MultiSelectInput';
-import TextareaInput from './input_components/TextareaInput';
-import TriStateInput from './input_components/TriStateInput';
-import Button from './input_components/Button';
-let valid_types = ["bool", "button", "confirm", "date", "grid", "number", "multi_select", "select", "text", "textarea", "tri_state"];
-//Add translations of this repo to OH. Prefixed with "user_input_hoc_".
+import * as TextImport from './input_components/TextInput';
+import * as BoolImport from './input_components/BoolInput';
+import * as GridImport from './input_components/GridInput';
+import * as SelectImport from './input_components/SelectInput';
+import * as MultiSelectImport from './input_components/MultiSelectInput';
+import * as TextareaImport from './input_components/TextareaInput';
+import * as TriStateImport from './input_components/TriStateInput';
+import * as NumericImport from './input_components/NumericInput';
+import * as ButtonImport from './input_components/Button';
+export let valid_types = ["bool", "button", "confirm", "date", "grid", "numeric", "multi_select", "select", "text", "textarea", "tri_state"];
+//Add translations of this repo to OH. Prefixed with "user_input_".
 oh.addDictionary(translations);
-let default_components = {
-    text: TextInput,
-    bool: BoolInput,
-    grid: GridInput,
-    button: Button,
-    select: SelectInput,
-    multi_select: MultiSelectInput,
-    textarea: TextareaInput,
-    tri_state: TriStateInput,
-    confirm: Button,
-    number: TextInput,
-    date: TextInput
+export const input_imports = {
+    text: TextImport,
+    bool: BoolImport,
+    grid: GridImport,
+    button: ButtonImport,
+    select: SelectImport,
+    multi_select: MultiSelectImport,
+    textarea: TextareaImport,
+    tri_state: TriStateImport,
+    confirm: ButtonImport,
+    numeric: NumericImport,
+    date: TextImport
 };
-let custom_components = {};
-export function renderInputs(inputs, values, inputValueChangeCB, confirmClickCB) {
-    return inputs.map((input_config) => {
-        const key = input_config.key;
-        const InputComp = custom_components[input_config.type] || default_components[input_config.type];
-        if (input_config.type === "confirm") {
-            let suppliedOnClickCB;
-            if (input_config.hasOwnProperty("onClick")) {
-                suppliedOnClickCB = input_config.onClick;
-            }
-            return React.createElement(InputComp, { key: key, config: input_config, value: values[key], onClick: () => {
-                    if (confirmClickCB) {
-                        confirmClickCB();
-                    }
-                    if (suppliedOnClickCB) {
-                        suppliedOnClickCB();
-                    }
-                } });
-        }
-        return React.createElement(InputComp, { key: key, config: input_config, value: values[key], onChange: (value) => {
-                inputValueChangeCB(key, value);
-            } });
-    });
-}
-export function renderPrompt(show, inputs, values, modal_props, valueChangeCB, userConfirmedCB, userCancelledCB) {
-    if (show !== true) {
+export function renderPrompt(form, prompt_config, userCancelledCB) {
+    if (!form || !prompt_config) {
         return null;
     }
-    let Modal = PromptModal;
-    return (React.createElement(Modal, Object.assign({ confirmCB: (values) => { userConfirmedCB(values); }, cancelCB: () => { userCancelledCB(); }, renderInputs: () => { return renderInputs(inputs, values, valueChangeCB); } }, modal_props)));
+    return (React.createElement(PromptModal, { cancelCB: () => { userCancelledCB(); }, config: prompt_config, form: form }));
 }
 export function InputHOC(WrappedComponent) {
     class Prompt extends React.Component {
         constructor(props) {
             super(props);
             this.exports = {
-                confirm: (prompt_request, confirmCB, cancelCB) => {
-                    if (prompt_request.hasOwnProperty("inputs") === false) {
-                        prompt_request.inputs = [];
+                confirm: (user_prompt_request, confirmCB, cancelCB) => {
+                    if (user_prompt_request.hasOwnProperty("inputs") === false) {
+                        user_prompt_request.inputs = [];
                     }
-                    if (prompt_request.hasOwnProperty("prompt_props") === false) {
-                        throw new Error("prompt_props are required in config for alert.");
-                    }
-                    if (!prompt_request.prompt_props.title) {
+                    if (!user_prompt_request.title) {
                         throw new Error("prompt_props requires 'title' property.");
                     }
-                    let default_props = {
+                    let default_settings = {
                         show_cancel_btn: true,
                         show_confirm_btn: true
                     };
-                    prompt_request.prompt_props = Object.assign({}, default_props, prompt_request.prompt_props);
+                    let prompt_request = Object.assign({}, user_prompt_request, default_settings);
                     this.initPrompt(prompt_request, confirmCB, cancelCB);
                 },
-                alert: (prompt_request, confirmCB) => {
-                    if (prompt_request.hasOwnProperty("inputs") === false) {
-                        prompt_request.inputs = [];
+                alert: (user_prompt_request, confirmCB) => {
+                    if (user_prompt_request.hasOwnProperty("inputs") === false) {
+                        user_prompt_request.inputs = [];
                     }
-                    if (prompt_request.hasOwnProperty("prompt_props") === false) {
-                        throw new Error("prompt_props are required in config for alert.");
-                    }
-                    if (!prompt_request.prompt_props.title) {
+                    if (!user_prompt_request.title) {
                         throw new Error("prompt_props requires 'title' property.");
                     }
-                    let default_props = {
+                    let default_settings = {
                         show_cancel_btn: false,
                         show_confirm_btn: true
                     };
-                    prompt_request.prompt_props = Object.assign({}, default_props, prompt_request.prompt_props);
+                    let prompt_request = Object.assign({}, user_prompt_request, default_settings);
                     this.initPrompt(prompt_request, confirmCB);
                 },
                 cancel: () => {
                     this.resetPrompt();
                 },
                 isOpen: () => {
-                    return this.state.show;
+                    return this.state.prompt_config !== null;
                 },
                 setTag: (tag) => {
                     this.setState({
@@ -112,112 +82,63 @@ export function InputHOC(WrappedComponent) {
                     return this.state.tag;
                 },
                 setConfig: (input_config) => {
-                    if (input_config.hasOwnProperty("key") === false) {
-                        throw new Error("UserInput: input_config must contain 'key' property.");
+                    if (this.state.form) {
+                        this.state.form.setInputConfig(input_config);
                     }
-                    let inputs = this.state.inputs;
-                    let input_index = inputs.findIndex(input => input.key === input_config.key);
-                    if (input_index < 0) {
-                        throw new Error("UserInput: Key not found in existing inputs. Key must match an input created with 'promp()'.");
+                    else {
+                        throw new Error("UserInput: Cannot setConfig without an open prompt.");
                     }
-                    let values = this.state.values;
-                    if (input_config.hasOwnProperty("value")) {
-                        if (input_config.type === "multi_select") {
-                            let selected_options = input_config.options.filter(option => input_config.value.includes(option.value));
-                            if (selected_options.length !== input_config.value.length) {
-                                throw new Error("UserInput: Values for multiselect not present in options.");
-                            }
-                            values[input_config.key] = selected_options;
-                        }
-                        else if (input_config.type === "select") {
-                            let selected_option = input_config.options.find(option => input_config.value === option.value);
-                            if (!selected_option) {
-                                throw new Error("UserInput: Value for select not present in options.");
-                            }
-                            values[input_config.key] = selected_option;
-                        }
-                        else {
-                            values[input_config.key] = input_config.value;
-                        }
-                    }
-                    inputs[input_index] = Object.assign({}, inputs[input_index], input_config);
-                    this.setState({
-                        inputs: inputs,
-                        values: values
-                    });
                 }
             };
             this.confirmCB = null;
             this.cancelCB = null;
-            this.input_components = {
-                text: TextInput,
-                grid: GridInput,
-                bool: BoolInput,
-                select: SelectInput,
-                multi_select: MultiSelectInput,
-                textarea: TextareaInput,
-                tri_state: TriStateInput,
-                button: Button,
-                confirm: Button
-            };
             this.state = {
-                show: false,
-                modal_props: {},
-                values: {},
-                prompt_request: null,
-                tag: null,
-                inputs: []
+                prompt_config: null,
+                form: null,
+                tag: null
             };
         }
-        initPrompt(prompt_request, confirmCB, cancelCB) {
-            let inputs = prompt_request.inputs;
-            let props = prompt_request.prompt_props;
+        initPrompt(prompt_config, confirmCB, cancelCB) {
+            let inputs = [...prompt_config.inputs];
             let invalid_inputs = inputs.some(input => input.hasOwnProperty("default_value") === false);
             if (invalid_inputs) {
                 throw new Error("UserInput: Inputs must be configured with a 'default_value'.");
             }
-            invalid_inputs = inputs.some(input => !this.input_components[input.type]);
+            invalid_inputs = inputs.some(input => !input_imports[input.type]);
             if (invalid_inputs) {
                 throw new Error("UserInput: Inputs must be configured with a valid 'type'. " + valid_types.join(','));
             }
             this.confirmCB = confirmCB || null;
             this.cancelCB = cancelCB || null;
-            let values = {};
-            inputs.forEach((input) => {
-                if (input.type === "multi_select") {
-                    let selected_options = input.options.filter(option => input.default_value.includes(option.value));
-                    if (selected_options.length !== input.default_value.length) {
-                        throw new Error("UserInput: Default values for multiselect not present in options.");
-                    }
-                    values[input.key] = selected_options;
-                }
-                else if (input.type === "select") {
-                    let selected_option = input.options.find(option => input.default_value === option.value);
-                    if (!selected_option) {
-                        throw new Error("UserInput: Default value for select not present in options.");
-                    }
-                    values[input.key] = selected_option;
-                }
-                else {
-                    values[input.key] = input.default_value;
-                }
-            });
+            let confirm_config = {
+                label: prompt_config.confirm_button_label || oh.translate('user_input_confirm'),
+                key: "confirm",
+                type: "confirm",
+                default_value: "",
+                filled: true,
+                big: true
+            };
+            let cancel_config = {
+                label: prompt_config.confirm_button_label || oh.translate('user_input_cancel'),
+                key: "cancel",
+                type: "button",
+                default_value: "",
+                onClick: () => this.userCancelledCB(),
+                filled: true,
+                big: true
+            };
+            inputs.push(cancel_config, confirm_config);
             this.setState({
-                show: true,
-                modal_props: props,
-                inputs: inputs,
-                values: values,
-                prompt_request: prompt_request
+                form: formGenerator(inputs, (values) => this.userConfirmedCB(values)),
+                prompt_config: prompt_config
             });
         }
         resetPrompt() {
             this.confirmCB = null;
             this.cancelCB = null;
             this.setState({
-                show: false,
-                inputs: [],
-                values: [],
-                prompt_request: null,
+                form: null,
+                prompt_config: null,
                 tag: null
             });
         }
@@ -236,57 +157,18 @@ export function InputHOC(WrappedComponent) {
             }
             this.resetPrompt();
         }
-        inputValueChangeCB(key, value) {
-            let values = Object.assign({}, this.state.values);
-            values[key] = value;
-            this.setState({
-                values: values
-            });
-        }
         render() {
             return (React.createElement("div", null,
                 React.createElement(WrappedComponent, Object.assign({ userInputs: this.exports }, this.props)),
-                renderPrompt(this.state.show, this.state.inputs, this.state.values, this.state.modal_props, (key, value) => { this.inputValueChangeCB(key, value); }, (values) => { this.userConfirmedCB(values); }, () => { this.userCancelledCB(); })));
+                renderPrompt(this.state.form, this.state.prompt_config, () => { this.userCancelledCB(); })));
         }
     }
     return Prompt;
 }
 (function (InputHOC) {
-    function setCustomComponents(object_with_components) {
-        custom_components = object_with_components;
-    }
-    InputHOC.setCustomComponents = setCustomComponents;
     function generateForm(input_configs, confirmCB) {
-        if (input_configs.length < 1) {
-            throw new Error("UserInput: GenerateInputs requires at least one input.");
-        }
-        if (!confirmCB) {
-            let inputs_missing_cb = input_configs.filter(input => !input.onChange);
-            if (inputs_missing_cb.length > 0) {
-                throw new Error("UserInput: GenerateInputs without a confirmCB requires every input to specify a onChange callback.");
-            }
-        }
-        else {
-            let confirm_buttons = input_configs.some(input => input.type === "confirm");
-            if (!confirm_buttons) {
-                throw new Error("UserInput: GenerateInputs with a confirmCB is required to have at least one input of type 'confirm'.");
-            }
-        }
-        let invalid_inputs = input_configs.some((input) => {
-            return (input.type !== "confirm" && input.type !== "button") && input.hasOwnProperty("default_value") === false;
-        });
-        if (invalid_inputs) {
-            throw new Error("UserInput: Every input that is not a 'button' or 'confirm' must be configured with a 'default_value'.");
-        }
-        invalid_inputs = input_configs.some(input => !valid_types.includes(input.type));
-        if (invalid_inputs) {
-            throw new Error("UserInput: Inputs must be configured with a valid 'type'. " + valid_types.join(','));
-        }
-        invalid_inputs = input_configs.some(input => (input.type !== 'button' && input.type !== 'confirm') && !input.hasOwnProperty('key'));
-        if (invalid_inputs) {
-            throw new Error("UserInput: Inputs that are not type 'button' or 'confirm' must be configured with a 'key' property. ");
-        }
-        return formGenerator.getInputForm(default_components, custom_components, input_configs, confirmCB);
+        validateFormGeneratorInputs(input_configs, confirmCB);
+        return formGenerator(input_configs, confirmCB);
     }
     InputHOC.generateForm = generateForm;
 })(InputHOC || (InputHOC = {}));

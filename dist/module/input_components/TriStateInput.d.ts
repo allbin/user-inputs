@@ -10,15 +10,20 @@ export interface TriStateInputConfig {
     no_options_message?: string;
     searchable?: boolean;
     disabled?: boolean;
-    onChange?: (value: string | number) => void;
+    message?: string;
+    /** TODO: Implement tooltip */
+    tooltip?: string;
+    onValueChange?: (value: string | number) => void;
 }
 export interface TriStateInputProps {
     value?: string;
     config: TriStateInputConfig;
     onChange: (value: string | number) => void;
 }
-declare class TriStateInput extends React.Component<TriStateInputProps, TriStateInputConfig> {
+export declare class Input extends React.Component<TriStateInputProps, TriStateInputConfig> {
     onChange(value: string | number): void;
     render(): JSX.Element;
 }
-export default TriStateInput;
+export declare function validate(cfg: TriStateInputConfig, value: string | number): null | string;
+export declare function validateConfig(cfg: TriStateInputConfig): null | string;
+export declare function getParsedValue(cfg: TriStateInputConfig, value: string | number): string | number;

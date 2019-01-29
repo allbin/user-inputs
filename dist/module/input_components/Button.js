@@ -63,7 +63,7 @@ const ButtonContainer = styled("button") `
         box-shadow: 0 4px 5px rgba(0,0,0,0.1);
     }
 `;
-export default class Button extends React.Component {
+export class Input extends React.Component {
     render() {
         let cfg = this.props.config;
         let class_names = "user_input button_input";
@@ -71,30 +71,42 @@ export default class Button extends React.Component {
             class_names += " " + cfg.class_name;
         }
         let classes = [];
-        if (this.props.dark) {
+        if (cfg.dark) {
             classes.push('dark');
         }
-        if (this.props.light) {
+        if (cfg.light) {
             classes.push('light');
         }
-        if (this.props.red) {
+        if (cfg.red) {
             classes.push('red');
         }
-        if (this.props.green) {
+        if (cfg.green) {
             classes.push('green');
         }
-        if (this.props.teal) {
+        if (cfg.teal) {
             classes.push('teal');
         }
-        if (this.props.disabled) {
+        if (cfg.disabled || this.props.disabled) {
             classes.push('disabled');
         }
-        if (this.props.big) {
+        if (cfg.big) {
             classes.push('big');
         }
         class_names += " " + classes.join(" ");
-        return (React.createElement(ButtonContainer, { onMouseEnter: () => this.props.onMouseEnter ? this.props.onMouseEnter() : null, onMouseLeave: () => this.props.onMouseLeave ? this.props.onMouseLeave() : null, block: (this.props.block) ? true : false, filled: (this.props.filled) ? true : false, disabled: this.props.disabled || false, autoFocus: this.props.autofocus || false, className: class_names, onClick: () => this.props.onClick() }, cfg.label));
+        return (React.createElement(ButtonContainer, { onMouseEnter: () => this.props.onMouseEnter ? this.props.onMouseEnter() : null, onMouseLeave: () => this.props.onMouseLeave ? this.props.onMouseLeave() : null, block: (cfg.block) ? true : false, filled: (cfg.filled === false) ? false : true, disabled: this.props.disabled || cfg.disabled || false, autoFocus: cfg.autofocus || false, className: class_names, onClick: () => this.props.onClick() }, cfg.label));
     }
+}
+export function validate(cfg, value) {
+    return null;
+}
+export function validateConfig(cfg) {
+    if (validate(cfg, cfg.default_value)) {
+        return "UserInput: Invalid default_value for Button.";
+    }
+    return null;
+}
+export function getParsedValue(cfg, value) {
+    return null;
 }
 
 //# sourceMappingURL=Button.js.map

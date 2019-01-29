@@ -3,23 +3,38 @@ import styled from 'styled-components';
 const Quagga = require('quagga');
 import { FaBarcode } from 'react-icons/fa';
 import oh from 'output-helpers';
-const TextInputContainer = styled.div `
+const TextInputContainer = styled("div") `
     text-align: left;
     p{
         color: ${props => props.theme.colors.dark[1]};
         font-size: 14px;
-        margin-bottom: 12px;
+        margin-bottom: 8px;
         font-weight: bold;
     }
+    p.message{
+        color: ${props => props.theme.colors.dark[2]};
+        font-size: 12px;
+        margin-bottom: 6px;
+        font-weight: normal;
+        font-style: italic;
+    }
+    p.validation_error{
+        color: ${props => props.theme.colors.red[0]};
+        font-size: 14px;
+        margin-bottom: 4px;
+        font-weight: bold;
+        font-style: italic;
+    }
     input{
-        border: 2px solid ${props => props.theme.colors.gray[2]};
+        background-color: ${props => !props.valid ? "rgba(255,0,0,0.1)" : ""};
+        border: 2px solid ${props => !props.valid ? props.theme.colors.error : props.theme.colors.gray[2]};
         border-radius: 4px;
         font-size: 16px;
         padding: 8px 12px;
         width: 100%;
         transition: all 0.3s;
         &:HOVER, &:FOCUS{
-            border-color: ${props => props.theme.colors.brand[2]};
+            border-color: ${props => !props.valid ? props.theme.colors.error : props.theme.colors.brand[2]};
         }
         &.small{
             width: calc(100% - 80px);
@@ -78,7 +93,7 @@ const TextInputContainer = styled.div `
         }
     }
 `;
-class TextInput extends React.Component {
+export class Input extends React.Component {
     constructor(props) {
         super(props);
         this.barcode_stream_target = null;
@@ -153,18 +168,13 @@ class TextInput extends React.Component {
                         this.setState({
                             barcode_stream_visible: false
                         });
-                    } }, oh.translate("user_input_hoc_cancel")))));
+                    } }, oh.translate("user_input_cancel")))));
     }
     onChange(value) {
         const cfg = this.props.config;
         this.props.onChange(value);
-        if (cfg.onChange) {
-            if (cfg.trim) {
-                cfg.onChange(value.trim());
-            }
-            else {
-                cfg.onChange(value);
-            }
+        if (cfg.onValueChange && !validate(cfg, value)) {
+            cfg.onValueChange(getParsedValue(cfg, value));
         }
     }
     render() {
@@ -177,12 +187,29 @@ class TextInput extends React.Component {
         if (cfg.barcode === true) {
             input_class_name = "small";
         }
-        return (React.createElement(TextInputContainer, { className: class_names },
+        const validation_error = validate(cfg, this.props.value);
+        return (React.createElement(TextInputContainer, { className: class_names, valid: !validation_error },
             cfg.label ? React.createElement("p", null, cfg.label) : null,
+            cfg.message ? React.createElement("p", { className: "message" }, cfg.message) : null,
+            validation_error && validation_error.length > 0 ? React.createElement("p", { className: "validation_error" }, validation_error) : null,
             React.createElement("input", { className: input_class_name, autoFocus: this.props.autofocus || false, type: "text", value: this.props.value, onChange: e => this.onChange(e.target.value) }),
             this.renderBarcodeBtn(cfg)));
     }
 }
-export default TextInput;
+export function validate(cfg, value) {
+    if (cfg.onValidate) {
+        return cfg.onValidate(value);
+    }
+    return null;
+}
+export function validateConfig(cfg) {
+    return null;
+}
+export function getParsedValue(cfg, value) {
+    if (!cfg.trim) {
+        return value;
+    }
+    return value.trim();
+}
 
 //# sourceMappingURL=TextInput.js.map

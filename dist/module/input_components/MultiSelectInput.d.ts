@@ -9,16 +9,22 @@ export interface MultiSelectInputConfig {
     class_name?: string;
     no_options_message?: string;
     disabled?: boolean;
+    /** Is the multi_select searchable? Default true */
     searchable?: boolean;
-    onChange?: (value: (string | number)[]) => void;
+    message?: string;
+    /** TODO: Implement tooltip */
+    tooltip?: string;
+    onValueChange?: (value: (string | number)[]) => void;
 }
 export interface MultiSelectInputProps {
     value: MultiSelectOption;
     config: MultiSelectInputConfig;
     onChange: (options: MultiSelectOption[]) => void;
 }
-declare class MultiSelectInput extends React.Component<MultiSelectInputProps> {
+export declare class Input extends React.Component<MultiSelectInputProps> {
     onChange(values: MultiSelectOption[]): void;
     render(): JSX.Element;
 }
-export default MultiSelectInput;
+export declare function validate(cfg: MultiSelectInputConfig, value: (number | string)[]): null | string;
+export declare function validateConfig(cfg: MultiSelectInputConfig): null | string;
+export declare function getParsedValue(cfg: MultiSelectInputConfig, values: MultiSelectOption[]): (string | number)[];

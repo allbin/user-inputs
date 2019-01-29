@@ -1,6 +1,7 @@
 import * as React from 'react';
-export function getInputForm(default_components, custom_components, input_configs, cb) {
-    let mounted_forms = [];
+import { valid_types, input_imports } from '.';
+export default function getInputForm(input_configs, cb) {
+    let mounted_form;
     class InputWrapper extends React.Component {
         constructor(props) {
             super(props);
@@ -20,6 +21,9 @@ export function getInputForm(default_components, custom_components, input_config
                     }
                     values[input.key] = selected_option;
                 }
+                else if (input.type === "numeric") {
+                    values[input.key] = input.default_value.toString();
+                }
                 else {
                     values[input.key] = input.default_value;
                 }
@@ -30,30 +34,22 @@ export function getInputForm(default_components, custom_components, input_config
                 tag: null,
             };
             this.confirmCB = cb || null;
-            this.input_components = {
-                text: default_components.text,
-                textarea: default_components.textarea,
-                grid: default_components.grid,
-                bool: default_components.bool,
-                multi_select: default_components.multi_select,
-                select: default_components.select,
-                button: default_components.button,
-                confirm: default_components.button,
-                tri_state: default_components.tri_state
-            };
         }
         componentDidMount() {
-            mounted_forms.push(this);
+            mounted_form = this;
         }
         componentWillUnmount() {
-            let mount_index = mounted_forms.findIndex(form => form === this);
-            mounted_forms.splice(mount_index, 1);
+            if (mounted_form === this) {
+                //If another instance of this form has already been mounted
+                //the mounted_form will have changed. Check before resetting it.
+                mounted_form = null;
+            }
         }
         setConfig(input_config) {
             let inputs = this.state.inputs;
             let input_index = inputs.findIndex(input => input.key === input_config.key);
             if (input_index < 0) {
-                throw new Error("UserInput: Key not found in existing inputs. Key must match an input created with 'generateForm()'.");
+                throw new Error("UserInput: Key not found in existing inputs.");
             }
             let values = this.state.values;
             if (input_config.hasOwnProperty("value")) {
@@ -71,6 +67,9 @@ export function getInputForm(default_components, custom_components, input_config
                     }
                     values[input_config.key] = selected_option;
                 }
+                else if (input_config.type === "numeric") {
+                    values[input_config.key] = input_config.value.toString();
+                }
                 else {
                     values[input_config.key] = input_config.value;
                 }
@@ -82,18 +81,13 @@ export function getInputForm(default_components, custom_components, input_config
             });
         }
         getValues() {
-            let values = Object.assign({}, this.state.values);
+            let values = {};
             this.state.inputs.forEach((input) => {
-                if ((input.type === "text" || input.type === "textarea") && (!input.hasOwnProperty("trim") || input.trim === true)) {
-                    if (typeof values[input.key] === "string") {
-                        values[input.key] = values[input.key].trim();
-                    }
+                if (input.type === "button" || input.type === "confirm") {
+                    return;
                 }
-                if (input.type === "select") {
-                    values[input.key] = values[input.key].value;
-                }
-                if (input.type === "multi_select") {
-                    values[input.key] = values[input.key].map((option) => option.value);
+                else {
+                    return values[input.key] = input_imports[input.type].getParsedValue(input, this.state.values[input.key]);
                 }
             });
             return values;
@@ -103,23 +97,8 @@ export function getInputForm(default_components, custom_components, input_config
             this.setState({ values: default_values });
         }
         userConfirmedCB() {
-            let values = Object.assign({}, this.state.values);
-            this.state.inputs.forEach((input) => {
-                if ((input.type === "text" || input.type === "textarea") && (!input.hasOwnProperty("trim") || input.trim === true)) {
-                    if (typeof values[input.key] === "string") {
-                        values[input.key] = values[input.key].trim();
-                    }
-                }
-                if (input.type === "select") {
-                    values[input.key] = values[input.key].value;
-                }
-                if (input.type === "multi_select") {
-                    values[input.key] = values[input.key].map((option) => option.value);
-                }
-            });
             if (this.confirmCB) {
-                this.confirmCB(values);
-                this.confirmCB = null;
+                this.confirmCB(this.getValues());
             }
         }
         inputValueChangeCB(key, value) {
@@ -129,16 +108,28 @@ export function getInputForm(default_components, custom_components, input_config
                 values: values
             });
         }
+        isValid() {
+            return this.state.inputs.some((input_config) => {
+                let valid_error = input_imports[input_config.type].validate(input_config, this.state.values[input_config.key]);
+                return valid_error !== null;
+            });
+        }
         renderInputs() {
             return this.state.inputs.map((input_request, index) => {
-                let InputComponent = this.input_components[input_request.type];
-                if (custom_components && custom_components.hasOwnProperty(input_request.type)) {
-                    InputComponent = custom_components[input_request.type];
-                }
+                let InputComponent = input_imports[input_request.type].Input;
                 let key = input_request.key || "input_" + index;
-                if (input_request.type === "confirm" || input_request.type === "button") {
+                if (input_request.type === "confirm") {
+                    return React.createElement(InputComponent, { key: key, config: input_request, value: this.state.values[key], disabled: this.isValid(), onClick: () => {
+                            if (input_request.type === "confirm") {
+                                this.userConfirmedCB();
+                            }
+                        } });
+                }
+                else if (input_request.type === "button") {
                     return React.createElement(InputComponent, { key: key, config: input_request, value: this.state.values[key], onClick: () => {
-                            this.userConfirmedCB();
+                            if (input_request.onClick) {
+                                input_request.onClick();
+                            }
                         } });
                 }
                 return React.createElement(InputComponent, { key: key, config: input_request, value: this.state.values[key], onChange: (value) => {
@@ -153,36 +144,84 @@ export function getInputForm(default_components, custom_components, input_config
     return {
         component: InputWrapper,
         reset: () => {
-            mounted_forms.forEach((form) => {
-                form.resetValues();
-            });
-        },
-        getForms: () => {
-            return mounted_forms;
+            if (mounted_form) {
+                mounted_form.resetValues();
+            }
         },
         getValues: () => {
-            return mounted_forms.map((form) => {
-                return {
-                    values: form.getValues(),
-                    ref: form
-                };
-            });
+            if (!mounted_form) {
+                return {};
+            }
+            return mounted_form.getValues();
         },
         setInputConfig: (updated_config) => {
             if (updated_config.hasOwnProperty("key") === false) {
                 throw new Error("UserInput: input_config must contain 'key' property.");
             }
             let inputs = input_configs;
-            let input_index = inputs.findIndex(input => input.key === updated_config.key);
+            let input_index = input_configs.findIndex(input => input.key === updated_config.key);
             if (input_index < 0) {
-                throw new Error("UserInput: Key not found in existing inputs. Key must match an input created with 'generateForm()'.");
+                throw new Error("UserInput: Key not found in existing inputs.");
             }
-            inputs[input_index] = Object.assign({}, inputs[input_index], updated_config);
-            mounted_forms.forEach((form) => {
-                form.setConfig(inputs[input_index]);
-            });
+            input_configs[input_index] = Object.assign({}, input_configs[input_index], updated_config);
+            if (mounted_form) {
+                mounted_form.setConfig(inputs[input_index]);
+            }
         }
     };
+}
+export function validateFormGeneratorInputs(input_configs, confirmCB) {
+    if (input_configs.length < 1) {
+        throw new Error("UserInput: GenerateForm requires at least one input.");
+    }
+    if (!confirmCB) {
+        let inputs_missing_cb = input_configs.filter(input => !input.onValueChange);
+        if (inputs_missing_cb.length > 0) {
+            throw new Error("UserInput: GenerateForm without a confirmCB requires every input to specify a onValueChange callback.");
+        }
+    }
+    else {
+        let confirm_buttons = input_configs.some(input => input.type === "confirm");
+        if (!confirm_buttons) {
+            throw new Error("UserInput: GenerateForm with a confirmCB is required to have at least one input of type 'confirm'.");
+        }
+    }
+    //Check that default_value is set.
+    let invalid_inputs = input_configs.some((input) => {
+        return (input.type !== "confirm" && input.type !== "button") && input.hasOwnProperty("default_value") === false;
+    });
+    if (invalid_inputs) {
+        throw new Error("UserInput: Every input that is not a 'button' or 'confirm' must be configured with a 'default_value'.");
+    }
+    //Check that each input has a valid type.
+    invalid_inputs = input_configs.some(input => !valid_types.includes(input.type));
+    if (invalid_inputs) {
+        throw new Error("UserInput: Inputs must be configured with a valid 'type'. " + valid_types.join(','));
+    }
+    //Check that each input has a key property.
+    invalid_inputs = input_configs.some(input => (input.type !== 'button' && input.type !== 'confirm') && !input.hasOwnProperty('key'));
+    if (invalid_inputs) {
+        throw new Error("UserInput: Inputs that are not type 'button' or 'confirm' must be configured with a 'key' property. ");
+    }
+    //Duplicate key check.
+    let duplicate_keys = new Set();
+    invalid_inputs = input_configs.some((input) => {
+        if (input.type === 'button' || input.type === 'confirm') {
+            return false;
+        }
+        return duplicate_keys.size === duplicate_keys.add(input.key).size;
+    });
+    //Run each input type's own validation function.
+    let errors = [];
+    input_configs.forEach((input) => {
+        let valid = input_imports[input.type].validateConfig(input);
+        if (valid) {
+            errors.push(valid);
+        }
+    });
+    if (errors.length > 0) {
+        throw new Error(errors.join('\n'));
+    }
 }
 
 //# sourceMappingURL=formGenerator.js.map

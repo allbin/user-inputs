@@ -1,16 +1,15 @@
 import * as React from 'react';
-import * as formGenerator from './formGenerator';
-import { TextInputConfig } from './input_components/TextInput';
-import { BoolInputConfig } from './input_components/BoolInput';
-import { GridInputConfig } from './input_components/GridInput';
-import { SelectInputConfig } from './input_components/SelectInput';
-import { MultiSelectInputConfig } from './input_components/MultiSelectInput';
-import { TextareaInputConfig } from './input_components/TextareaInput';
-import { TriStateInputConfig } from './input_components/TriStateInput';
-import { ButtonConfig } from './input_components/Button';
-export declare type ComponentLib = {
-    [key in InputType]: typeof React.Component;
-};
+import { GeneratedForm } from './formGenerator';
+import * as TextImport from './input_components/TextInput';
+import * as BoolImport from './input_components/BoolInput';
+import * as GridImport from './input_components/GridInput';
+import * as SelectImport from './input_components/SelectInput';
+import * as MultiSelectImport from './input_components/MultiSelectInput';
+import * as TextareaImport from './input_components/TextareaInput';
+import * as TriStateImport from './input_components/TriStateInput';
+import * as NumericImport from './input_components/NumericInput';
+import * as ButtonImport from './input_components/Button';
+export declare let valid_types: string[];
 export interface HOCProps {
     /** Opens a prompt using supplied config which has a single Confirm button. */
     alert: (prompt_request: UserInputPromptConfig, confirmCB?: (values: LooseObject) => void) => void;
@@ -30,25 +29,14 @@ export interface HOCProps {
 export declare type ValueInterface = {
     value?: any;
 };
-export declare type AnyInputConfig = ButtonConfig | TextInputConfig | BoolInputConfig | GridInputConfig | SelectInputConfig | MultiSelectInputConfig | TextareaInputConfig | TriStateInputConfig;
+export declare type AnyInputConfig = ButtonImport.ButtonConfig | TextImport.TextInputConfig | BoolImport.BoolInputConfig | GridImport.GridInputConfig | SelectImport.SelectInputConfig | MultiSelectImport.MultiSelectInputConfig | NumericImport.NumericInputConfig | TextareaImport.TextareaInputConfig | TriStateImport.TriStateInputConfig;
 export declare type AnyInputConfigWithValue = AnyInputConfig & ValueInterface;
-export declare type PromptInputConfigArray = Array<TextInputConfig | BoolInputConfig | GridInputConfig | SelectInputConfig | MultiSelectInputConfig | TextareaInputConfig | TriStateInputConfig>;
-export declare type FormInputConfigArray = Array<ButtonConfig | TextInputConfig | BoolInputConfig | GridInputConfig | SelectInputConfig | MultiSelectInputConfig | TextareaInputConfig | TriStateInputConfig>;
-interface PromptRequest {
-    inputs: PromptInputConfigArray;
-    props?: {
-        [key: string]: any;
-    };
-}
+export declare type PromptInputConfigArray = Array<ButtonImport.ButtonConfig | TextImport.TextInputConfig | BoolImport.BoolInputConfig | GridImport.GridInputConfig | SelectImport.SelectInputConfig | MultiSelectImport.MultiSelectInputConfig | NumericImport.NumericInputConfig | TextareaImport.TextareaInputConfig | TriStateImport.TriStateInputConfig>;
+export declare type FormInputConfigArray = Array<ButtonImport.ButtonConfig | TextImport.TextInputConfig | BoolImport.BoolInputConfig | GridImport.GridInputConfig | SelectImport.SelectInputConfig | MultiSelectImport.MultiSelectInputConfig | NumericImport.NumericInputConfig | TextareaImport.TextareaInputConfig | TriStateImport.TriStateInputConfig>;
 export interface PromptState {
-    show: boolean;
-    modal_props: any;
-    values: {
-        [key: string]: any;
-    };
-    inputs: PromptInputConfigArray;
-    prompt_request: PromptRequest | null;
+    prompt_config: PromptConfig | null;
     tag: string | null;
+    form: GeneratedForm | null;
 }
 export interface FormState {
     values: {
@@ -58,24 +46,46 @@ export interface FormState {
     tag: string | null;
 }
 export interface UserInputPromptConfig {
-    /** Props sent to the PromptModal component. */
-    prompt_props: {
-        title: string;
-        message?: string;
-        classes?: string;
-        confirmCB?: () => void;
-        cancelCB?: () => void;
-    };
+    title: string;
     inputs: PromptInputConfigArray;
+    message?: string;
+    classes?: string;
+    confirmCB?: () => void;
+    cancelCB?: () => void;
+    confirm_button_label?: string;
+    cancel_button_label?: string;
 }
 export interface UserInputProps {
     userInputs: HOCProps;
 }
-export declare function renderInputs(inputs: FormInputConfigArray, values: LooseObject, inputValueChangeCB: (key: string, value: any) => void, confirmClickCB?: (() => void)): JSX.Element[];
-export declare function renderPrompt(show: boolean, inputs: PromptInputConfigArray, values: LooseObject, modal_props: LooseObject, valueChangeCB: (key: string, value: any) => void, userConfirmedCB: (values: LooseObject) => void, userCancelledCB: () => void): JSX.Element | null;
+export interface PromptConfig extends UserInputPromptConfig {
+    show_cancel_btn: boolean;
+    show_confirm_btn: boolean;
+}
+interface InputComponentExports {
+    Input: React.ComponentClass<any>;
+    getParsedValue: (cfg: any, value: any) => any;
+    validateConfig: (cfg: any) => null | string;
+    validate: (cfg: any, value: any) => null | string;
+}
+export interface ComponentObject {
+    [key: string]: InputComponentExports;
+    bool: InputComponentExports;
+    button: InputComponentExports;
+    date: InputComponentExports;
+    grid: InputComponentExports;
+    numeric: InputComponentExports;
+    select: InputComponentExports;
+    text: InputComponentExports;
+    textarea: InputComponentExports;
+    multi_select: InputComponentExports;
+    confirm: InputComponentExports;
+    tri_state: InputComponentExports;
+}
+export declare const input_imports: ComponentObject;
+export declare function renderPrompt(form: GeneratedForm | null, prompt_config: PromptConfig | null, userCancelledCB: () => void): JSX.Element | null;
 export declare function InputHOC<P extends UserInputProps>(WrappedComponent: React.ComponentType<P>): React.ComponentClass<Omit<P, keyof UserInputProps>>;
 export declare namespace InputHOC {
-    function setCustomComponents(object_with_components: ComponentObject): void;
-    function generateForm(input_configs: FormInputConfigArray, confirmCB?: (value: any) => void): formGenerator.GeneratedForm;
+    function generateForm(input_configs: FormInputConfigArray, confirmCB?: (value: any) => void): GeneratedForm;
 }
 export default InputHOC;
