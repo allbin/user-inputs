@@ -4,6 +4,7 @@ const Quagga = require('quagga');
 import { FaBarcode } from 'react-icons/fa';
 import oh from 'output-helpers';
 
+declare module "quagga" {}
 export interface TextInputConfig {
     type: "text";
     key: string;
