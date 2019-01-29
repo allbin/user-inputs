@@ -70,13 +70,6 @@ gulp.task('build:static', () => {
     return gulp.src(['./img/**/*']).pipe(gulp.dest('dist/module/img'));
 });
 
-gulp.task('build:scripts', () => {
-    return lint().pipe(sourcemaps.init())
-        .pipe(tsProject())
-        .pipe(sourcemaps.write('.'))
-        .pipe(gulp.dest('dist'));
-});
-
 gulp.task('build', gulp.series("clean", gulp.parallel("build:static", "build:scripts")));
 
 gulp.task('bump:patch', (cb) => {
