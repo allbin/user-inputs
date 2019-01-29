@@ -58,13 +58,26 @@ gulp.task('clean', () => {
     return del("dist");
 });
 
-gulp.task('build', function () {
+gulp.task('build:scripts', function () {
     return tsProject.src()
         .pipe(sourcemaps.init())
         .pipe(tsProject())
         .pipe(sourcemaps.write('.'))
         .pipe(gulp.dest('dist'));
 });
+
+gulp.task('build:static', () => {
+    return gulp.src(['./img/**/*']).pipe(gulp.dest('dist/module/img'));
+});
+
+gulp.task('build:scripts', () => {
+    return lint().pipe(sourcemaps.init())
+        .pipe(tsProject())
+        .pipe(sourcemaps.write('.'))
+        .pipe(gulp.dest('dist'));
+});
+
+gulp.task('build', gulp.series("clean", gulp.parallel("build:static", "build:scripts")));
 
 gulp.task('bump:patch', (cb) => {
     return gulp.src('./package.json')
@@ -86,6 +99,6 @@ gulp.task('release:patch', tagAndPush(["package.json", "dist"], "patch"));
 gulp.task('release:minor', tagAndPush(["package.json", "dist"], "minor"));
 gulp.task('release:major', tagAndPush(["package.json", "dist"], "major"));
 
-gulp.task('buildAndReleasePatch', gulp.series('clean', 'build', 'release:patch'));
-gulp.task('buildAndReleaseMinor', gulp.series('clean', 'build', 'release:minor'));
-gulp.task('buildAndReleaseMajor', gulp.series('clean', 'build', 'release:major'));
+gulp.task('buildAndReleasePatch', gulp.series('build', 'release:patch'));
+gulp.task('buildAndReleaseMinor', gulp.series('build', 'release:minor'));
+gulp.task('buildAndReleaseMajor', gulp.series('build', 'release:major'));
