@@ -1,11 +1,11 @@
 import * as React from 'react';
 import styled, { keyframes } from 'styled-components';
 //These are require because build engine doesn't like 'import ... .svg'.
-let SymbolClone = require('./img/symbol_clone.svg');
-let SymbolDelete = require('./img/symbol_delete.svg');
-let SymbolArchive = require('./img/symbol_archive.svg');
-let SymbolNewDoc = require('./img/symbol_new_doc.svg');
-let SymbolNewFolder = require('./img/symbol_new_folder.svg');
+let SymbolClone = require('../img/symbol_clone.svg');
+let SymbolDelete = require('../img/symbol_delete.svg');
+let SymbolArchive = require('../img/symbol_archive.svg');
+let SymbolNewDoc = require('../img/symbol_new_doc.svg');
+let SymbolNewFolder = require('../img/symbol_new_folder.svg');
 const modal_animate_down = keyframes `
     from {
         transform: rotateX(1deg) translateY(-30px);
