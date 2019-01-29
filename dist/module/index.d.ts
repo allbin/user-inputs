@@ -14,6 +14,23 @@ export declare type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 export interface LooseObject {
     [key: string]: any;
 }
+export interface SelectOption {
+    value: string | number;
+    label: string;
+}
+export interface TriStateInputOption {
+    value: string | number;
+    label: string;
+}
+export interface MultiSelectOption {
+    value: string | number;
+    label: string;
+}
+export interface GridSelectOption {
+    value: string | number;
+    label: string;
+    color?: string;
+}
 export interface HOCProps {
     /** Opens a prompt using supplied config which has a single Confirm button. */
     alert: (prompt_request: UserInputPromptConfig, confirmCB?: (values: LooseObject) => void) => void;
