@@ -2,7 +2,7 @@
     "name": "user-inputs",
     "version": "7.0.0",
     "description": "",
-    "main": "dist/index.js",
+    "main": "dist/module/index.js",
     "scripts": {
         "start": "react-scripts-ts start",
         "build": "gulp4 build",
