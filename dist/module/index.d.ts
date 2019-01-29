@@ -10,6 +10,10 @@ import * as TriStateImport from './input_components/TriStateInput';
 import * as NumericImport from './input_components/NumericInput';
 import * as ButtonImport from './input_components/Button';
 export declare let valid_types: string[];
+export declare type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
+export interface LooseObject {
+    [key: string]: any;
+}
 export interface HOCProps {
     /** Opens a prompt using supplied config which has a single Confirm button. */
     alert: (prompt_request: UserInputPromptConfig, confirmCB?: (values: LooseObject) => void) => void;
