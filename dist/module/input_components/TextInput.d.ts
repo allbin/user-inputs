@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { LooseObject } from '../.';
 export interface TextInputConfig {
     type: "text";
     key: string;

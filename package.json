@@ -1,6 +1,6 @@
 {
     "name": "user-inputs",
-    "version": "7.0.5",
+    "version": "7.0.6",
     "description": "",
     "main": "dist/module/index.js",
     "scripts": {

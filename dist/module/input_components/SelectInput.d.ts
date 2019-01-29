@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { SelectOption } from '../.';
 export interface SelectInputConfig {
     type: "select";
     key: string;

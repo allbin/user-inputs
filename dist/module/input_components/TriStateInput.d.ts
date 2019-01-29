@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { TriStateInputOption } from '../.';
 export interface TriStateInputConfig {
     type: "tri_state";
     key: string;

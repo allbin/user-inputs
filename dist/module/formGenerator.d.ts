@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { LooseObject } from '.';
 import { FormInputConfigArray, AnyInputConfig } from '.';
 export interface GeneratedForm {
     component: typeof React.Component;

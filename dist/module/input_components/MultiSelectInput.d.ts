@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { MultiSelectOption } from '../.';
 export interface MultiSelectInputConfig {
     type: "multi_select";
     key: string;
