@@ -14,23 +14,36 @@ export interface SelectInputConfig {
     no_options_message?: string;
     searchable?: boolean;
     disabled?: boolean;
-    onValueChange?: (value: string|number) => void;
     message?: string;
+    /** TODO: Implement tooltip */
     tooltip?: string;
+    onValueChange?: (value: string|number) => void;
+    onValidate?: (value: string|number) => null|string;
 }
 export interface SelectInputProps {
-    value?: SelectOption;
+    value: SelectOption;
     config: SelectInputConfig;
     onChange: (value: SelectOption) => void;
 }
 
-const SelectInputContainer = styled.div `
+interface ContainerStyleProps {
+    valid: boolean;
+}
+
+const SelectInputContainer = styled("div")<ContainerStyleProps> `
     text-align: left;
     p.message{
         color: ${props => props.theme.colors.dark[2]};
         font-size: 12px;
         margin-bottom: 6px;
         font-weight: normal;
+        font-style: italic;
+    }
+    p.validation_error{
+        color: ${props => props.theme.colors.red[0]};
+        font-size: 14px;
+        margin-bottom: 4px;
+        font-weight: bold;
         font-style: italic;
     }
     p.select_label {
@@ -57,10 +70,16 @@ export class Input extends React.Component<SelectInputProps> {
             class_names += " " + cfg.class_name;
         }
 
+        const validation_error = validate(cfg, this.props.value.value);
+
         return (
-            <SelectInputContainer className={class_names}>
+            <SelectInputContainer
+                className={class_names}
+                valid={!validation_error}
+            >
                 { cfg.label ? <p className="select_label">{ cfg.label }</p> : null }
                 { cfg.message ? <p className="message">{ cfg.message }</p> : null }
+                { validation_error && validation_error.length > 0 ? <p className="validation_error">{ validation_error }</p> : null }
                 <Select
                     placeholder={cfg.placeholder ? cfg.placeholder : cfg.label ? cfg.label : '' }
                     value={this.props.value}
@@ -78,6 +97,9 @@ export class Input extends React.Component<SelectInputProps> {
 }
 
 export function validate(cfg: SelectInputConfig, value: string|number): string|null {
+    if (cfg.onValidate) {
+        return cfg.onValidate(value);
+    }
     return null;
 }
 

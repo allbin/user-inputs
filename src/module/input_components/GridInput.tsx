@@ -11,9 +11,10 @@ export interface GridInputConfig {
     grid_type: GridType;
     options: any;
     class_name?: string;
-    onValueChange?: (value: string|number) => void;
     message?: string;
+    /** TODO: Implement tooltip */
     tooltip?: string;
+    onValueChange?: (value: string|number) => void;
 }
 export interface GridInputProps {
     value: any;

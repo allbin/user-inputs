@@ -10,9 +10,11 @@ export interface TextareaInputConfig {
     placeholder?: string;
     class_name?: string;
     trim?: boolean;
-    onValueChange?: (value: string) => void;
     message?: string;
+    /** TODO: Implement tooltip */
     tooltip?: string;
+    onValueChange?: (value: string) => void;
+    onValidate?: (value: string) => null|string;
 }
 export interface TextareaInputProps {
     value: string;
@@ -25,7 +27,11 @@ let default_config = {
     rows: 3
 };
 
-const TextareaInputContainer = styled.div `
+interface ContainerStyleProps {
+    valid: boolean;
+}
+
+const TextareaInputContainer = styled("div")<ContainerStyleProps> `
     text-align: left;
     p {
         color: ${props => props.theme.colors.dark[1]};
@@ -40,14 +46,22 @@ const TextareaInputContainer = styled.div `
         font-weight: normal;
         font-style: italic;
     }
+    p.validation_error{
+        color: ${props => props.theme.colors.red[0]};
+        font-size: 14px;
+        margin-bottom: 4px;
+        font-weight: bold;
+        font-style: italic;
+    }
     textarea {
-        border: 2px solid ${props => props.theme.colors.gray[2]};
+        background-color: ${props => !props.valid ? "rgba(255,0,0,0.1)" : "" };
+        border: 2px solid ${props => !props.valid ? props.theme.colors.error : props.theme.colors.gray[2]};
         border-radius: 4px;
         font-size: 16px;
         padding: 8px 12px;
         width: 100%;
         &:HOVER, &:FOCUS {
-            border-color: ${props => props.theme.colors.brand[2]};
+            border-color: ${props => !props.valid ? props.theme.colors.error : props.theme.colors.brand[2]};
         }
     }
 `;
@@ -73,12 +87,18 @@ export class Input extends React.Component<TextareaInputProps, TextareaInputConf
             class_names += " " + cfg.class_name;
         }
 
+        const validation_error = validate(cfg, this.props.value);
+
         return (
-            <TextareaInputContainer className={class_names}>
+            <TextareaInputContainer
+                className={class_names}
+                valid={!validation_error}
+            >
                 { cfg.label ? <p>{ cfg.label }</p> : null }
                 { cfg.message ? <p className="message">{ cfg.message }</p> : null }
+                { validation_error && validation_error.length > 0 ? <p className="validation_error">{ validation_error }</p> : null }
                 <textarea
-                    rows={cfg.rows || 3}
+                    rows={cfg.rows}
                     autoFocus={this.props.autofocus || false}
                     placeholder={cfg.placeholder ? cfg.placeholder : cfg.label ? cfg.label : '' }
                     value={this.props.value}
@@ -90,13 +110,13 @@ export class Input extends React.Component<TextareaInputProps, TextareaInputConf
 }
 
 export function validate(cfg: TextareaInputConfig, value: string): null|string {
+    if (cfg.onValidate) {
+        return cfg.onValidate(value);
+    }
     return null;
 }
 
 export function validateConfig(cfg: TextareaInputConfig): null|string {
-    if (validate(cfg, cfg.default_value)) {
-        return "UserInput: Invalid default_value for Textarea.";
-    }
 
     return null;
 }

@@ -14,9 +14,10 @@ export interface MultiSelectInputConfig {
     disabled?: boolean;
     /** Is the multi_select searchable? Default true */
     searchable?: boolean;
-    onValueChange?: (value: (string|number)[]) => void;
     message?: string;
+    /** TODO: Implement tooltip */
     tooltip?: string;
+    onValueChange?: (value: (string|number)[]) => void;
 }
 export interface MultiSelectInputProps {
     value: MultiSelectOption;

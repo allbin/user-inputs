@@ -27,7 +27,7 @@ class Alert1 extends React.Component<Form1Props, Form1State> {
             key: "text_input_test_without_label",
             default_value: "",
             message: "Text input without label.",
-            class_name: "alert_text_input_test_class"
+            class_name: "form_text_input_test_class"
         },
         {
             type: "button",
@@ -42,8 +42,14 @@ class Alert1 extends React.Component<Form1Props, Form1State> {
             key: "text_input_test",
             default_value: "",
             label: "Text input with label and message",
-            message: "This is a text input message",
-            class_name: "alert_text_input_test_class"
+            message: "Please enter text. Maximum 6 characters long.",
+            class_name: "form_text_input_test_class",
+            onValidate: (value: string) => {
+                if (value.length < 7) {
+                    return null;
+                }
+                return "Value needs to be 6 or less characters long.";
+            }
         },
         {
             type: "select",
@@ -89,6 +95,21 @@ class Alert1 extends React.Component<Form1Props, Form1State> {
             min: 0,
             max: 50,
             class_name: "form_boolean_test_class",
+        },
+        {
+            type: "textarea",
+            key: "textarea_input_test",
+            default_value: "",
+            label: "Textarea input with 4 rows",
+            rows: 4,
+            message: "Only accepts 'a'.",
+            class_name: "form_textarea_input_test_class",
+            onValidate: (value: string) => {
+                if (/^a+$/.test(value)) {
+                    return null;
+                }
+                return "Value needs to be one or more 'a'.";
+            }
         },
         {
             type: "confirm",

@@ -12,9 +12,11 @@ export interface TextInputConfig {
     class_name?: string;
     label?: string;
     message?: string;
+    /** TODO: Implement tooltip */
     tooltip?: string;
     trim?: boolean;
     onValueChange?: (value: string) => void;
+    onValidate?: (value: string) => null|string;
 }
 export interface TextInputProps {
     value: string;
@@ -27,7 +29,11 @@ interface TextInputState {
     barcode_stream_visible: boolean;
 }
 
-const TextInputContainer = styled.div `
+interface ContainerStyleProps {
+    valid: boolean;
+}
+
+const TextInputContainer = styled("div")<ContainerStyleProps> `
     text-align: left;
     p{
         color: ${props => props.theme.colors.dark[1]};
@@ -42,15 +48,23 @@ const TextInputContainer = styled.div `
         font-weight: normal;
         font-style: italic;
     }
+    p.validation_error{
+        color: ${props => props.theme.colors.red[0]};
+        font-size: 14px;
+        margin-bottom: 4px;
+        font-weight: bold;
+        font-style: italic;
+    }
     input{
-        border: 2px solid ${props => props.theme.colors.gray[2]};
+        background-color: ${props => !props.valid ? "rgba(255,0,0,0.1)" : "" };
+        border: 2px solid ${props => !props.valid ? props.theme.colors.error : props.theme.colors.gray[2]};
         border-radius: 4px;
         font-size: 16px;
         padding: 8px 12px;
         width: 100%;
         transition: all 0.3s;
         &:HOVER, &:FOCUS{
-            border-color: ${props => props.theme.colors.brand[2]};
+            border-color: ${props => !props.valid ? props.theme.colors.error : props.theme.colors.brand[2]};
         }
         &.small{
             width: calc(100% - 80px);
@@ -185,7 +199,6 @@ export class Input extends React.Component<TextInputProps, TextInputState> {
         }
 
         let barcode_stream_classes = ["barcode_stream_target"];
-
         if (this.state.barcode_stream_visible) {
             barcode_stream_classes.push("show");
         }
@@ -223,7 +236,7 @@ export class Input extends React.Component<TextInputProps, TextInputState> {
     onChange(value: string) {
         const cfg = this.props.config;
         this.props.onChange(value);
-        if (cfg.onValueChange) {
+        if (cfg.onValueChange && !validate(cfg, value)) {
             cfg.onValueChange(getParsedValue(cfg, value));
         }
     }
@@ -240,10 +253,16 @@ export class Input extends React.Component<TextInputProps, TextInputState> {
             input_class_name = "small";
         }
 
+        const validation_error = validate(cfg, this.props.value);
+
         return (
-            <TextInputContainer className={class_names}>
+            <TextInputContainer
+                className={class_names}
+                valid={!validation_error}
+            >
                 { cfg.label ? <p>{ cfg.label }</p> : null }
                 { cfg.message ? <p className="message">{ cfg.message }</p> : null }
+                { validation_error && validation_error.length > 0 ? <p className="validation_error">{ validation_error }</p> : null }
                 <input
                     className={input_class_name}
                     autoFocus={this.props.autofocus || false}
@@ -258,13 +277,14 @@ export class Input extends React.Component<TextInputProps, TextInputState> {
 }
 
 export function validate(cfg: TextInputConfig, value: string): null|string {
+    if (cfg.onValidate) {
+        return cfg.onValidate(value);
+    }
     return null;
 }
 
 export function validateConfig(cfg: TextInputConfig): null|string {
-    if (validate(cfg, cfg.default_value)) {
-        return "UserInput: Invalid default_value for TextState.";
-    }
+
 
     return null;
 }

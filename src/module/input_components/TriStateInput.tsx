@@ -12,9 +12,10 @@ export interface TriStateInputConfig {
     no_options_message?: string;
     searchable?: boolean;
     disabled?: boolean;
-    onValueChange?: (value: string|number) => void;
     message?: string;
+    /** TODO: Implement tooltip */
     tooltip?: string;
+    onValueChange?: (value: string|number) => void;
 }
 export interface TriStateInputProps {
     value?: string;

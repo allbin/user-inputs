@@ -32,6 +32,8 @@ export default function getInputForm(input_configs: FormInputConfigArray, cb?: (
                         throw new Error("UserInput: Default value for select not present in options.");
                     }
                     values[input.key] = selected_option;
+                } else if (input.type === "numeric") {
+                    values[input.key] = input.default_value.toString();
                 } else {
                     values[input.key] = input.default_value;
                 }
@@ -77,6 +79,8 @@ export default function getInputForm(input_configs: FormInputConfigArray, cb?: (
                         throw new Error("UserInput: Value for select not present in options.");
                     }
                     values[input_config.key] = selected_option;
+                } else if (input_config.type === "numeric") {
+                    values[input_config.key] = input_config.value.toString();
                 } else {
                     values[input_config.key] = input_config.value;
                 }

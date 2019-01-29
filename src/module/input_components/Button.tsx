@@ -10,8 +10,6 @@ export interface ButtonConfig {
     /** Should the buttons background color be filled in or transparent? Default true. */
     filled?: boolean;
     disabled?: boolean;
-    onClick?: () => void;
-    onValueChange?: () => void;
     dark?: boolean;
     light?: boolean;
     red?: boolean;
@@ -19,6 +17,8 @@ export interface ButtonConfig {
     teal?: boolean;
     block?: boolean;
     autofocus?: boolean;
+    onClick?: () => void;
+    onValueChange?: () => void;
 }
 export interface ButtonProps {
     config: ButtonConfig;

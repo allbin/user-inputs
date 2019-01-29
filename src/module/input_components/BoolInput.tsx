@@ -7,9 +7,10 @@ export interface BoolInputConfig {
     default_value: boolean;
     label?: string;
     class_name?: string;
-    onValueChange?: (value: boolean) => void;
     message?: string;
+    /** TODO: Implement tooltip */
     tooltip?: string;
+    onValueChange?: (value: boolean) => void;
 }
 export interface BoolInputProps {
     type: "bool";

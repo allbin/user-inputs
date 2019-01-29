@@ -10,10 +10,12 @@ export interface NumericInputConfig {
 
     class_name?: string;
     label?: string;
+    /** TODO: Implement tooltip */
     tooltip?: string;
     message?: string;
     max?: number;
     min?: number;
+    /** TODO: Implement step functionality. Use +/- keys as well as UI buttons? */
     step?: number;
     onValueChange?: (value: number) => void;
     /** Return error message. Empty string displays no message but marks the input as invalid. */
@@ -162,9 +164,6 @@ export function validate(cfg: NumericInputConfig, value: string): null|string {
 export function validateConfig(cfg: NumericInputConfig): null|string {
     if (cfg.number_type !== "integer" && cfg.number_type !== "float") {
         return "UserInput: Numeric input config 'number_type' must be 'float' or 'integer'.";
-    }
-    if (validate(cfg, cfg.default_value.toString())) {
-        return "UserInput: Invalid default_value for numeric input.";
     }
 
     return null;
