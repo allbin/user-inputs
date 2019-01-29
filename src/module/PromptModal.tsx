@@ -4,11 +4,11 @@ import { GeneratedForm } from './formGenerator';
 import { PromptConfig } from '.';
 
 //These are require because build engine doesn't like 'import ... .svg'.
-let SymbolClone = require('./img/symbol_clone.svg');
-let SymbolDelete = require('./img/symbol_delete.svg');
-let SymbolArchive = require('./img/symbol_archive.svg');
-let SymbolNewDoc = require('./img/symbol_new_doc.svg');
-let SymbolNewFolder = require('./img/symbol_new_folder.svg');
+let SymbolClone = require('../img/symbol_clone.svg');
+let SymbolDelete = require('../img/symbol_delete.svg');
+let SymbolArchive = require('../img/symbol_archive.svg');
+let SymbolNewDoc = require('../img/symbol_new_doc.svg');
+let SymbolNewFolder = require('../img/symbol_new_folder.svg');
 
 export interface ModalProps {
     config: PromptConfig;
