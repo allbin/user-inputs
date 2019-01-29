@@ -1,15 +1,13 @@
 # userInput
 
-A repo for wrapping components with a userInput HOC to enable easy creation of modals which may include specific inputs fields for the user.
+TODO: Update this readme.
 
-userInput can also generate input components for use outside of modals.
+A repo for wrapping components with a userInput HOC to enable easy creation of modals and forms.
 
 ### Index
 [Quick guide](#quick-guide)  
 [HOC Wrapping function](#wrapping-function)  
 [Utility functions](#utility-functions)  
-[Generating inputs](#generate-inputs)  
-[Opening a modal](#opening-a-modal)  
 
 
 
@@ -54,21 +52,29 @@ export default class MyComp extends React.Component {
 
 
 # Known issues
-- The 
+- 
 
 
 
 # Wrapping function
-The HOC wrapping function attaches the `userInput` prop to the component being wrapped.
+The HOC wrapping function attaches the `userInputs` prop to the component being wrapped.
 
-Example: `userInput(YourComponent)` will give access to `this.props.userInput` inside *YourComponent*.
+Example: `userInput(YourComponent)` will give access to `this.props.userInputs` inside *YourComponent*.
 
 
 
 # Utility functions
 
-`userInput.configure(<config object>, <default profile>)` - See [Setting config and default](#setting-config-and-default).
-
-`userInput.generateForm(<callback>)` - The 
+`userInput.generateForm(<input_config_array>, <confirm_callback>)` - Returns a `generatedForm` object. See [Generating Forms](#generating-forms).
 
 
+# Generating forms
+A generated form is an object returned from `userInput.generateForm`:
+```
+{
+    component: <JSX Component>,
+    getValues: () => the values currently in the form,
+    reset: () => void <function to reset inputs to default_values>,
+    setInputConfig: (<InputConfig>) => void <function to update an input>
+}
+```
