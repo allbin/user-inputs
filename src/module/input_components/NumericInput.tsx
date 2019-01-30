@@ -19,12 +19,13 @@ export interface NumericInputConfig {
     step?: number;
     onValueChange?: (value: number) => void;
     /** Return error message. Empty string displays no message but marks the input as invalid. */
-    onValidate?: (value: string) => null|string;
+    validationCB?: (value: string) => null|string;
 }
 export interface NumericInputProps {
     value: string;
     config: NumericInputConfig;
     onChange: (value: string) => void;
+    display_error_message: boolean;
     autofocus?: boolean;
 }
 
@@ -84,7 +85,7 @@ export class Input extends React.Component<NumericInputProps, NumericInputState>
         this.props.onChange(value);
         const cfg = this.props.config;
         if (cfg.onValueChange && validate(cfg, value)) {
-            cfg.onValueChange(getParsedValue(cfg, value));
+            cfg.onValueChange(convertInternalToExternalValue(cfg, value));
         }
     }
 
@@ -99,11 +100,11 @@ export class Input extends React.Component<NumericInputProps, NumericInputState>
         return (
             <NumericInputContainer
                 className={class_names}
-                valid={!validation_error}
+                valid={!validation_error || !this.props.display_error_message}
             >
                 { cfg.label ? <p>{ cfg.label }</p> : null }
                 { cfg.message ? <p className="message">{ cfg.message }</p> : null }
-                { validation_error && validation_error.length > 0 ? <p className="validation_error">{ validation_error }</p> : null }
+                { validation_error && this.props.display_error_message && validation_error.length > 0 ? <p className="validation_error">{ validation_error }</p> : null }
                 <input
                     type="text"
                     autoFocus={this.props.autofocus || false}
@@ -116,8 +117,8 @@ export class Input extends React.Component<NumericInputProps, NumericInputState>
 }
 
 export function validate(cfg: NumericInputConfig, value: string): null|string {
-    if (cfg.onValidate) {
-        return cfg.onValidate(value);
+    if (cfg.validationCB) {
+        return cfg.validationCB(value);
     }
     let messages: string[] = [];
     if (cfg.number_type === "integer") {
@@ -169,7 +170,7 @@ export function validateConfig(cfg: NumericInputConfig): null|string {
     return null;
 }
 
-export function getParsedValue(cfg: NumericInputConfig, value: string): number {
+export function convertInternalToExternalValue(cfg: NumericInputConfig, value: string): number {
     if (cfg.number_type === "integer") {
         let parsed = parseInt(value, 10);
         if (!Number.isNaN(parsed) && Number.isFinite(parsed) && Number.isSafeInteger(parsed) && parsed.toString(10) === value.trim()) {
@@ -183,4 +184,8 @@ export function getParsedValue(cfg: NumericInputConfig, value: string): number {
         return parsed;
     }
     return cfg.default_value;
+}
+
+export function convertExternalToInternalValue(cfg: NumericInputConfig, value: number): string {
+    return value.toString();
 }

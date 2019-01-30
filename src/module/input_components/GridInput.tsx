@@ -1,5 +1,6 @@
 import * as React from 'react';
 import styled from '../styling';
+import { GridSelectOption } from '../.';
 
 export type GridType = "icons" | "colors";
 
@@ -15,15 +16,18 @@ export interface GridInputConfig {
     /** TODO: Implement tooltip */
     tooltip?: string;
     onValueChange?: (value: string|number) => void;
+    validationCB?: (value: string|number) => null|string;
 }
 export interface GridInputProps {
     value: any;
     config: GridInputConfig;
     onChange: (value: string|number) => void;
+    display_error_message: boolean;
 }
 
 interface GridInputStyleProps {
     grid_type: GridType;
+    valid: boolean;
     color?: string;
 }
 
@@ -45,6 +49,13 @@ const GridInputContainer = styled.div<GridInputStyleProps>`
         font-size: 12px;
         margin-bottom: 6px;
         font-weight: normal;
+        font-style: italic;
+    }
+    p.validation_error{
+        color: ${props => props.theme.colors.red[0]};
+        font-size: 14px;
+        margin-bottom: 4px;
+        font-weight: bold;
         font-style: italic;
     }
     .grid_block{
@@ -93,7 +104,7 @@ export class Input extends React.Component<GridInputProps, any> {
         const cfg = this.props.config;
         this.props.onChange(value);
         if (cfg.onValueChange) {
-            cfg.onValueChange(getParsedValue(cfg, value));
+            cfg.onValueChange(convertInternalToExternalValue(cfg, value));
         }
     }
     render() {
@@ -103,13 +114,17 @@ export class Input extends React.Component<GridInputProps, any> {
             class_names += " " + cfg.class_name;
         }
 
+        const validation_error = validate(cfg, this.props.value);
+
         return (
             <GridInputContainer
                 grid_type={cfg.grid_type}
                 className={class_names}
+                valid={!validation_error || !this.props.display_error_message}
             >
                 { cfg.label ? <p>{ cfg.label }</p> : null }
                 { cfg.message ? <p className="message">{ cfg.message }</p> : null }
+                { validation_error && this.props.display_error_message && validation_error.length > 0 ? <p className="validation_error">{ validation_error }</p> : null }
                 <div className="grid_block">
                     {
                         cfg.options.map((item: GridSelectOption, i: number) => {
@@ -117,6 +132,7 @@ export class Input extends React.Component<GridInputProps, any> {
                                 <StyledGridItem
                                     color={item.color}
                                     grid_type={cfg.grid_type}
+                                    valid={!validation_error || !this.props.display_error_message}
                                     key={i}
                                     className={`grid_item ${this.props.value === item.value ? 'active' : ''}`}
                                     onClick={() => {
@@ -135,6 +151,9 @@ export class Input extends React.Component<GridInputProps, any> {
 }
 
 export function validate(cfg: GridInputConfig, value: string): null|string {
+    if (cfg.validationCB) {
+        return cfg.validationCB(value);
+    }
     return null;
 }
 
@@ -146,6 +165,10 @@ export function validateConfig(cfg: GridInputConfig): null|string {
     return null;
 }
 
-export function getParsedValue(cfg: GridInputConfig, value: string|number): string|number {
+export function convertInternalToExternalValue(cfg: GridInputConfig, value: string|number): string|number {
+    return value;
+}
+
+export function convertExternalToInternalValue(cfg: GridInputConfig, value: string|number): string|number {
     return value;
 }

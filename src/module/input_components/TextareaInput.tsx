@@ -14,12 +14,13 @@ export interface TextareaInputConfig {
     /** TODO: Implement tooltip */
     tooltip?: string;
     onValueChange?: (value: string) => void;
-    onValidate?: (value: string) => null|string;
+    validationCB?: (value: string) => null|string;
 }
 export interface TextareaInputProps {
     value: string;
     config: TextareaInputConfig;
     onChange: (value: string) => void;
+    display_error_message: boolean;
     autofocus?: boolean;
 }
 
@@ -92,26 +93,26 @@ export class Input extends React.Component<TextareaInputProps, TextareaInputConf
         return (
             <TextareaInputContainer
                 className={class_names}
-                valid={!validation_error}
+                valid={!validation_error || !this.props.display_error_message}
             >
                 { cfg.label ? <p>{ cfg.label }</p> : null }
                 { cfg.message ? <p className="message">{ cfg.message }</p> : null }
-                { validation_error && validation_error.length > 0 ? <p className="validation_error">{ validation_error }</p> : null }
+                { validation_error && this.props.display_error_message && validation_error.length > 0 ? <p className="validation_error">{ validation_error }</p> : null }
                 <textarea
                     rows={cfg.rows}
                     autoFocus={this.props.autofocus || false}
-                    placeholder={cfg.placeholder ? cfg.placeholder : cfg.label ? cfg.label : '' }
+                    placeholder={cfg.placeholder ? cfg.placeholder : ''}
                     value={this.props.value}
-                    onChange={e => this.onChange(e.target.value)}>
-                </textarea>
+                    onChange={e => this.onChange(e.target.value)}
+                />
             </TextareaInputContainer>
         );
     }
 }
 
 export function validate(cfg: TextareaInputConfig, value: string): null|string {
-    if (cfg.onValidate) {
-        return cfg.onValidate(value);
+    if (cfg.validationCB) {
+        return cfg.validationCB(value);
     }
     return null;
 }
@@ -121,6 +122,10 @@ export function validateConfig(cfg: TextareaInputConfig): null|string {
     return null;
 }
 
-export function getParsedValue(cfg: TextareaInputConfig, value: string): string|number {
+export function convertInternalToExternalValue(cfg: TextareaInputConfig, value: string): string {
     return value;
+}
+
+export function convertExternalToInternalValue(cfg: TextareaInputConfig, value: string|number): string {
+    return value.toString();
 }

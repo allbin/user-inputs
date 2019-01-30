@@ -11,6 +11,7 @@ export interface BoolInputConfig {
     /** TODO: Implement tooltip */
     tooltip?: string;
     onValueChange?: (value: boolean) => void;
+    validationCB?: (value: boolean) => null|string;
 }
 export interface BoolInputProps {
     type: "bool";
@@ -18,11 +19,13 @@ export interface BoolInputProps {
     value: boolean;
     config: BoolInputConfig;
     onChange: (checked: boolean) => void;
+    display_error_message: boolean;
 }
 
 interface BoolInputContainerProps {
     //TODO: What is thing_size?
     thing_size: number;
+    valid: boolean;
 }
 
 const BoolInputContainer = styled("div")<BoolInputContainerProps> `
@@ -98,7 +101,7 @@ export class Input extends React.Component<BoolInputProps, any> {
         const cfg = this.props.config;
         this.props.onChange(value);
         if (cfg.onValueChange) {
-            cfg.onValueChange(getParsedValue(cfg, value));
+            cfg.onValueChange(convertInternalToExternalValue(cfg, value));
         }
     }
     render() {
@@ -108,13 +111,17 @@ export class Input extends React.Component<BoolInputProps, any> {
             class_names += " " + cfg.class_name;
         }
 
+        const validation_error = validate(cfg, this.props.value);
+
         return (
             <BoolInputContainer
                 className={class_names}
                 thing_size={30}
+                valid={!validation_error || !this.props.display_error_message}
             >
                 { cfg.label ? <p>{ cfg.label }</p> : null }
                 { cfg.message ? <p className="message">{ cfg.message }</p> : null }
+                { validation_error && this.props.display_error_message && validation_error.length > 0 ? <p className="validation_error">{ validation_error }</p> : null }
                 <div className="bool_block">
                     <div
                         className={`bool_input ${this.props.value === true ? 'active' : ''}`}
@@ -132,6 +139,9 @@ export class Input extends React.Component<BoolInputProps, any> {
 }
 
 export function validate(cfg: BoolInputConfig, value: boolean): null|string {
+    if (cfg.validationCB) {
+        return cfg.validationCB(value);
+    }
     return null;
 }
 
@@ -143,6 +153,10 @@ export function validateConfig(cfg: BoolInputConfig): null|string {
     return null;
 }
 
-export function getParsedValue(cfg: BoolInputConfig, value: boolean): boolean {
+export function convertInternalToExternalValue(cfg: BoolInputConfig, value: boolean): boolean {
+    return value;
+}
+
+export function convertExternalToInternalValue(cfg: BoolInputConfig, value: boolean): boolean {
     return value;
 }

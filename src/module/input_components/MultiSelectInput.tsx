@@ -1,6 +1,7 @@
 import * as React from 'react';
 import styled from '../styling';
 import Select from 'react-select';
+import { MultiSelectOption } from '../.';
 
 export interface MultiSelectInputConfig {
     type: "multi_select";
@@ -18,20 +19,33 @@ export interface MultiSelectInputConfig {
     /** TODO: Implement tooltip */
     tooltip?: string;
     onValueChange?: (value: (string|number)[]) => void;
+    validationCB?: (value: (string|number)[]) => null|string;
 }
 export interface MultiSelectInputProps {
-    value: MultiSelectOption;
+    value: MultiSelectOption[];
     config: MultiSelectInputConfig;
     onChange: (options: MultiSelectOption[]) => void;
+    display_error_message: boolean;
 }
 
-const MultiSelectInputContainer = styled("div") `
+interface ContainerStyleProps {
+    valid: boolean;
+}
+
+const MultiSelectInputContainer = styled("div")<ContainerStyleProps> `
     text-align: left;
     p.message{
         color: ${props => props.theme.colors.dark[2]};
         font-size: 12px;
         margin-bottom: 6px;
         font-weight: normal;
+        font-style: italic;
+    }
+    p.validation_error{
+        color: ${props => props.theme.colors.red[0]};
+        font-size: 14px;
+        margin-bottom: 4px;
+        font-weight: bold;
         font-style: italic;
     }
     p.multi_select_label {
@@ -48,7 +62,7 @@ export class Input extends React.Component<MultiSelectInputProps> {
         const cfg = this.props.config;
         this.props.onChange(values);
         if (cfg.onValueChange) {
-            cfg.onValueChange(getParsedValue(cfg, values));
+            cfg.onValueChange(convertInternalToExternalValue(cfg, values));
         }
     }
 
@@ -59,12 +73,16 @@ export class Input extends React.Component<MultiSelectInputProps> {
             class_names += " " + cfg.class_name;
         }
 
+        const validation_error = validate(cfg, this.props.value.map(option => option.value));
+
         return (
             <MultiSelectInputContainer
                 className={class_names}
+                valid={!validation_error || !this.props.display_error_message}
             >
                 { cfg.label ? <p className="multi_select_label">{ cfg.label }</p> : null }
                 { cfg.message ? <p className="message">{ cfg.message }</p> : null }
+                { validation_error && this.props.display_error_message && validation_error.length > 0 ? <p className="validation_error">{ validation_error }</p> : null }
                 <Select
                     placeholder={cfg.placeholder ? cfg.placeholder : cfg.label ? cfg.label : '' }
                     isMulti={true}
@@ -83,17 +101,24 @@ export class Input extends React.Component<MultiSelectInputProps> {
 }
 
 export function validate(cfg: MultiSelectInputConfig, value: (number|string)[]): null|string {
+    if (cfg.validationCB) {
+        return cfg.validationCB(value);
+    }
     return null;
 }
 
 export function validateConfig(cfg: MultiSelectInputConfig): null|string {
-    if (validate(cfg, cfg.default_value)) {
-        return "UserInput: Invalid default_value for MultiSelect.";
-    }
-
     return null;
 }
 
-export function getParsedValue(cfg: MultiSelectInputConfig, values: MultiSelectOption[]): (string|number)[] {
+export function convertInternalToExternalValue(cfg: MultiSelectInputConfig, values: MultiSelectOption[]): (string|number)[] {
     return values.map(x => x.value);
+}
+
+export function convertExternalToInternalValue(cfg: MultiSelectInputConfig, values: (number|string)[]): MultiSelectOption[] {
+    let selected_options = cfg.options.filter(option => values.includes(option.value));
+    if (selected_options.length !== values.length) {
+        throw new Error("UserInput: Default value for multiselect not present in options.");
+    }
+    return selected_options;
 }

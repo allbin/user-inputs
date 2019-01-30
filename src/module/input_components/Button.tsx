@@ -144,6 +144,10 @@ export function validateConfig(cfg: ButtonConfig): null|string {
     return null;
 }
 
-export function getParsedValue(cfg: ButtonConfig, value: any): any {
+export function convertInternalToExternalValue(cfg: ButtonConfig, value: any): any {
     return null;
+}
+
+export function convertExternalToInternalValue(cfg: ButtonConfig, value: any): any {
+    return value;
 }

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import styled from 'styled-components';
+import { TriStateInputOption } from '../.';
 
 export interface TriStateInputConfig {
     type: "tri_state";
@@ -16,14 +17,20 @@ export interface TriStateInputConfig {
     /** TODO: Implement tooltip */
     tooltip?: string;
     onValueChange?: (value: string|number) => void;
+    validationCB?: (value: string|number) => null|string;
 }
 export interface TriStateInputProps {
-    value?: string;
+    value: string|number;
     config: TriStateInputConfig;
     onChange: (value: string|number) => void;
+    display_error_message: boolean;
 }
 
-const TriStateInputContainer = styled.div `
+interface ContainerStyleProps {
+    valid: boolean;
+}
+
+const TriStateInputContainer = styled("div")<ContainerStyleProps> `
     text-align: left;
     p.tri_state_label {
         color: ${props => props.theme.colors.dark[1]};
@@ -36,6 +43,13 @@ const TriStateInputContainer = styled.div `
         font-size: 12px;
         margin-bottom: 6px;
         font-weight: normal;
+        font-style: italic;
+    }
+    p.validation_error{
+        color: ${props => props.theme.colors.red[0]};
+        font-size: 14px;
+        margin-bottom: 4px;
+        font-weight: bold;
         font-style: italic;
     }
     .grid_block{
@@ -72,7 +86,7 @@ export class Input extends React.Component<TriStateInputProps, TriStateInputConf
         const cfg = this.props.config;
         this.props.onChange(value);
         if (cfg.onValueChange) {
-            cfg.onValueChange(getParsedValue(cfg, value));
+            cfg.onValueChange(convertInternalToExternalValue(cfg, value));
         }
     }
     render() {
@@ -84,10 +98,16 @@ export class Input extends React.Component<TriStateInputProps, TriStateInputConf
 
         const LEFT_POSITION = cfg.options.findIndex(option => option.value === this.props.value);
 
+        const validation_error = validate(cfg, this.props.value);
+
         return (
-            <TriStateInputContainer className={class_names}>
+            <TriStateInputContainer
+                className={class_names}
+                valid={!validation_error || !this.props.display_error_message}
+            >
                 { cfg.label ? <p className="tri_state_label">{ cfg.label }</p> : null }
                 { cfg.message ? <p className="message">{ cfg.message }</p> : null }
+                { validation_error && this.props.display_error_message && validation_error.length > 0 ? <p className="validation_error">{ validation_error }</p> : null }
                 <div className="grid_block">
                     <div className="grid_block_bg" style={{left: 33.333333333333 * LEFT_POSITION + '%'}}></div>
                     {
@@ -112,6 +132,9 @@ export class Input extends React.Component<TriStateInputProps, TriStateInputConf
 }
 
 export function validate(cfg: TriStateInputConfig, value: string|number): null|string {
+    if (cfg.validationCB) {
+        return cfg.validationCB(value);
+    }
     return null;
 }
 
@@ -123,6 +146,10 @@ export function validateConfig(cfg: TriStateInputConfig): null|string {
     return null;
 }
 
-export function getParsedValue(cfg: TriStateInputConfig, value: string|number): string|number {
+export function convertInternalToExternalValue(cfg: TriStateInputConfig, value: string|number): string|number {
+    return value;
+}
+
+export function convertExternalToInternalValue(cfg: TriStateInputConfig, value: string|number): string|number {
     return value;
 }

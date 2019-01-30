@@ -3,6 +3,7 @@ import styled from 'styled-components';
 const Quagga = require('quagga');
 import { FaBarcode } from 'react-icons/fa';
 import oh from 'output-helpers';
+import { LooseObject } from '../.';
 
 export interface TextInputConfig {
     type: "text";
@@ -16,12 +17,13 @@ export interface TextInputConfig {
     tooltip?: string;
     trim?: boolean;
     onValueChange?: (value: string) => void;
-    onValidate?: (value: string) => null|string;
+    validationCB?: (value: string) => null|string;
 }
 export interface TextInputProps {
     value: string;
     config: TextInputConfig;
     onChange: (value: string) => void;
+    display_error_message: boolean;
     autofocus?: boolean;
 }
 
@@ -237,7 +239,7 @@ export class Input extends React.Component<TextInputProps, TextInputState> {
         const cfg = this.props.config;
         this.props.onChange(value);
         if (cfg.onValueChange && !validate(cfg, value)) {
-            cfg.onValueChange(getParsedValue(cfg, value));
+            cfg.onValueChange(convertInternalToExternalValue(cfg, value));
         }
     }
 
@@ -258,11 +260,11 @@ export class Input extends React.Component<TextInputProps, TextInputState> {
         return (
             <TextInputContainer
                 className={class_names}
-                valid={!validation_error}
+                valid={!validation_error || !this.props.display_error_message}
             >
                 { cfg.label ? <p>{ cfg.label }</p> : null }
                 { cfg.message ? <p className="message">{ cfg.message }</p> : null }
-                { validation_error && validation_error.length > 0 ? <p className="validation_error">{ validation_error }</p> : null }
+                { validation_error && this.props.display_error_message && validation_error.length > 0 ? <p className="validation_error">{ validation_error }</p> : null }
                 <input
                     className={input_class_name}
                     autoFocus={this.props.autofocus || false}
@@ -277,8 +279,8 @@ export class Input extends React.Component<TextInputProps, TextInputState> {
 }
 
 export function validate(cfg: TextInputConfig, value: string): null|string {
-    if (cfg.onValidate) {
-        return cfg.onValidate(value);
+    if (cfg.validationCB) {
+        return cfg.validationCB(value);
     }
     return null;
 }
@@ -289,9 +291,13 @@ export function validateConfig(cfg: TextInputConfig): null|string {
     return null;
 }
 
-export function getParsedValue(cfg: TextInputConfig, value: string): string {
+export function convertInternalToExternalValue(cfg: TextInputConfig, value: string): string {
     if (!cfg.trim) {
         return value;
     }
     return value.trim();
+}
+
+export function convertExternalToInternalValue(cfg: TextInputConfig, value: any): string {
+    return value.toString();
 }

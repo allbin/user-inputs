@@ -19,7 +19,7 @@ let DynamicContainer = styled.div `
     }
 `;
 
-class Alert1 extends React.Component<Form1Props, Form1State> {
+class Form1 extends React.Component<Form1Props, Form1State> {
 
     form_inputs: FormInputConfigArray = [
         {
@@ -32,10 +32,10 @@ class Alert1 extends React.Component<Form1Props, Form1State> {
         {
             type: "button",
             key: "button_input_test",
-            label: "button in form",
+            label: "Reset form",
             default_value: "",
             class_name: "form_button_test_class",
-            onClick: () => { console.log("button in form click: userInputs.isOpen():", this.props.userInputs.isOpen()); }
+            onClick: () => { this.form.reset(); }
         },
         {
             type: "text",
@@ -44,7 +44,7 @@ class Alert1 extends React.Component<Form1Props, Form1State> {
             label: "Text input with label and message",
             message: "Please enter text. Maximum 6 characters long.",
             class_name: "form_text_input_test_class",
-            onValidate: (value: string) => {
+            validationCB: (value: string) => {
                 if (value.length < 7) {
                     return null;
                 }
@@ -104,11 +104,21 @@ class Alert1 extends React.Component<Form1Props, Form1State> {
             rows: 4,
             message: "Only accepts 'a'.",
             class_name: "form_textarea_input_test_class",
-            onValidate: (value: string) => {
+            validationCB: (value: string) => {
                 if (/^a+$/.test(value)) {
                     return null;
                 }
                 return "Value needs to be one or more 'a'.";
+            }
+        },
+        {
+            type: "button",
+            key: "reset_confirm",
+            label: "Reset confirmation clicked",
+            default_value: "",
+            class_name: "reset_confirm_button_test_class",
+            onClick: () => {
+                this.form.resetConfirmClick();
             }
         },
         {
@@ -134,4 +144,4 @@ class Alert1 extends React.Component<Form1Props, Form1State> {
     }
 }
 
-export default userInputs(Alert1);
+export default userInputs(Form1);

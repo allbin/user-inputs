@@ -1,7 +1,7 @@
 import * as React from 'react';
 import styled from '../styling';
 import Select from 'react-select';
-
+import { SelectOption } from '../.';
 
 export interface SelectInputConfig {
     type: "select";
@@ -18,12 +18,13 @@ export interface SelectInputConfig {
     /** TODO: Implement tooltip */
     tooltip?: string;
     onValueChange?: (value: string|number) => void;
-    onValidate?: (value: string|number) => null|string;
+    validationCB?: (value: string|number) => null|string;
 }
 export interface SelectInputProps {
     value: SelectOption;
     config: SelectInputConfig;
     onChange: (value: SelectOption) => void;
+    display_error_message: boolean;
 }
 
 interface ContainerStyleProps {
@@ -75,11 +76,11 @@ export class Input extends React.Component<SelectInputProps> {
         return (
             <SelectInputContainer
                 className={class_names}
-                valid={!validation_error}
+                valid={!validation_error || !this.props.display_error_message}
             >
                 { cfg.label ? <p className="select_label">{ cfg.label }</p> : null }
                 { cfg.message ? <p className="message">{ cfg.message }</p> : null }
-                { validation_error && validation_error.length > 0 ? <p className="validation_error">{ validation_error }</p> : null }
+                { validation_error && this.props.display_error_message && validation_error.length > 0 ? <p className="validation_error">{ validation_error }</p> : null }
                 <Select
                     placeholder={cfg.placeholder ? cfg.placeholder : cfg.label ? cfg.label : '' }
                     value={this.props.value}
@@ -97,8 +98,8 @@ export class Input extends React.Component<SelectInputProps> {
 }
 
 export function validate(cfg: SelectInputConfig, value: string|number): string|null {
-    if (cfg.onValidate) {
-        return cfg.onValidate(value);
+    if (cfg.validationCB) {
+        return cfg.validationCB(value);
     }
     return null;
 }
@@ -111,6 +112,14 @@ export function validateConfig(cfg: SelectInputConfig): null|string {
     return null;
 }
 
-export function getParsedValue(cfg: SelectInputConfig, value: SelectOption): string|number {
+export function convertInternalToExternalValue(cfg: SelectInputConfig, value: SelectOption): string|number {
     return value.value;
+}
+
+export function convertExternalToInternalValue(cfg: SelectInputConfig, value: string|number): SelectOption {
+    let selected_option = cfg.options.find(option => value === option.value);
+    if (!selected_option) {
+        throw new Error("UserInput: Default value for select not present in options.");
+    }
+    return selected_option;
 }
