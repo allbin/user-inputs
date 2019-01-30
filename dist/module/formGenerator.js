@@ -6,32 +6,14 @@ export default function getInputForm(input_configs, cb) {
         constructor(props) {
             super(props);
             let values = {};
-            input_configs.forEach((input) => {
-                if (input.type === "multi_select") {
-                    let selected_options = input.options.filter(option => input.default_value.includes(option.value));
-                    if (selected_options.length !== input.default_value.length) {
-                        throw new Error("UserInput: Default values for multiselect not present in options.");
-                    }
-                    values[input.key] = selected_options;
-                }
-                else if (input.type === "select") {
-                    let selected_option = input.options.find(option => input.default_value === option.value);
-                    if (!selected_option) {
-                        throw new Error("UserInput: Default value for select not present in options.");
-                    }
-                    values[input.key] = selected_option;
-                }
-                else if (input.type === "numeric") {
-                    values[input.key] = input.default_value.toString();
-                }
-                else {
-                    values[input.key] = input.default_value;
-                }
+            input_configs.forEach((input_config) => {
+                values[input_config.key] = input_imports[input_config.type].convertExternalToInternalValue(input_config, input_config.default_value);
             });
             this.state = {
                 values: values,
                 inputs: input_configs,
                 tag: null,
+                confirm_clicked: (cb) ? false : true
             };
             this.confirmCB = cb || null;
         }
@@ -53,26 +35,7 @@ export default function getInputForm(input_configs, cb) {
             }
             let values = this.state.values;
             if (input_config.hasOwnProperty("value")) {
-                if (input_config.type === "multi_select") {
-                    let selected_options = input_config.options.filter(option => input_config.value.includes(option.value));
-                    if (selected_options.length !== input_config.value.length) {
-                        throw new Error("UserInput: Values for multiselect not present in options.");
-                    }
-                    values[input_config.key] = selected_options;
-                }
-                else if (input_config.type === "select") {
-                    let selected_option = input_config.options.find(option => input_config.value === option.value);
-                    if (!selected_option) {
-                        throw new Error("UserInput: Value for select not present in options.");
-                    }
-                    values[input_config.key] = selected_option;
-                }
-                else if (input_config.type === "numeric") {
-                    values[input_config.key] = input_config.value.toString();
-                }
-                else {
-                    values[input_config.key] = input_config.value;
-                }
+                values[input_config.key] = input_imports[input_config.type].convertExternalToInternalValue(input_config, input_config.default_value);
             }
             inputs[input_index] = Object.assign({}, inputs[input_index], input_config);
             this.setState({
@@ -87,17 +50,29 @@ export default function getInputForm(input_configs, cb) {
                     return;
                 }
                 else {
-                    return values[input.key] = input_imports[input.type].getParsedValue(input, this.state.values[input.key]);
+                    return values[input.key] = input_imports[input.type].convertInternalToExternalValue(input, this.state.values[input.key]);
                 }
             });
             return values;
         }
         resetValues() {
-            let default_values = input_configs.map(input => input.default_value);
-            this.setState({ values: default_values });
+            let values = {};
+            input_configs.forEach((input_config) => {
+                values[input_config.key] = input_imports[input_config.type].convertExternalToInternalValue(input_config, input_config.default_value);
+            });
+            this.setState({
+                values: values,
+                confirm_clicked: false
+            });
+        }
+        resetConfirmClick() {
+            this.setState({
+                confirm_clicked: false
+            });
         }
         userConfirmedCB() {
-            if (this.confirmCB) {
+            this.setState({ confirm_clicked: true });
+            if (this.confirmCB && this.isValid()) {
                 this.confirmCB(this.getValues());
             }
         }
@@ -119,11 +94,7 @@ export default function getInputForm(input_configs, cb) {
                 let InputComponent = input_imports[input_request.type].Input;
                 let key = input_request.key || "input_" + index;
                 if (input_request.type === "confirm") {
-                    return React.createElement(InputComponent, { key: key, config: input_request, value: this.state.values[key], disabled: this.isValid(), onClick: () => {
-                            if (input_request.type === "confirm") {
-                                this.userConfirmedCB();
-                            }
-                        } });
+                    return React.createElement(InputComponent, { key: key, config: input_request, value: this.state.values[key], onClick: () => { this.userConfirmedCB(); } });
                 }
                 else if (input_request.type === "button") {
                     return React.createElement(InputComponent, { key: key, config: input_request, value: this.state.values[key], onClick: () => {
@@ -132,7 +103,7 @@ export default function getInputForm(input_configs, cb) {
                             }
                         } });
                 }
-                return React.createElement(InputComponent, { key: key, config: input_request, value: this.state.values[key], onChange: (value) => {
+                return React.createElement(InputComponent, { key: key, config: input_request, value: this.state.values[key], display_error_message: this.state.confirm_clicked, onChange: (value) => {
                         this.inputValueChangeCB(key, value);
                     } });
             });
@@ -146,6 +117,11 @@ export default function getInputForm(input_configs, cb) {
         reset: () => {
             if (mounted_form) {
                 mounted_form.resetValues();
+            }
+        },
+        resetConfirmClick: () => {
+            if (mounted_form) {
+                mounted_form.resetConfirmClick();
             }
         },
         getValues: () => {

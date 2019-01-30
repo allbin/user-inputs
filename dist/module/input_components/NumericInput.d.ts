@@ -15,12 +15,13 @@ export interface NumericInputConfig {
     step?: number;
     onValueChange?: (value: number) => void;
     /** Return error message. Empty string displays no message but marks the input as invalid. */
-    onValidate?: (value: string) => null | string;
+    validationCB?: (value: string) => null | string;
 }
 export interface NumericInputProps {
     value: string;
     config: NumericInputConfig;
     onChange: (value: string) => void;
+    display_error_message: boolean;
     autofocus?: boolean;
 }
 interface NumericInputState {
@@ -32,5 +33,6 @@ export declare class Input extends React.Component<NumericInputProps, NumericInp
 }
 export declare function validate(cfg: NumericInputConfig, value: string): null | string;
 export declare function validateConfig(cfg: NumericInputConfig): null | string;
-export declare function getParsedValue(cfg: NumericInputConfig, value: string): number;
+export declare function convertInternalToExternalValue(cfg: NumericInputConfig, value: string): number;
+export declare function convertExternalToInternalValue(cfg: NumericInputConfig, value: number): string;
 export {};

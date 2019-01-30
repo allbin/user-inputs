@@ -20,6 +20,13 @@ const GridInputContainer = styled.div `
         font-weight: normal;
         font-style: italic;
     }
+    p.validation_error{
+        color: ${props => props.theme.colors.red[0]};
+        font-size: 14px;
+        margin-bottom: 4px;
+        font-weight: bold;
+        font-style: italic;
+    }
     .grid_block{
         border-radius: 4px;
         background-color: ${props => props.theme.colors.border};
@@ -64,7 +71,7 @@ export class Input extends React.Component {
         const cfg = this.props.config;
         this.props.onChange(value);
         if (cfg.onValueChange) {
-            cfg.onValueChange(getParsedValue(cfg, value));
+            cfg.onValueChange(convertInternalToExternalValue(cfg, value));
         }
     }
     render() {
@@ -73,17 +80,22 @@ export class Input extends React.Component {
         if (cfg.class_name) {
             class_names += " " + cfg.class_name;
         }
-        return (React.createElement(GridInputContainer, { grid_type: cfg.grid_type, className: class_names },
+        const validation_error = validate(cfg, this.props.value);
+        return (React.createElement(GridInputContainer, { grid_type: cfg.grid_type, className: class_names, valid: !validation_error || !this.props.display_error_message },
             cfg.label ? React.createElement("p", null, cfg.label) : null,
             cfg.message ? React.createElement("p", { className: "message" }, cfg.message) : null,
+            validation_error && this.props.display_error_message && validation_error.length > 0 ? React.createElement("p", { className: "validation_error" }, validation_error) : null,
             React.createElement("div", { className: "grid_block" }, cfg.options.map((item, i) => {
-                return (React.createElement(StyledGridItem, { color: item.color, grid_type: cfg.grid_type, key: i, className: `grid_item ${this.props.value === item.value ? 'active' : ''}`, onClick: () => {
+                return (React.createElement(StyledGridItem, { color: item.color, grid_type: cfg.grid_type, valid: !validation_error || !this.props.display_error_message, key: i, className: `grid_item ${this.props.value === item.value ? 'active' : ''}`, onClick: () => {
                         this.onChange(item.value);
                     } }, cfg.grid_type === 'icons' ? null : React.createElement("span", null, item.label)));
             }))));
     }
 }
 export function validate(cfg, value) {
+    if (cfg.validationCB) {
+        return cfg.validationCB(value);
+    }
     return null;
 }
 export function validateConfig(cfg) {
@@ -92,7 +104,10 @@ export function validateConfig(cfg) {
     }
     return null;
 }
-export function getParsedValue(cfg, value) {
+export function convertInternalToExternalValue(cfg, value) {
+    return value;
+}
+export function convertExternalToInternalValue(cfg, value) {
     return value;
 }
 

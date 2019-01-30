@@ -105,8 +105,11 @@ export function validateConfig(cfg) {
     }
     return null;
 }
-export function getParsedValue(cfg, value) {
+export function convertInternalToExternalValue(cfg, value) {
     return null;
+}
+export function convertExternalToInternalValue(cfg, value) {
+    return value;
 }
 
 //# sourceMappingURL=Button.js.map

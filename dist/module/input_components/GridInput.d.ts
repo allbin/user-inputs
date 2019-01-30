@@ -12,11 +12,13 @@ export interface GridInputConfig {
     /** TODO: Implement tooltip */
     tooltip?: string;
     onValueChange?: (value: string | number) => void;
+    validationCB?: (value: string | number) => null | string;
 }
 export interface GridInputProps {
     value: any;
     config: GridInputConfig;
     onChange: (value: string | number) => void;
+    display_error_message: boolean;
 }
 export declare class Input extends React.Component<GridInputProps, any> {
     onChange(value: string | number): void;
@@ -24,4 +26,5 @@ export declare class Input extends React.Component<GridInputProps, any> {
 }
 export declare function validate(cfg: GridInputConfig, value: string): null | string;
 export declare function validateConfig(cfg: GridInputConfig): null | string;
-export declare function getParsedValue(cfg: GridInputConfig, value: string | number): string | number;
+export declare function convertInternalToExternalValue(cfg: GridInputConfig, value: string | number): string | number;
+export declare function convertExternalToInternalValue(cfg: GridInputConfig, value: string | number): string | number;

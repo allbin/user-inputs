@@ -9,6 +9,7 @@ export interface BoolInputConfig {
     /** TODO: Implement tooltip */
     tooltip?: string;
     onValueChange?: (value: boolean) => void;
+    validationCB?: (value: boolean) => null | string;
 }
 export interface BoolInputProps {
     type: "bool";
@@ -16,6 +17,7 @@ export interface BoolInputProps {
     value: boolean;
     config: BoolInputConfig;
     onChange: (checked: boolean) => void;
+    display_error_message: boolean;
 }
 export declare class Input extends React.Component<BoolInputProps, any> {
     onChange(value: boolean): void;
@@ -23,4 +25,5 @@ export declare class Input extends React.Component<BoolInputProps, any> {
 }
 export declare function validate(cfg: BoolInputConfig, value: boolean): null | string;
 export declare function validateConfig(cfg: BoolInputConfig): null | string;
-export declare function getParsedValue(cfg: BoolInputConfig, value: boolean): boolean;
+export declare function convertInternalToExternalValue(cfg: BoolInputConfig, value: boolean): boolean;
+export declare function convertExternalToInternalValue(cfg: BoolInputConfig, value: boolean): boolean;

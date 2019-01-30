@@ -174,7 +174,7 @@ export class Input extends React.Component {
         const cfg = this.props.config;
         this.props.onChange(value);
         if (cfg.onValueChange && !validate(cfg, value)) {
-            cfg.onValueChange(getParsedValue(cfg, value));
+            cfg.onValueChange(convertInternalToExternalValue(cfg, value));
         }
     }
     render() {
@@ -188,28 +188,31 @@ export class Input extends React.Component {
             input_class_name = "small";
         }
         const validation_error = validate(cfg, this.props.value);
-        return (React.createElement(TextInputContainer, { className: class_names, valid: !validation_error },
+        return (React.createElement(TextInputContainer, { className: class_names, valid: !validation_error || !this.props.display_error_message },
             cfg.label ? React.createElement("p", null, cfg.label) : null,
             cfg.message ? React.createElement("p", { className: "message" }, cfg.message) : null,
-            validation_error && validation_error.length > 0 ? React.createElement("p", { className: "validation_error" }, validation_error) : null,
+            validation_error && this.props.display_error_message && validation_error.length > 0 ? React.createElement("p", { className: "validation_error" }, validation_error) : null,
             React.createElement("input", { className: input_class_name, autoFocus: this.props.autofocus || false, type: "text", value: this.props.value, onChange: e => this.onChange(e.target.value) }),
             this.renderBarcodeBtn(cfg)));
     }
 }
 export function validate(cfg, value) {
-    if (cfg.onValidate) {
-        return cfg.onValidate(value);
+    if (cfg.validationCB) {
+        return cfg.validationCB(value);
     }
     return null;
 }
 export function validateConfig(cfg) {
     return null;
 }
-export function getParsedValue(cfg, value) {
+export function convertInternalToExternalValue(cfg, value) {
     if (!cfg.trim) {
         return value;
     }
     return value.trim();
+}
+export function convertExternalToInternalValue(cfg, value) {
+    return value.toString();
 }
 
 //# sourceMappingURL=TextInput.js.map

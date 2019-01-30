@@ -46,7 +46,7 @@ export class Input extends React.Component {
         this.props.onChange(value);
         const cfg = this.props.config;
         if (cfg.onValueChange && validate(cfg, value)) {
-            cfg.onValueChange(getParsedValue(cfg, value));
+            cfg.onValueChange(convertInternalToExternalValue(cfg, value));
         }
     }
     render() {
@@ -56,16 +56,16 @@ export class Input extends React.Component {
             class_names += " " + cfg.class_name;
         }
         const validation_error = validate(cfg, this.props.value);
-        return (React.createElement(NumericInputContainer, { className: class_names, valid: !validation_error },
+        return (React.createElement(NumericInputContainer, { className: class_names, valid: !validation_error || !this.props.display_error_message },
             cfg.label ? React.createElement("p", null, cfg.label) : null,
             cfg.message ? React.createElement("p", { className: "message" }, cfg.message) : null,
-            validation_error && validation_error.length > 0 ? React.createElement("p", { className: "validation_error" }, validation_error) : null,
+            validation_error && this.props.display_error_message && validation_error.length > 0 ? React.createElement("p", { className: "validation_error" }, validation_error) : null,
             React.createElement("input", { type: "text", autoFocus: this.props.autofocus || false, value: this.props.value, onChange: e => this.onChange(e.target.value) })));
     }
 }
 export function validate(cfg, value) {
-    if (cfg.onValidate) {
-        return cfg.onValidate(value);
+    if (cfg.validationCB) {
+        return cfg.validationCB(value);
     }
     let messages = [];
     if (cfg.number_type === "integer") {
@@ -113,7 +113,7 @@ export function validateConfig(cfg) {
     }
     return null;
 }
-export function getParsedValue(cfg, value) {
+export function convertInternalToExternalValue(cfg, value) {
     if (cfg.number_type === "integer") {
         let parsed = parseInt(value, 10);
         if (!Number.isNaN(parsed) && Number.isFinite(parsed) && Number.isSafeInteger(parsed) && parsed.toString(10) === value.trim()) {
@@ -126,6 +126,9 @@ export function getParsedValue(cfg, value) {
         return parsed;
     }
     return cfg.default_value;
+}
+export function convertExternalToInternalValue(cfg, value) {
+    return value.toString();
 }
 
 //# sourceMappingURL=NumericInput.js.map

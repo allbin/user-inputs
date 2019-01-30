@@ -1,6 +1,6 @@
 import * as React from 'react';
 import styled from 'styled-components';
-const TriStateInputContainer = styled.div `
+const TriStateInputContainer = styled("div") `
     text-align: left;
     p.tri_state_label {
         color: ${props => props.theme.colors.dark[1]};
@@ -13,6 +13,13 @@ const TriStateInputContainer = styled.div `
         font-size: 12px;
         margin-bottom: 6px;
         font-weight: normal;
+        font-style: italic;
+    }
+    p.validation_error{
+        color: ${props => props.theme.colors.red[0]};
+        font-size: 14px;
+        margin-bottom: 4px;
+        font-weight: bold;
         font-style: italic;
     }
     .grid_block{
@@ -48,7 +55,7 @@ export class Input extends React.Component {
         const cfg = this.props.config;
         this.props.onChange(value);
         if (cfg.onValueChange) {
-            cfg.onValueChange(getParsedValue(cfg, value));
+            cfg.onValueChange(convertInternalToExternalValue(cfg, value));
         }
     }
     render() {
@@ -58,9 +65,11 @@ export class Input extends React.Component {
             class_names += " " + cfg.class_name;
         }
         const LEFT_POSITION = cfg.options.findIndex(option => option.value === this.props.value);
-        return (React.createElement(TriStateInputContainer, { className: class_names },
+        const validation_error = validate(cfg, this.props.value);
+        return (React.createElement(TriStateInputContainer, { className: class_names, valid: !validation_error || !this.props.display_error_message },
             cfg.label ? React.createElement("p", { className: "tri_state_label" }, cfg.label) : null,
             cfg.message ? React.createElement("p", { className: "message" }, cfg.message) : null,
+            validation_error && this.props.display_error_message && validation_error.length > 0 ? React.createElement("p", { className: "validation_error" }, validation_error) : null,
             React.createElement("div", { className: "grid_block" },
                 React.createElement("div", { className: "grid_block_bg", style: { left: 33.333333333333 * LEFT_POSITION + '%' } }),
                 cfg.options.map((item, i) => {
@@ -72,6 +81,9 @@ export class Input extends React.Component {
     }
 }
 export function validate(cfg, value) {
+    if (cfg.validationCB) {
+        return cfg.validationCB(value);
+    }
     return null;
 }
 export function validateConfig(cfg) {
@@ -80,7 +92,10 @@ export function validateConfig(cfg) {
     }
     return null;
 }
-export function getParsedValue(cfg, value) {
+export function convertInternalToExternalValue(cfg, value) {
+    return value;
+}
+export function convertExternalToInternalValue(cfg, value) {
     return value;
 }
 

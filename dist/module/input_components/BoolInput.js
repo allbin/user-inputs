@@ -72,7 +72,7 @@ export class Input extends React.Component {
         const cfg = this.props.config;
         this.props.onChange(value);
         if (cfg.onValueChange) {
-            cfg.onValueChange(getParsedValue(cfg, value));
+            cfg.onValueChange(convertInternalToExternalValue(cfg, value));
         }
     }
     render() {
@@ -81,9 +81,11 @@ export class Input extends React.Component {
         if (cfg.class_name) {
             class_names += " " + cfg.class_name;
         }
-        return (React.createElement(BoolInputContainer, { className: class_names, thing_size: 30 },
+        const validation_error = validate(cfg, this.props.value);
+        return (React.createElement(BoolInputContainer, { className: class_names, thing_size: 30, valid: !validation_error || !this.props.display_error_message },
             cfg.label ? React.createElement("p", null, cfg.label) : null,
             cfg.message ? React.createElement("p", { className: "message" }, cfg.message) : null,
+            validation_error && this.props.display_error_message && validation_error.length > 0 ? React.createElement("p", { className: "validation_error" }, validation_error) : null,
             React.createElement("div", { className: "bool_block" },
                 React.createElement("div", { className: `bool_input ${this.props.value === true ? 'active' : ''}`, onClick: () => {
                         this.onChange(!this.props.value);
@@ -92,6 +94,9 @@ export class Input extends React.Component {
     }
 }
 export function validate(cfg, value) {
+    if (cfg.validationCB) {
+        return cfg.validationCB(value);
+    }
     return null;
 }
 export function validateConfig(cfg) {
@@ -100,7 +105,10 @@ export function validateConfig(cfg) {
     }
     return null;
 }
-export function getParsedValue(cfg, value) {
+export function convertInternalToExternalValue(cfg, value) {
+    return value;
+}
+export function convertExternalToInternalValue(cfg, value) {
     return value;
 }
 

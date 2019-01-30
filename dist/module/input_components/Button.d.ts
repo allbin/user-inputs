@@ -31,4 +31,5 @@ export declare class Input extends React.Component<ButtonProps, any> {
 }
 export declare function validate(cfg: ButtonConfig, value: any): null | string;
 export declare function validateConfig(cfg: ButtonConfig): null | string;
-export declare function getParsedValue(cfg: ButtonConfig, value: any): any;
+export declare function convertInternalToExternalValue(cfg: ButtonConfig, value: any): any;
+export declare function convertExternalToInternalValue(cfg: ButtonConfig, value: any): any;

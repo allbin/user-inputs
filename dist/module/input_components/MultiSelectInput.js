@@ -10,6 +10,13 @@ const MultiSelectInputContainer = styled("div") `
         font-weight: normal;
         font-style: italic;
     }
+    p.validation_error{
+        color: ${props => props.theme.colors.red[0]};
+        font-size: 14px;
+        margin-bottom: 4px;
+        font-weight: bold;
+        font-style: italic;
+    }
     p.multi_select_label {
         color: ${props => props.theme.colors.dark[1]};
         font-size: 14px;
@@ -22,7 +29,7 @@ export class Input extends React.Component {
         const cfg = this.props.config;
         this.props.onChange(values);
         if (cfg.onValueChange) {
-            cfg.onValueChange(getParsedValue(cfg, values));
+            cfg.onValueChange(convertInternalToExternalValue(cfg, values));
         }
     }
     render() {
@@ -31,25 +38,34 @@ export class Input extends React.Component {
         if (cfg.class_name) {
             class_names += " " + cfg.class_name;
         }
-        return (React.createElement(MultiSelectInputContainer, { className: class_names },
+        const validation_error = validate(cfg, this.props.value.map(option => option.value));
+        return (React.createElement(MultiSelectInputContainer, { className: class_names, valid: !validation_error || !this.props.display_error_message },
             cfg.label ? React.createElement("p", { className: "multi_select_label" }, cfg.label) : null,
             cfg.message ? React.createElement("p", { className: "message" }, cfg.message) : null,
+            validation_error && this.props.display_error_message && validation_error.length > 0 ? React.createElement("p", { className: "validation_error" }, validation_error) : null,
             React.createElement(Select, { placeholder: cfg.placeholder ? cfg.placeholder : cfg.label ? cfg.label : '', isMulti: true, value: this.props.value, onChange: (e) => {
                     this.onChange(e);
                 }, isSearchable: cfg.searchable || false, isDisabled: cfg.disabled || false, noOptionsMessage: () => cfg.no_options_message || null, options: cfg.options })));
     }
 }
 export function validate(cfg, value) {
-    return null;
-}
-export function validateConfig(cfg) {
-    if (validate(cfg, cfg.default_value)) {
-        return "UserInput: Invalid default_value for MultiSelect.";
+    if (cfg.validationCB) {
+        return cfg.validationCB(value);
     }
     return null;
 }
-export function getParsedValue(cfg, values) {
+export function validateConfig(cfg) {
+    return null;
+}
+export function convertInternalToExternalValue(cfg, values) {
     return values.map(x => x.value);
+}
+export function convertExternalToInternalValue(cfg, values) {
+    let selected_options = cfg.options.filter(option => values.includes(option.value));
+    if (selected_options.length !== values.length) {
+        throw new Error("UserInput: Default value for multiselect not present in options.");
+    }
+    return selected_options;
 }
 
 //# sourceMappingURL=MultiSelectInput.js.map

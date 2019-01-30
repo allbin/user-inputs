@@ -59,13 +59,6 @@ export interface PromptState {
     tag: string | null;
     form: GeneratedForm | null;
 }
-export interface FormState {
-    values: {
-        [key: string]: any;
-    };
-    inputs: FormInputConfigArray;
-    tag: string | null;
-}
 export interface UserInputPromptConfig {
     title: string;
     inputs: PromptInputConfigArray;
@@ -85,9 +78,10 @@ export interface PromptConfig extends UserInputPromptConfig {
 }
 interface InputComponentExports {
     Input: React.ComponentClass<any>;
-    getParsedValue: (cfg: any, value: any) => any;
+    convertInternalToExternalValue: (cfg: any, value: any) => any;
     validateConfig: (cfg: any) => null | string;
     validate: (cfg: any, value: any) => null | string;
+    convertExternalToInternalValue: (cfg: any, value: any) => any;
 }
 export interface ComponentObject {
     [key: string]: InputComponentExports;

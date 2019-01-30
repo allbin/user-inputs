@@ -12,12 +12,13 @@ export interface TextareaInputConfig {
     /** TODO: Implement tooltip */
     tooltip?: string;
     onValueChange?: (value: string) => void;
-    onValidate?: (value: string) => null | string;
+    validationCB?: (value: string) => null | string;
 }
 export interface TextareaInputProps {
     value: string;
     config: TextareaInputConfig;
     onChange: (value: string) => void;
+    display_error_message: boolean;
     autofocus?: boolean;
 }
 export declare class Input extends React.Component<TextareaInputProps, TextareaInputConfig> {
@@ -26,4 +27,5 @@ export declare class Input extends React.Component<TextareaInputProps, TextareaI
 }
 export declare function validate(cfg: TextareaInputConfig, value: string): null | string;
 export declare function validateConfig(cfg: TextareaInputConfig): null | string;
-export declare function getParsedValue(cfg: TextareaInputConfig, value: string): string | number;
+export declare function convertInternalToExternalValue(cfg: TextareaInputConfig, value: string): string;
+export declare function convertExternalToInternalValue(cfg: TextareaInputConfig, value: string | number): string;

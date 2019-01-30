@@ -15,12 +15,13 @@ export interface SelectInputConfig {
     /** TODO: Implement tooltip */
     tooltip?: string;
     onValueChange?: (value: string | number) => void;
-    onValidate?: (value: string | number) => null | string;
+    validationCB?: (value: string | number) => null | string;
 }
 export interface SelectInputProps {
     value: SelectOption;
     config: SelectInputConfig;
     onChange: (value: SelectOption) => void;
+    display_error_message: boolean;
 }
 export declare class Input extends React.Component<SelectInputProps> {
     onChange(value: SelectOption): void;
@@ -28,4 +29,5 @@ export declare class Input extends React.Component<SelectInputProps> {
 }
 export declare function validate(cfg: SelectInputConfig, value: string | number): string | null;
 export declare function validateConfig(cfg: SelectInputConfig): null | string;
-export declare function getParsedValue(cfg: SelectInputConfig, value: SelectOption): string | number;
+export declare function convertInternalToExternalValue(cfg: SelectInputConfig, value: SelectOption): string | number;
+export declare function convertExternalToInternalValue(cfg: SelectInputConfig, value: string | number): SelectOption;

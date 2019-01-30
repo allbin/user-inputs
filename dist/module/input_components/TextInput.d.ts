@@ -12,12 +12,13 @@ export interface TextInputConfig {
     tooltip?: string;
     trim?: boolean;
     onValueChange?: (value: string) => void;
-    onValidate?: (value: string) => null | string;
+    validationCB?: (value: string) => null | string;
 }
 export interface TextInputProps {
     value: string;
     config: TextInputConfig;
     onChange: (value: string) => void;
+    display_error_message: boolean;
     autofocus?: boolean;
 }
 interface TextInputState {
@@ -34,5 +35,6 @@ export declare class Input extends React.Component<TextInputProps, TextInputStat
 }
 export declare function validate(cfg: TextInputConfig, value: string): null | string;
 export declare function validateConfig(cfg: TextInputConfig): null | string;
-export declare function getParsedValue(cfg: TextInputConfig, value: string): string;
+export declare function convertInternalToExternalValue(cfg: TextInputConfig, value: string): string;
+export declare function convertExternalToInternalValue(cfg: TextInputConfig, value: any): string;
 export {};

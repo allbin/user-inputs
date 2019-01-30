@@ -16,11 +16,13 @@ export interface MultiSelectInputConfig {
     /** TODO: Implement tooltip */
     tooltip?: string;
     onValueChange?: (value: (string | number)[]) => void;
+    validationCB?: (value: (string | number)[]) => null | string;
 }
 export interface MultiSelectInputProps {
-    value: MultiSelectOption;
+    value: MultiSelectOption[];
     config: MultiSelectInputConfig;
     onChange: (options: MultiSelectOption[]) => void;
+    display_error_message: boolean;
 }
 export declare class Input extends React.Component<MultiSelectInputProps> {
     onChange(values: MultiSelectOption[]): void;
@@ -28,4 +30,5 @@ export declare class Input extends React.Component<MultiSelectInputProps> {
 }
 export declare function validate(cfg: MultiSelectInputConfig, value: (number | string)[]): null | string;
 export declare function validateConfig(cfg: MultiSelectInputConfig): null | string;
-export declare function getParsedValue(cfg: MultiSelectInputConfig, values: MultiSelectOption[]): (string | number)[];
+export declare function convertInternalToExternalValue(cfg: MultiSelectInputConfig, values: MultiSelectOption[]): (string | number)[];
+export declare function convertExternalToInternalValue(cfg: MultiSelectInputConfig, values: (number | string)[]): MultiSelectOption[];

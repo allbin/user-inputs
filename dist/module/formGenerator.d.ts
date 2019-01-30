@@ -4,6 +4,7 @@ import { FormInputConfigArray, AnyInputConfig } from '.';
 export interface GeneratedForm {
     component: typeof React.Component;
     reset: () => void;
+    resetConfirmClick: () => void;
     getValues: () => LooseObject;
     setInputConfig: (updated_config: Partial<AnyInputConfig>) => void;
 }
