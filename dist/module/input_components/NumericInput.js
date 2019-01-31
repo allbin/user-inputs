@@ -43,11 +43,12 @@ const NumericInputContainer = styled("div") `
 `;
 export class Input extends React.Component {
     onChange(value) {
-        this.props.onChange(value);
         const cfg = this.props.config;
-        if (cfg.onValueChange && validate(cfg, value)) {
-            cfg.onValueChange(convertInternalToExternalValue(cfg, value));
-        }
+        this.props.onChange(value, () => {
+            if (cfg.onValueChange && !validate(cfg, value)) {
+                cfg.onValueChange(convertInternalToExternalValue(cfg, value));
+            }
+        });
     }
     render() {
         let cfg = this.props.config;

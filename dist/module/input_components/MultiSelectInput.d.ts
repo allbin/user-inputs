@@ -21,7 +21,7 @@ export interface MultiSelectInputConfig {
 export interface MultiSelectInputProps {
     value: MultiSelectOption[];
     config: MultiSelectInputConfig;
-    onChange: (options: MultiSelectOption[]) => void;
+    onChange: (options: MultiSelectOption[], cb: () => void) => void;
     display_error_message: boolean;
 }
 export declare class Input extends React.Component<MultiSelectInputProps> {

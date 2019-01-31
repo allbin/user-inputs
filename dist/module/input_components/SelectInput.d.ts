@@ -20,7 +20,7 @@ export interface SelectInputConfig {
 export interface SelectInputProps {
     value: SelectOption;
     config: SelectInputConfig;
-    onChange: (value: SelectOption) => void;
+    onChange: (value: SelectOption, cb: () => void) => void;
     display_error_message: boolean;
 }
 export declare class Input extends React.Component<SelectInputProps> {

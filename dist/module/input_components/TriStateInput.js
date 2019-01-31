@@ -53,10 +53,12 @@ const TriStateInputContainer = styled("div") `
 export class Input extends React.Component {
     onChange(value) {
         const cfg = this.props.config;
-        this.props.onChange(value);
-        if (cfg.onValueChange) {
-            cfg.onValueChange(convertInternalToExternalValue(cfg, value));
-        }
+        this.props.onChange(value, () => {
+            let ext_value = convertInternalToExternalValue(cfg, value);
+            if (cfg.onValueChange && !validate(cfg, ext_value)) {
+                cfg.onValueChange(ext_value);
+            }
+        });
     }
     render() {
         let cfg = this.props.config;

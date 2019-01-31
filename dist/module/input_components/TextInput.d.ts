@@ -17,7 +17,7 @@ export interface TextInputConfig {
 export interface TextInputProps {
     value: string;
     config: TextInputConfig;
-    onChange: (value: string) => void;
+    onChange: (value: string, cb: () => void) => void;
     display_error_message: boolean;
     autofocus?: boolean;
 }

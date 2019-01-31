@@ -20,7 +20,7 @@ export interface TriStateInputConfig {
 export interface TriStateInputProps {
     value: string | number;
     config: TriStateInputConfig;
-    onChange: (value: string | number) => void;
+    onChange: (value: string | number, cb: () => void) => void;
     display_error_message: boolean;
 }
 export declare class Input extends React.Component<TriStateInputProps, TriStateInputConfig> {

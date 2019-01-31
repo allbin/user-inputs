@@ -17,7 +17,7 @@ export interface TextareaInputConfig {
 export interface TextareaInputProps {
     value: string;
     config: TextareaInputConfig;
-    onChange: (value: string) => void;
+    onChange: (value: string, cb: () => void) => void;
     display_error_message: boolean;
     autofocus?: boolean;
 }

@@ -40,15 +40,12 @@ const TextareaInputContainer = styled("div") `
 export class Input extends React.Component {
     onChange(value) {
         const cfg = this.props.config;
-        this.props.onChange(value);
-        if (cfg.onValueChange) {
-            if (cfg.trim) {
-                cfg.onValueChange(value.trim());
+        this.props.onChange(value, () => {
+            let ext_value = convertInternalToExternalValue(cfg, value);
+            if (cfg.onValueChange && !validate(cfg, ext_value)) {
+                cfg.onValueChange(ext_value);
             }
-            else {
-                cfg.onValueChange(value);
-            }
-        }
+        });
     }
     render() {
         let cfg = Object.assign({}, default_config, this.props.config);
@@ -74,6 +71,9 @@ export function validateConfig(cfg) {
     return null;
 }
 export function convertInternalToExternalValue(cfg, value) {
+    if (cfg.trim) {
+        return value.trim();
+    }
     return value;
 }
 export function convertExternalToInternalValue(cfg, value) {

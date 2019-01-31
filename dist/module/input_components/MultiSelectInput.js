@@ -27,10 +27,12 @@ const MultiSelectInputContainer = styled("div") `
 export class Input extends React.Component {
     onChange(values) {
         const cfg = this.props.config;
-        this.props.onChange(values);
-        if (cfg.onValueChange) {
-            cfg.onValueChange(convertInternalToExternalValue(cfg, values));
-        }
+        this.props.onChange(values, () => {
+            let ext_value = convertInternalToExternalValue(cfg, values);
+            if (cfg.onValueChange && !validate(cfg, ext_value)) {
+                cfg.onValueChange(ext_value);
+            }
+        });
     }
     render() {
         let cfg = this.props.config;
@@ -43,7 +45,7 @@ export class Input extends React.Component {
             cfg.label ? React.createElement("p", { className: "multi_select_label" }, cfg.label) : null,
             cfg.message ? React.createElement("p", { className: "message" }, cfg.message) : null,
             validation_error && this.props.display_error_message && validation_error.length > 0 ? React.createElement("p", { className: "validation_error" }, validation_error) : null,
-            React.createElement(Select, { placeholder: cfg.placeholder ? cfg.placeholder : cfg.label ? cfg.label : '', isMulti: true, value: this.props.value, onChange: (e) => {
+            React.createElement(Select, { placeholder: cfg.placeholder ? cfg.placeholder : '', isMulti: true, value: this.props.value, onChange: (e) => {
                     this.onChange(e);
                 }, isSearchable: cfg.searchable || false, isDisabled: cfg.disabled || false, noOptionsMessage: () => cfg.no_options_message || null, options: cfg.options })));
     }

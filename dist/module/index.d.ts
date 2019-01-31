@@ -47,11 +47,12 @@ export interface HOCProps {
     /** Set tag. */
     setTag: (tag: string) => void;
 }
-export declare type ValueInterface = {
+export declare type UpdateConfig = {
+    key: string;
     value?: any;
 };
 export declare type AnyInputConfig = ButtonImport.ButtonConfig | TextImport.TextInputConfig | BoolImport.BoolInputConfig | GridImport.GridInputConfig | SelectImport.SelectInputConfig | MultiSelectImport.MultiSelectInputConfig | NumericImport.NumericInputConfig | TextareaImport.TextareaInputConfig | TriStateImport.TriStateInputConfig;
-export declare type AnyInputConfigWithValue = AnyInputConfig & ValueInterface;
+export declare type AnyInputConfigWithValue = Partial<AnyInputConfig> & UpdateConfig & Pick<AnyInputConfig, "type">;
 export declare type PromptInputConfigArray = Array<ButtonImport.ButtonConfig | TextImport.TextInputConfig | BoolImport.BoolInputConfig | GridImport.GridInputConfig | SelectImport.SelectInputConfig | MultiSelectImport.MultiSelectInputConfig | NumericImport.NumericInputConfig | TextareaImport.TextareaInputConfig | TriStateImport.TriStateInputConfig>;
 export declare type FormInputConfigArray = Array<ButtonImport.ButtonConfig | TextImport.TextInputConfig | BoolImport.BoolInputConfig | GridImport.GridInputConfig | SelectImport.SelectInputConfig | MultiSelectImport.MultiSelectInputConfig | NumericImport.NumericInputConfig | TextareaImport.TextareaInputConfig | TriStateImport.TriStateInputConfig>;
 export interface PromptState {

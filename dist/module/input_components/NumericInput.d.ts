@@ -20,7 +20,7 @@ export interface NumericInputConfig {
 export interface NumericInputProps {
     value: string;
     config: NumericInputConfig;
-    onChange: (value: string) => void;
+    onChange: (value: string, cb: () => void) => void;
     display_error_message: boolean;
     autofocus?: boolean;
 }

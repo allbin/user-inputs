@@ -16,7 +16,7 @@ export interface BoolInputProps {
     key: string;
     value: boolean;
     config: BoolInputConfig;
-    onChange: (checked: boolean) => void;
+    onChange: (checked: boolean, cb: () => void) => void;
     display_error_message: boolean;
 }
 export declare class Input extends React.Component<BoolInputProps, any> {
