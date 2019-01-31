@@ -23,7 +23,7 @@ export interface SelectInputConfig {
 export interface SelectInputProps {
     value: SelectOption;
     config: SelectInputConfig;
-    onChange: (value: SelectOption) => void;
+    onChange: (value: SelectOption, cb: () => void ) => void;
     display_error_message: boolean;
 }
 
@@ -59,10 +59,12 @@ export class Input extends React.Component<SelectInputProps> {
 
     onChange(value: SelectOption) {
         const cfg = this.props.config;
-        this.props.onChange(value);
-        if (cfg.onValueChange) {
-            cfg.onValueChange(value.value);
-        }
+        this.props.onChange(value, () => {
+            let ext_value = convertInternalToExternalValue(cfg, value);
+            if (cfg.onValueChange && !validate(cfg, ext_value)) {
+                cfg.onValueChange(ext_value);
+            }
+        });
     }
     render() {
         let cfg = this.props.config;

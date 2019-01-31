@@ -18,7 +18,7 @@ export interface BoolInputProps {
     key: string;
     value: boolean;
     config: BoolInputConfig;
-    onChange: (checked: boolean) => void;
+    onChange: (checked: boolean, cb: () => void) => void;
     display_error_message: boolean;
 }
 
@@ -99,10 +99,12 @@ const BoolInputContainer = styled("div")<BoolInputContainerProps> `
 export class Input extends React.Component<BoolInputProps, any> {
     onChange(value: boolean) {
         const cfg = this.props.config;
-        this.props.onChange(value);
-        if (cfg.onValueChange) {
-            cfg.onValueChange(convertInternalToExternalValue(cfg, value));
-        }
+        this.props.onChange(value, () => {
+            let ext_value = convertInternalToExternalValue(cfg, value);
+            if (cfg.onValueChange) {
+                cfg.onValueChange(ext_value);
+            }
+        });
     }
     render() {
         let cfg = this.props.config;

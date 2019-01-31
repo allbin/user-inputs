@@ -107,16 +107,16 @@ export default function getInputForm(input_configs: FormInputConfigArray, cb?: (
             }
         }
 
-        inputValueChangeCB(key: string, value: any) {
+        inputValueChangeCB(key: string, value: any, cb?: () => void) {
             let values = Object.assign({}, this.state.values);
             values[key] = value;
             this.setState({
                 values: values
-            });
+            }, cb);
         }
 
         isValid() {
-            return this.state.inputs.some((input_config) => {
+            return !this.state.inputs.some((input_config) => {
                 let valid_error = input_imports[input_config.type].validate(input_config, this.state.values[input_config.key]);
                 return valid_error !== null;
             });
@@ -150,8 +150,8 @@ export default function getInputForm(input_configs: FormInputConfigArray, cb?: (
                     config={input_request}
                     value={this.state.values[key]}
                     display_error_message={this.state.confirm_clicked}
-                    onChange={(value: any) => {
-                        this.inputValueChangeCB(key, value);
+                    onChange={(value: any, cb: () => void) => {
+                        this.inputValueChangeCB(key, value, cb);
                     }}
                 />;
             });

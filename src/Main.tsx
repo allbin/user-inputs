@@ -1,6 +1,7 @@
 import * as React from 'react';
 import userInputs, { UserInputProps } from './module/index';
 import Alert1 from './Alert1';
+import Alert2 from './Alert2';
 import Form1 from './Form1';
 import styled from './module/styling';
 interface MainProps extends UserInputProps {
@@ -26,6 +27,7 @@ class Main extends React.Component<MainProps, MainState> {
                 MAIN
                 <Divider />
                 <Alert1 />
+                <Alert2 />
                 <Divider />
                 <Form1 />
             </div>

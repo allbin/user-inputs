@@ -24,7 +24,7 @@ export interface MultiSelectInputConfig {
 export interface MultiSelectInputProps {
     value: MultiSelectOption[];
     config: MultiSelectInputConfig;
-    onChange: (options: MultiSelectOption[]) => void;
+    onChange: (options: MultiSelectOption[], cb: () => void) => void;
     display_error_message: boolean;
 }
 
@@ -60,10 +60,12 @@ export class Input extends React.Component<MultiSelectInputProps> {
 
     onChange(values: MultiSelectOption[]) {
         const cfg = this.props.config;
-        this.props.onChange(values);
-        if (cfg.onValueChange) {
-            cfg.onValueChange(convertInternalToExternalValue(cfg, values));
-        }
+        this.props.onChange(values, () => {
+            let ext_value = convertInternalToExternalValue(cfg, values);
+            if (cfg.onValueChange && !validate(cfg, ext_value)) {
+                cfg.onValueChange(ext_value);
+            }
+        });
     }
 
     render() {
@@ -84,7 +86,7 @@ export class Input extends React.Component<MultiSelectInputProps> {
                 { cfg.message ? <p className="message">{ cfg.message }</p> : null }
                 { validation_error && this.props.display_error_message && validation_error.length > 0 ? <p className="validation_error">{ validation_error }</p> : null }
                 <Select
-                    placeholder={cfg.placeholder ? cfg.placeholder : cfg.label ? cfg.label : '' }
+                    placeholder={cfg.placeholder ? cfg.placeholder : ''}
                     isMulti={true}
                     value={this.props.value}
                     onChange={(e) => {

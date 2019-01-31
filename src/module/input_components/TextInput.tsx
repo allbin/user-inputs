@@ -22,7 +22,7 @@ export interface TextInputConfig {
 export interface TextInputProps {
     value: string;
     config: TextInputConfig;
-    onChange: (value: string) => void;
+    onChange: (value: string, cb: () => void) => void;
     display_error_message: boolean;
     autofocus?: boolean;
 }
@@ -142,9 +142,10 @@ export class Input extends React.Component<TextInputProps, TextInputState> {
             Quagga.offDetected(this.detectedCB);
             Quagga.stop();
             let result = data.codeResult.code;
-            this.props.onChange(result);
             this.setState({
                 barcode_stream_visible: false
+            }, () => {
+                this.onChange(result);
             });
         };
 
@@ -237,10 +238,12 @@ export class Input extends React.Component<TextInputProps, TextInputState> {
 
     onChange(value: string) {
         const cfg = this.props.config;
-        this.props.onChange(value);
-        if (cfg.onValueChange && !validate(cfg, value)) {
-            cfg.onValueChange(convertInternalToExternalValue(cfg, value));
-        }
+        this.props.onChange(value, () => {
+            let ext_value = convertInternalToExternalValue(cfg, value);
+            if (cfg.onValueChange && !validate(cfg, ext_value)) {
+                cfg.onValueChange(ext_value);
+            }
+        });
     }
 
     render() {

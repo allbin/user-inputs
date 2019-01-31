@@ -24,7 +24,7 @@ export interface NumericInputConfig {
 export interface NumericInputProps {
     value: string;
     config: NumericInputConfig;
-    onChange: (value: string) => void;
+    onChange: (value: string, cb: () => void) => void;
     display_error_message: boolean;
     autofocus?: boolean;
 }
@@ -82,11 +82,12 @@ const NumericInputContainer = styled("div")<ContainerStyleProps> `
 export class Input extends React.Component<NumericInputProps, NumericInputState> {
 
     onChange(value: string) {
-        this.props.onChange(value);
         const cfg = this.props.config;
-        if (cfg.onValueChange && validate(cfg, value)) {
-            cfg.onValueChange(convertInternalToExternalValue(cfg, value));
-        }
+        this.props.onChange(value, () => {
+            if (cfg.onValueChange && !validate(cfg, value)) {
+                cfg.onValueChange(convertInternalToExternalValue(cfg, value));
+            }
+        });
     }
 
     render() {

@@ -21,7 +21,7 @@ export interface GridInputConfig {
 export interface GridInputProps {
     value: any;
     config: GridInputConfig;
-    onChange: (value: string|number) => void;
+    onChange: (value: string|number, cb: () => void) => void;
     display_error_message: boolean;
 }
 
@@ -102,10 +102,12 @@ const StyledGridItem = styled.div<GridInputStyleProps>`
 export class Input extends React.Component<GridInputProps, any> {
     onChange(value: string|number) {
         const cfg = this.props.config;
-        this.props.onChange(value);
-        if (cfg.onValueChange) {
-            cfg.onValueChange(convertInternalToExternalValue(cfg, value));
-        }
+        this.props.onChange(value, () => {
+            let ext_value = convertInternalToExternalValue(cfg, value);
+            if (cfg.onValueChange && !validate(cfg, ext_value)) {
+                cfg.onValueChange(ext_value);
+            }
+        });
     }
     render() {
         let cfg = this.props.config;
@@ -150,7 +152,7 @@ export class Input extends React.Component<GridInputProps, any> {
     }
 }
 
-export function validate(cfg: GridInputConfig, value: string): null|string {
+export function validate(cfg: GridInputConfig, value: string|number): null|string {
     if (cfg.validationCB) {
         return cfg.validationCB(value);
     }

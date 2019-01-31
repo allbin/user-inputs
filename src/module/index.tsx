@@ -67,11 +67,12 @@ export interface HOCProps {
     setTag: (tag: string) => void;
 }
 
-export type ValueInterface = {
+export type UpdateConfig = {
+    key: string;
     value?: any;
 };
 export type AnyInputConfig = ButtonImport.ButtonConfig|TextImport.TextInputConfig|BoolImport.BoolInputConfig|GridImport.GridInputConfig|SelectImport.SelectInputConfig|MultiSelectImport.MultiSelectInputConfig|NumericImport.NumericInputConfig|TextareaImport.TextareaInputConfig|TriStateImport.TriStateInputConfig;
-export type AnyInputConfigWithValue = AnyInputConfig & ValueInterface;
+export type AnyInputConfigWithValue = Partial<AnyInputConfig> & UpdateConfig & Pick<AnyInputConfig, "type">;
 export type PromptInputConfigArray = Array<ButtonImport.ButtonConfig|TextImport.TextInputConfig|BoolImport.BoolInputConfig|GridImport.GridInputConfig|SelectImport.SelectInputConfig|MultiSelectImport.MultiSelectInputConfig|NumericImport.NumericInputConfig|TextareaImport.TextareaInputConfig|TriStateImport.TriStateInputConfig>;
 export type FormInputConfigArray = Array<ButtonImport.ButtonConfig|TextImport.TextInputConfig|BoolImport.BoolInputConfig|GridImport.GridInputConfig|SelectImport.SelectInputConfig|MultiSelectImport.MultiSelectInputConfig|NumericImport.NumericInputConfig|TextareaImport.TextareaInputConfig|TriStateImport.TriStateInputConfig>;
 
