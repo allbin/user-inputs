@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { LooseObject } from '.';
 
-import { valid_types, input_imports, FormInputConfigArray, AnyInputConfig, AnyInputConfigWithValue } from '.';
+import { valid_types, input_imports, FormInputConfigArray, AnyInputConfigWithValue } from '.';
 
 interface FormState {
     values: {
@@ -17,7 +17,7 @@ export interface GeneratedForm {
     reset: () => void;
     resetConfirmClick: () => void;
     getValues: () => LooseObject;
-    setInputConfig: (updated_config: Partial<AnyInputConfig>) => void;
+    setInputConfig: (updated_config: AnyInputConfigWithValue) => void;
 }
 
 export default function getInputForm(input_configs: FormInputConfigArray, cb?: (values: any) => void): GeneratedForm {
@@ -184,7 +184,7 @@ export default function getInputForm(input_configs: FormInputConfigArray, cb?: (
             }
             return mounted_form.getValues();
         },
-        setInputConfig: (updated_config: Partial<AnyInputConfigWithValue>) => {
+        setInputConfig: (updated_config: AnyInputConfigWithValue) => {
             if (updated_config.hasOwnProperty("key") === false) {
                 throw new Error("UserInput: input_config must contain 'key' property.");
             }
