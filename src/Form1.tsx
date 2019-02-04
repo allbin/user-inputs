@@ -122,6 +122,16 @@ class Form1 extends React.Component<Form1Props, Form1State> {
             }
         },
         {
+            type: "button",
+            key: "getvalues_test",
+            label: "getValues() test",
+            default_value: "",
+            class_name: "reset_confirm_button_test_class",
+            onClick: () => {
+                console.log(this.form.getValues());
+            }
+        },
+        {
             type: "confirm",
             key: "confirm_input_test",
             label: "Confirm label",
