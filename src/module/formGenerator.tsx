@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { LooseObject } from '.';
 
-import { valid_types, input_imports, FormInputConfigArray, AnyInputConfigWithValue } from '.';
+import { valid_types, input_imports, FormInputConfigArray, AnyInputConfigWithValue, GeneratedForm } from '.';
 
 interface FormState {
     values: {
@@ -10,14 +10,6 @@ interface FormState {
     inputs: FormInputConfigArray;
     tag: string | null;
     confirm_clicked: boolean;
-}
-
-export interface GeneratedForm {
-    component: typeof React.Component;
-    reset: () => void;
-    resetConfirmClick: () => void;
-    getValues: () => LooseObject;
-    setInputConfig: (updated_config: AnyInputConfigWithValue) => void;
 }
 
 export default function getInputForm(input_configs: FormInputConfigArray, cb?: (values: any) => void): GeneratedForm {
@@ -160,7 +152,7 @@ export default function getInputForm(input_configs: FormInputConfigArray, cb?: (
         render() {
             return (
                 <div>
-                    { this.renderInputs() }
+                    {this.renderInputs()}
                 </div>
             );
         }

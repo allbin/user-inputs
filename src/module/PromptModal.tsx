@@ -1,7 +1,6 @@
 import * as React from 'react';
 import styled, { keyframes } from 'styled-components';
-import { GeneratedForm } from './formGenerator';
-import { PromptConfig } from '.';
+import { PromptConfig, GeneratedForm } from '.';
 
 //These are require because build engine doesn't like 'import ... .svg'.
 let SymbolClone = require('../img/symbol_clone.svg');
@@ -26,7 +25,7 @@ const modal_animate_down = keyframes`
     }
 `;
 
-const ModalContainer = styled.div `
+const ModalContainer = styled.div`
     @media (max-width: 700px) {
         .modal_container {
             .modal_box {
@@ -142,10 +141,10 @@ export default class Modal extends React.Component<ModalProps, any> {
                 <div className={`modal_container`}>
                     <div className="modal_box">
                         <div className="modal_title">
-                            { this.props.config.title }
+                            {this.props.config.title}
                         </div>
                         <div className="modal_body">
-                            { this.props.config.message }
+                            {this.props.config.message}
                             <this.props.form.component />
                         </div>
                     </div>

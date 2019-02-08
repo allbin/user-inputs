@@ -7,7 +7,7 @@ interface Form1State {
     blocked: boolean;
 }
 
-let DynamicContainer = styled.div `
+let DynamicContainer = styled.div`
     position: relative;
     width: 50%;
     left: 50%;
@@ -129,6 +129,25 @@ class Form1 extends React.Component<Form1Props, Form1State> {
             class_name: "reset_confirm_button_test_class",
             onClick: () => {
                 console.log(this.form.getValues());
+                this.props.userInputs.confirm({
+                    title: "add tag",
+                    message: "enter_new_tag",
+                    inputs: [
+                        {
+                            type: "text",
+                            key: "new_tag",
+                            default_value: "",
+                            validationCB: (value: string) => {
+                                if (value.length > 0) {
+                                    return null;
+                                }
+                                return "must_be_at_least_one_character";
+                            }
+                        }
+                    ]
+                }, (values) => {
+                    console.log("form.getValues():", this.form.getValues());
+                });
             }
         },
         {
@@ -148,7 +167,7 @@ class Form1 extends React.Component<Form1Props, Form1State> {
         return (
             <DynamicContainer>
                 <p className="info">Form1: The following form is set in a dynamic container 50% width.</p>
-                <this.form.component/>
+                <this.form.component />
             </DynamicContainer>
         );
     }

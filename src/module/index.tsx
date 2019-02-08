@@ -2,7 +2,7 @@ import * as React from 'react';
 import oh from 'output-helpers';
 import translations from './translations';
 
-import formGenerator, { GeneratedForm, validateFormGeneratorInputs } from './formGenerator';
+import formGenerator, { validateFormGeneratorInputs } from './formGenerator';
 
 import PromptModal from './PromptModal';
 import * as TextImport from './input_components/TextInput';
@@ -32,23 +32,30 @@ export interface LooseObject {
     [key: string]: any;
 }
 export interface SelectOption {
-    value: string|number;
+    value: string | number;
     label: string;
 }
 export interface TriStateInputOption {
-    value: string|number;
+    value: string | number;
     label: string;
 }
 export interface MultiSelectOption {
-    value: string|number;
+    value: string | number;
     label: string;
 }
 export interface GridSelectOption {
-    value: string|number;
+    value: string | number;
     label: string;
     color?: string;
 }
 
+export interface GeneratedForm {
+    component: typeof React.Component;
+    reset: () => void;
+    resetConfirmClick: () => void;
+    getValues: () => LooseObject;
+    setInputConfig: (updated_config: AnyInputConfigWithValue) => void;
+}
 
 export interface HOCProps {
     /** Opens a prompt using supplied config which has a single Confirm button. */
@@ -71,10 +78,10 @@ export type UpdateConfig = {
     key: string;
     value?: any;
 };
-export type AnyInputConfig = ButtonImport.ButtonConfig|TextImport.TextInputConfig|BoolImport.BoolInputConfig|GridImport.GridInputConfig|SelectImport.SelectInputConfig|MultiSelectImport.MultiSelectInputConfig|NumericImport.NumericInputConfig|TextareaImport.TextareaInputConfig|TriStateImport.TriStateInputConfig;
+export type AnyInputConfig = ButtonImport.ButtonConfig | TextImport.TextInputConfig | BoolImport.BoolInputConfig | GridImport.GridInputConfig | SelectImport.SelectInputConfig | MultiSelectImport.MultiSelectInputConfig | NumericImport.NumericInputConfig | TextareaImport.TextareaInputConfig | TriStateImport.TriStateInputConfig;
 export type AnyInputConfigWithValue = Partial<AnyInputConfig> & UpdateConfig & Pick<AnyInputConfig, "type">;
-export type PromptInputConfigArray = Array<ButtonImport.ButtonConfig|TextImport.TextInputConfig|BoolImport.BoolInputConfig|GridImport.GridInputConfig|SelectImport.SelectInputConfig|MultiSelectImport.MultiSelectInputConfig|NumericImport.NumericInputConfig|TextareaImport.TextareaInputConfig|TriStateImport.TriStateInputConfig>;
-export type FormInputConfigArray = Array<ButtonImport.ButtonConfig|TextImport.TextInputConfig|BoolImport.BoolInputConfig|GridImport.GridInputConfig|SelectImport.SelectInputConfig|MultiSelectImport.MultiSelectInputConfig|NumericImport.NumericInputConfig|TextareaImport.TextareaInputConfig|TriStateImport.TriStateInputConfig>;
+export type PromptInputConfigArray = Array<ButtonImport.ButtonConfig | TextImport.TextInputConfig | BoolImport.BoolInputConfig | GridImport.GridInputConfig | SelectImport.SelectInputConfig | MultiSelectImport.MultiSelectInputConfig | NumericImport.NumericInputConfig | TextareaImport.TextareaInputConfig | TriStateImport.TriStateInputConfig>;
+export type FormInputConfigArray = Array<ButtonImport.ButtonConfig | TextImport.TextInputConfig | BoolImport.BoolInputConfig | GridImport.GridInputConfig | SelectImport.SelectInputConfig | MultiSelectImport.MultiSelectInputConfig | NumericImport.NumericInputConfig | TextareaImport.TextareaInputConfig | TriStateImport.TriStateInputConfig>;
 
 
 export interface PromptState {
@@ -106,8 +113,8 @@ export interface PromptConfig extends UserInputPromptConfig {
 interface InputComponentExports {
     Input: React.ComponentClass<any>;
     convertInternalToExternalValue: (cfg: any, value: any) => any;
-    validateConfig: (cfg: any) => null|string;
-    validate: (cfg: any, value: any) => null|string;
+    validateConfig: (cfg: any) => null | string;
+    validate: (cfg: any, value: any) => null | string;
     convertExternalToInternalValue: (cfg: any, value: any) => any;
 }
 
