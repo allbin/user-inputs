@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { GeneratedForm } from './formGenerator';
 import * as TextImport from './input_components/TextInput';
 import * as BoolImport from './input_components/BoolInput';
 import * as GridImport from './input_components/GridInput';
@@ -30,6 +29,13 @@ export interface GridSelectOption {
     value: string | number;
     label: string;
     color?: string;
+}
+export interface GeneratedForm {
+    component: typeof React.Component;
+    reset: () => void;
+    resetConfirmClick: () => void;
+    getValues: () => LooseObject;
+    setInputConfig: (updated_config: AnyInputConfigWithValue) => void;
 }
 export interface HOCProps {
     /** Opens a prompt using supplied config which has a single Confirm button. */

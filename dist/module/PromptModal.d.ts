@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { GeneratedForm } from './formGenerator';
-import { PromptConfig } from '.';
+import { PromptConfig, GeneratedForm } from '.';
 export interface ModalProps {
     config: PromptConfig;
     cancelCB: () => void;
