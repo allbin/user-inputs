@@ -1,10 +1,17 @@
 # userInput
-
-TODO: Update this readme.
-
 A repo for wrapping components with a userInput HOC to enable easy creation of modals and forms.
 
-### Index
+**TODO:**
+- Update this readme.
+- Make a generic <UserInputs /> component, which renders popups. Eliminating need to wrap other components.
+- Remove requirement to have onValueChange callbacks when no submit button is supplied for generateForm.  
+*Usecase: When using form.getValues to access the values programattically.*
+- Allow multiple popups on top of each other.
+- Allow updating of entire form after creation.  
+*Usecase: Would enable removing/adding inputs when updating the form.*
+
+
+## Index
 [Quick guide](#quick-guide)  
 [HOC Wrapping function](#wrapping-function)  
 [Utility functions](#utility-functions)  
