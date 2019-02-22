@@ -95,7 +95,7 @@ let main_theme: ThemeInterface = {
             radius: 3,
             shadow: '0px 3px 8px 0 rgba(0,0,0,0.42)',
             hover_shadow: '0px 11px 8px -4px rgba(0,0,0,0.42)',
-            height: 38
+            height: 40
         },
         form: {
             user_input: {
