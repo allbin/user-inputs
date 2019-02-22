@@ -3,25 +3,56 @@ import { ThemedStyledComponentsModule } from "styled-components";
 
 interface ThemeInterface {
     sizes: {
-        general: {
-            transition_time: number,
-            input_radius: number,
-            input_padding: string
+        padding: {
+            horizontal: number;
+        };
+        fonts: {
+            big: number;
+            medium: number;
+            small: number;
+            tiny: number;
+        };
+        panel: {
+            height: number;
         }
     };
+    components: {
+        left_panel: {
+            shadow: string;
+            width: number;
+        };
+        right_panel: {
+          shadow: string;
+          width: number;
+        };
+        device_list: {
+            sort_container: {
+                height: number;
+            };
+        };
+        button: {
+          radius: number;
+          shadow: string;
+          hover_shadow: string;
+      };
+    };
     colors: {
-        brand: string[],
+        brand: string[];
         disabled_input: string;
-        text: string
-        border: string,
+        text: string;
+        subtitle: string;
+        border: string;
         background: string;
-        gray: string[],
-        dark: string[],
-        red: string[],
-        yellow: string[],
-        green: string[],
-        teal: string[],
-        error: string
+        error: string;
+        gray: string[];
+        dark: string[];
+        red: string[];
+        yellow: string[];
+        green: string[];
+        teal: string[];
+    };
+    mixins: {
+      truncate: string
     };
 }
 
