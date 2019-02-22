@@ -56,7 +56,7 @@ const TextareaInputContainer = styled("div")<ContainerStyleProps> `
     }
     textarea {
         background-color: ${props => !props.valid ? "rgba(255,0,0,0.1)" : "" };
-        border: 2px solid ${props => !props.valid ? props.theme.colors.error : props.theme.colors.gray[2]};
+        border: 1px solid ${props => !props.valid ? props.theme.colors.error : props.theme.colors.border};
         border-radius: 4px;
         font-size: 16px;
         padding: 8px 12px;

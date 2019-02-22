@@ -59,7 +59,7 @@ const BoolInputContainer = styled("div")<BoolInputContainerProps> `
         width: 60px;
         height: ${props => props.thing_size}px;
         position: relative;
-        border: 2px solid ${props => props.theme.colors.border};
+        border: 1px solid ${props => props.theme.colors.border};
         background-color: ${props => props.theme.colors.border};
         box-sizing: content-box;
         transition: all 0.3s;
