@@ -3,6 +3,7 @@ import styled from '../styling';
 import Select from 'react-select';
 const SelectInputContainer = styled("div") `
     text-align: left;
+    margin-bottom: ${props => props.theme.components.form.user_input.margin_bottom}px;
     p.message{
         color: ${props => props.theme.colors.dark[2]};
         font-size: 12px;

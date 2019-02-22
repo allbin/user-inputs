@@ -3,6 +3,7 @@ import oh from 'output-helpers';
 import styled from '../styling';
 const NumericInputContainer = styled("div") `
     text-align: left;
+    margin-bottom: ${props => props.theme.components.form.user_input.margin_bottom}px;
     p{
         color: ${props => props.theme.colors.dark[1]};
         font-size: 14px;
@@ -25,7 +26,7 @@ const NumericInputContainer = styled("div") `
     }
     input{
         background-color: ${props => !props.valid ? "rgba(255,0,0,0.1)" : ""};
-        border: 2px solid ${props => !props.valid ? props.theme.colors.error : props.theme.colors.gray[2]};
+        border: 1px solid ${props => !props.valid ? props.theme.colors.error : props.theme.colors.border};
         border-radius: 4px;
         font-size: 16px;
         padding: 8px 12px;

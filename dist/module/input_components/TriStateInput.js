@@ -2,6 +2,7 @@ import * as React from 'react';
 import styled from 'styled-components';
 const TriStateInputContainer = styled("div") `
     text-align: left;
+    margin-bottom: ${props => props.theme.components.form.user_input.margin_bottom}px;
     p.tri_state_label {
         color: ${props => props.theme.colors.dark[1]};
         font-size: 14px;

@@ -2,7 +2,7 @@ import * as React from 'react';
 import styled from '../styling';
 const BoolInputContainer = styled("div") `
     text-align: left;
-    padding: 16px 20px !important;
+    margin-bottom: ${props => props.theme.components.form.user_input.margin_bottom}px;
     p, .bool_block, .bool_input{
         vertical-align: middle;
         display: inline-block;
@@ -31,7 +31,7 @@ const BoolInputContainer = styled("div") `
         width: 60px;
         height: ${props => props.thing_size}px;
         position: relative;
-        border: 2px solid ${props => props.theme.colors.border};
+        border: 1px solid ${props => props.theme.colors.border};
         background-color: ${props => props.theme.colors.border};
         box-sizing: content-box;
         transition: all 0.3s;
