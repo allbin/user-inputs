@@ -10,6 +10,9 @@ A repo for wrapping components with a userInput HOC to enable easy creation of m
 - Allow updating of entire form after creation.  
 *Usecase: Would enable removing/adding inputs when updating the form.*
 
+**Known bugs:**
+- Using updateConfig functions requires specifying `value` and `default_value` to correctly update the value.
+- Using updateConfig requires specifying the `type` again, even though it isn't used for anything.
 
 ## Index
 [Quick guide](#quick-guide)  
