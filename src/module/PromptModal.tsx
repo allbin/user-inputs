@@ -72,7 +72,7 @@ const ModalContainer = styled.div`
             left: 0;
             right: 0;
             margin: auto;
-            .modal_footer, .modal_title{
+            .modal_footer, .modal_title, .modal_subtitle{
                 text-align: center;
                 left: 0;
                 right: 0;
@@ -88,11 +88,14 @@ const ModalContainer = styled.div`
                 text-align: center;
                 font-size: 24px;
             }
+            .modal_subtitle{
+                margin-bottom: 12px;
+            }
             .modal_body{
                 text-align: center;
                 margin: 12px 20px 28px;
                 .user_input{
-                    margin-top: 12px;
+                    margin-bottom: 12px;
                 }
                 .live_edit_section{
                     margin-top: 20px;
@@ -143,8 +146,8 @@ export default class Modal extends React.Component<ModalProps, any> {
                         <div className="modal_title">
                             {this.props.config.title}
                         </div>
+                        {this.props.config.message ? <div className="modal_subtitle">{this.props.config.message}</div> : null}
                         <div className="modal_body">
-                            {this.props.config.message}
                             <this.props.form.component />
                         </div>
                     </div>
