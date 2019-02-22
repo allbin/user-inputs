@@ -33,21 +33,28 @@ interface ContainerStyleProps {
 }
 
 const ButtonContainer = styled("button")<ContainerStyleProps> `
-    font-size: 14px;
-    user-select: none;
+    margin-bottom: ${props => props.theme.components.form.user_input.margin_bottom}px;
     border: ${props => props.filled ? 'none' : '1px solid ' + props.theme.colors.brand[0]};
-    display: ${props => props.block ? 'block' : 'inline-block'};
-    width: ${props => props.block ? '100%' : 'unset'};
-    cursor: pointer;
-    border-radius: 200px;
+    border-radius: ${props => props.theme.components.button.radius}px;
     background-color: ${props => props.filled ? props.theme.colors.brand[0] : 'transparent'};
     color: #fff;
-    text-align: center;
-    padding: 12px 20px;
+    display: flex;
+    font-size: ${props => props.theme.sizes.fonts.small}px;
+    user-select: none;
+    height: ${props => props.theme.components.button.height}px;
+    width: 100%;
+    cursor: pointer;
+    justify-content: center;
+    padding: 0 20px;
     font-weight: bold;
     transition: all 0.3s;
+    &:HOVER{
+        background-color: ${props => props.filled ? props.theme.colors.brand[1] : props.theme.colors.brand[0]};
+        border: ${props => props.filled ? 'none' : '1px solid ' + props.theme.colors.brand[0]};
+        box-shadow: 0 4px 5px rgba(0,0,0,0.1);
+    }
     &.big{
-        padding: 20px 44px;
+        height: 48px;
     }
     &.disabled{
         pointer-events: none;
@@ -88,11 +95,6 @@ const ButtonContainer = styled("button")<ContainerStyleProps> `
             background-color: ${props => props.filled ? props.theme.colors.teal[2] : props.theme.colors.teal[2]};
             border: ${props => props.filled ? 'none' : '1px solid ' + props.theme.colors.teal[2]};
         }
-    }
-    &:HOVER{
-        background-color: ${props => props.filled ? props.theme.colors.brand[2] : props.theme.colors.brand[0]};
-        border: ${props => props.filled ? 'none' : '1px solid ' + props.theme.colors.brand[0]};
-        box-shadow: 0 4px 5px rgba(0,0,0,0.1);
     }
 `;
 

@@ -30,7 +30,7 @@ interface BoolInputContainerProps {
 
 const BoolInputContainer = styled("div")<BoolInputContainerProps> `
     text-align: left;
-    padding: 16px 20px !important;
+    margin-bottom: ${props => props.theme.components.form.user_input.margin_bottom}px;
     p, .bool_block, .bool_input{
         vertical-align: middle;
         display: inline-block;

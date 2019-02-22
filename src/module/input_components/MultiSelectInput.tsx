@@ -34,6 +34,7 @@ interface ContainerStyleProps {
 
 const MultiSelectInputContainer = styled("div")<ContainerStyleProps> `
     text-align: left;
+    margin-bottom: ${props => props.theme.components.form.user_input.margin_bottom}px;
     p.message{
         color: ${props => props.theme.colors.dark[2]};
         font-size: 12px;

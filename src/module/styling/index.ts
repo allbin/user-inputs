@@ -17,24 +17,17 @@ interface ThemeInterface {
         }
     };
     components: {
-        left_panel: {
+        button: {
+            radius: number;
             shadow: string;
-            width: number;
+            hover_shadow: string;
+            height: number;
         };
-        right_panel: {
-          shadow: string;
-          width: number;
-        };
-        device_list: {
-            sort_container: {
-                height: number;
+        form: {
+            user_input: {
+                margin_bottom: number;
             };
         };
-        button: {
-          radius: number;
-          shadow: string;
-          hover_shadow: string;
-      };
     };
     colors: {
         brand: string[];

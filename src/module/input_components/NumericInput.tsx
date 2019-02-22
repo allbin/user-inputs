@@ -40,6 +40,7 @@ interface ContainerStyleProps {
 
 const NumericInputContainer = styled("div")<ContainerStyleProps> `
     text-align: left;
+    margin-bottom: ${props => props.theme.components.form.user_input.margin_bottom}px;
     p{
         color: ${props => props.theme.colors.dark[1]};
         font-size: 14px;

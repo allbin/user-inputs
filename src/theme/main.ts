@@ -31,6 +31,12 @@ export interface ThemeInterface {
           radius: number;
           shadow: string;
           hover_shadow: string;
+          height: number;
+      };
+      form: {
+          user_input: {
+              margin_bottom: number;
+          };
       };
     };
     colors: {
@@ -85,7 +91,13 @@ let main_theme: ThemeInterface = {
         button: {
             radius: 3,
             shadow: '0px 3px 8px 0 rgba(0,0,0,0.42)',
-            hover_shadow: '0px 11px 8px -4px rgba(0,0,0,0.42)'
+            hover_shadow: '0px 11px 8px -4px rgba(0,0,0,0.42)',
+            height: 38
+        },
+        form: {
+            user_input: {
+                margin_bottom: 12
+            }
         }
     },
     colors: {

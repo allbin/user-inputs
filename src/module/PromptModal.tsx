@@ -94,9 +94,6 @@ const ModalContainer = styled.div`
             .modal_body{
                 text-align: center;
                 margin: 12px 20px 28px;
-                .user_input{
-                    margin-bottom: 12px;
-                }
                 .live_edit_section{
                     margin-top: 20px;
                 }
