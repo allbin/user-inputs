@@ -28,6 +28,9 @@ interface ThemeInterface {
                 margin_bottom: number;
             };
         };
+        modal: {
+            border_radius: number;
+        };
     };
     colors: {
         brand: string[];

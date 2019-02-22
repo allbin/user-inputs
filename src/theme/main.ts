@@ -38,6 +38,9 @@ export interface ThemeInterface {
               margin_bottom: number;
           };
       };
+      modal: {
+          border_radius: number;
+      }
     };
     colors: {
         brand: string[];
@@ -96,8 +99,11 @@ let main_theme: ThemeInterface = {
         },
         form: {
             user_input: {
-                margin_bottom: 12
+                margin_bottom: 16
             }
+        },
+        modal: {
+            border_radius: 12
         }
     },
     colors: {

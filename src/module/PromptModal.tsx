@@ -63,7 +63,7 @@ const ModalContainer = styled.div`
         .modal_box {
             transform-origin: center;
             animation: ${modal_animate_down} 0.4s both;
-            border-radius: 12px;
+            border-radius: ${props => props.theme.components.modal.border_radius}px;
             background-color: #fff;
             box-shadow: 0 4px 8px rgba(0,0,0,0.2);
             position: absolute;
@@ -72,33 +72,34 @@ const ModalContainer = styled.div`
             left: 0;
             right: 0;
             margin: auto;
-            .modal_footer, .modal_title, .modal_subtitle{
-                text-align: center;
-                left: 0;
-                right: 0;
-            }
-            .modal_image{
+            .modal_image {
                 width: 500px;
                 height: 300px;
                 border-radius: 12px 12px 0 0;
             }
-            .modal_title{
-                margin: 20px 0 20px;
+            .modal_head {
+                background-color: ${props => props.theme.colors.background};
+                border-radius: ${props => props.theme.components.modal.border_radius + 'px ' + props.theme.components.modal.border_radius + 'px 0 0'};
+            }
+            .modal_title {
+                font-size: ${props => props.theme.sizes.fonts.big}px;
+                padding: 20px 20px 20px;
                 font-weight: bold;
-                text-align: center;
-                font-size: 24px;
             }
-            .modal_subtitle{
-                margin-bottom: 12px;
+            .modal_subtitle {
+                color: ${props => props.theme.colors.subtitle};
+                font-size: ${props => props.theme.sizes.fonts.small}px;
+                margin-top: -8px;
+                padding: 0 20px 20px;
             }
-            .modal_body{
+            .modal_body {
                 text-align: center;
-                margin: 12px 20px 28px;
+                margin: 24px 20px 20px;
                 .live_edit_section{
                     margin-top: 20px;
                 }
             }
-            .modal_footer{
+            .modal_footer {
                 padding: 20px;
                 .modal_footer_cancel, .modal_footer_confirm{
                     display: inline-block;
@@ -140,10 +141,12 @@ export default class Modal extends React.Component<ModalProps, any> {
             <ModalContainer>
                 <div className={`modal_container`}>
                     <div className="modal_box">
-                        <div className="modal_title">
-                            {this.props.config.title}
+                        <div className="modal_head">
+                            <div className="modal_title">
+                                {this.props.config.title}
+                            </div>
+                            {this.props.config.message ? <div className="modal_subtitle">{this.props.config.message}</div> : null}
                         </div>
-                        {this.props.config.message ? <div className="modal_subtitle">{this.props.config.message}</div> : null}
                         <div className="modal_body">
                             <this.props.form.component />
                         </div>
