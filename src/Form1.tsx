@@ -70,12 +70,20 @@ class Form1 extends React.Component<Form1Props, Form1State> {
             default_value: [1, "3"],
             class_name: "form_multi_select_test_class",
             searchable: true,
+            styles: {
+                option: (styles, { data, isDisabled, isFocused, isSelected }) => {
+                    return {
+                        ...styles,
+                        backgroundColor: data.value === 4 ? 'grey':''
+                    };
+                }
+            },
             options: [
                 { label: "option 1", value: 1 },
                 { label: "option 2", value: 2 },
                 { label: "option 3", value: "3" },
                 { label: "option 4", value: 4 },
-            ]
+            ],
         },
         {
             type: "bool",

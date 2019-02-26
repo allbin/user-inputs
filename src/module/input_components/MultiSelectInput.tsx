@@ -2,6 +2,7 @@ import * as React from 'react';
 import styled from '../styling';
 import Select from 'react-select';
 import { MultiSelectOption } from '../.';
+import { StylesConfig } from 'react-select/lib/styles';
 
 export interface MultiSelectInputConfig {
     type: "multi_select";
@@ -10,6 +11,7 @@ export interface MultiSelectInputConfig {
     label?: string;
     placeholder?: string;
     options: MultiSelectOption[];
+    styles?: StylesConfig;
     class_name?: string;
     no_options_message?: string;
     disabled?: boolean;
@@ -97,6 +99,7 @@ export class Input extends React.Component<MultiSelectInputProps> {
                     isDisabled={cfg.disabled || false}
                     noOptionsMessage={() => cfg.no_options_message || null}
                     options={cfg.options}
+                    styles={cfg.styles}
                 />
             </MultiSelectInputContainer>
         );
