@@ -48,7 +48,7 @@ export class Input extends React.Component {
             validation_error && this.props.display_error_message && validation_error.length > 0 ? React.createElement("p", { className: "validation_error" }, validation_error) : null,
             React.createElement(Select, { placeholder: cfg.placeholder ? cfg.placeholder : '', isMulti: true, value: this.props.value, onChange: (e) => {
                     this.onChange(e);
-                }, isSearchable: cfg.searchable || false, isDisabled: cfg.disabled || false, noOptionsMessage: () => cfg.no_options_message || null, options: cfg.options })));
+                }, isSearchable: cfg.searchable || false, isDisabled: cfg.disabled || false, noOptionsMessage: () => cfg.no_options_message || null, options: cfg.options, styles: cfg.styles })));
     }
 }
 export function validate(cfg, value) {

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { MultiSelectOption } from '../.';
+import { StylesConfig } from 'react-select/lib/styles';
 export interface MultiSelectInputConfig {
     type: "multi_select";
     key: string;
@@ -7,6 +8,7 @@ export interface MultiSelectInputConfig {
     label?: string;
     placeholder?: string;
     options: MultiSelectOption[];
+    styles?: StylesConfig;
     class_name?: string;
     no_options_message?: string;
     disabled?: boolean;
