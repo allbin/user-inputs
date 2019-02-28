@@ -110,6 +110,18 @@ export function InputHOC(WrappedComponent) {
             }
             this.confirmCB = confirmCB || null;
             this.cancelCB = cancelCB || null;
+            if (cancelCB) {
+                let cancel_config = {
+                    label: prompt_config.confirm_button_label || oh.translate('user_input_cancel'),
+                    key: "cancel",
+                    type: "button",
+                    default_value: "",
+                    onClick: () => this.userCancelledCB(),
+                    filled: true,
+                    big: true
+                };
+                inputs.push(cancel_config);
+            }
             let confirm_config = {
                 label: prompt_config.confirm_button_label || oh.translate('user_input_confirm'),
                 key: "confirm",
@@ -118,16 +130,7 @@ export function InputHOC(WrappedComponent) {
                 filled: true,
                 big: true
             };
-            let cancel_config = {
-                label: prompt_config.confirm_button_label || oh.translate('user_input_cancel'),
-                key: "cancel",
-                type: "button",
-                default_value: "",
-                onClick: () => this.userCancelledCB(),
-                filled: true,
-                big: true
-            };
-            inputs.push(cancel_config, confirm_config);
+            inputs.push(confirm_config);
             this.setState({
                 form: formGenerator(inputs, (values) => this.userConfirmedCB(values)),
                 prompt_config: prompt_config
