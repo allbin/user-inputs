@@ -257,6 +257,18 @@ export function InputHOC<P extends UserInputProps>(WrappedComponent: React.Compo
             this.confirmCB = confirmCB || null;
             this.cancelCB = cancelCB || null;
 
+            if (prompt_config.show_confirm_btn) {
+                let confirm_config: ButtonImport.ButtonConfig = {
+                    label: prompt_config.confirm_button_label || oh.translate('user_input_confirm'),
+                    key: "confirm",
+                    type: "confirm",
+                    default_value: "",
+                    filled: true,
+                    big: true
+                };
+                inputs.push(confirm_config);
+            }
+
             if (prompt_config.show_cancel_btn) {
                 let cancel_config: ButtonImport.ButtonConfig = {
                     label: prompt_config.confirm_button_label || oh.translate('user_input_cancel'),
@@ -268,18 +280,6 @@ export function InputHOC<P extends UserInputProps>(WrappedComponent: React.Compo
                     big: true
                 };
                 inputs.push(cancel_config);
-            }
-
-            if (prompt_config.show_confirm_btn) {
-                let confirm_config: ButtonImport.ButtonConfig = {
-                    label: prompt_config.confirm_button_label || oh.translate('user_input_confirm'),
-                    key: "confirm",
-                    type: "confirm",
-                    default_value: "",
-                    filled: true,
-                    big: true
-                };
-                inputs.push(confirm_config);
             }
 
             this.setState({
