@@ -2,6 +2,7 @@ import * as React from 'react';
 import styled from '../styling';
 import Select from 'react-select';
 import { SelectOption } from '../.';
+import { StylesConfig } from 'react-select/lib/styles';
 
 export interface SelectInputConfig {
     type: "select";
@@ -9,6 +10,7 @@ export interface SelectInputConfig {
     default_value: string|number;
     label?: string;
     options: SelectOption[];
+    styles?: StylesConfig;
     placeholder?: string;
     class_name?: string;
     no_options_message?: string;
@@ -94,6 +96,7 @@ export class Input extends React.Component<SelectInputProps> {
                     isSearchable={cfg.searchable || false}
                     noOptionsMessage={() => cfg.no_options_message || null}
                     options={cfg.options}
+                    styles={cfg.styles}
                 />
             </SelectInputContainer>
         );

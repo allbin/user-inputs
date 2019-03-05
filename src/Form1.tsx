@@ -61,7 +61,16 @@ class Form1 extends React.Component<Form1Props, Form1State> {
                 { label: "option 1", value: 1 },
                 { label: "option 2", value: 2 },
                 { label: "option 3", value: 3 },
-            ]
+                { label: "option 4", value: 4 },
+            ],
+            styles: {
+                option: (styles, { data, isDisabled, isFocused, isSelected }) => {
+                    return {
+                        ...styles,
+                        color: data.value === 3 ? 'green' : ''
+                    };
+                }
+            },
         },
         {
             type: "multi_select",
