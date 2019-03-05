@@ -1,11 +1,13 @@
 import * as React from 'react';
 import { SelectOption } from '../.';
+import { StylesConfig } from 'react-select/lib/styles';
 export interface SelectInputConfig {
     type: "select";
     key: string;
     default_value: string | number;
     label?: string;
     options: SelectOption[];
+    styles?: StylesConfig;
     placeholder?: string;
     class_name?: string;
     no_options_message?: string;
