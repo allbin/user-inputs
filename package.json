@@ -18,7 +18,8 @@
         "output-helpers": "git+https://bitbucket.org/allbin/output-helpers.git#v2.0.3",
         "react-icons": "3.x",
         "quagga": "0.x",
-        "react-select": "2.x"
+        "react-select": "2.x",
+        "@types/react-select": "2.x"
     },
     "devDependencies": {
         "@types/react-select": "2.0.11",
