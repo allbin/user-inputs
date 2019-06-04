@@ -1,5 +1,6 @@
 export default {
     "sv-SE": {
+        camera_error: "kunde inte starta kameran, förmodligen blockerad åtkomst för denna URL. Prova att återställa inställningar och prova igen.",
         cancel: "avbryt",
         confirm: "bekräfta",
         invalid_float: "värdet är inte ett heltal eller decimaltal",

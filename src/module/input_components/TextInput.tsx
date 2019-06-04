@@ -29,6 +29,7 @@ export interface TextInputProps {
 
 interface TextInputState {
     barcode_stream_visible: boolean;
+    barcode_stream_failed: boolean;
 }
 
 interface ContainerStyleProps {
@@ -126,6 +127,19 @@ const TextInputContainer = styled("div")<ContainerStyleProps> `
         }
     }
 `;
+
+const CameraError = styled("div")`
+    postition: absolute;
+    left: 5%;
+    top: 5%;
+    right: 5%;
+    padding: 20px;
+    background-color: #c12a22;
+    color: #fff;
+    font-size: 16px;
+`;
+
+
 export class Input extends React.Component<TextInputProps, TextInputState> {
     barcode_stream_target: HTMLDivElement|null;
     detectedCB: (data: LooseObject) => void;
@@ -136,7 +150,8 @@ export class Input extends React.Component<TextInputProps, TextInputState> {
         this.barcode_stream_target = null;
 
         this.state = {
-            barcode_stream_visible: false
+            barcode_stream_visible: false,
+            barcode_stream_failed: false
         };
 
         this.detectedCB = (data) => {
@@ -185,7 +200,10 @@ export class Input extends React.Component<TextInputProps, TextInputState> {
 
         Quagga.init(quagga_config, (err: any) => {
             if (err) {
-                console.error(err);
+                console.error(err); //asd
+                this.setState({
+                    barcode_stream_failed: true
+                });
                 throw err;
             }
 
@@ -216,6 +234,16 @@ export class Input extends React.Component<TextInputProps, TextInputState> {
                 >
                     <FaBarcode />
                 </div>
+
+                {
+                    this.state.barcode_stream_failed === true ?
+                    <CameraError>
+                        <p>{ oh.translate("camera_error") }</p>
+                    </CameraError>
+                    :
+                    null
+                }
+
                 <div
                     className={barcode_stream_classes.join(" ")}
                     ref={(ref) => { this.barcode_stream_target = ref; }}
