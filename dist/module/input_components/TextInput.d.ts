@@ -23,6 +23,7 @@ export interface TextInputProps {
 }
 interface TextInputState {
     barcode_stream_visible: boolean;
+    barcode_stream_failed: boolean;
 }
 export declare class Input extends React.Component<TextInputProps, TextInputState> {
     barcode_stream_target: HTMLDivElement | null;

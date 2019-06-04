@@ -94,12 +94,23 @@ const TextInputContainer = styled("div") `
         }
     }
 `;
+const CameraError = styled("div") `
+    postition: absolute;
+    left: 5%;
+    top: 5%;
+    right: 5%;
+    padding: 20px;
+    background-color: #c12a22;
+    color: #fff;
+    font-size: 16px;
+`;
 export class Input extends React.Component {
     constructor(props) {
         super(props);
         this.barcode_stream_target = null;
         this.state = {
-            barcode_stream_visible: false
+            barcode_stream_visible: false,
+            barcode_stream_failed: false
         };
         this.detectedCB = (data) => {
             Quagga.offDetected(this.detectedCB);
@@ -143,7 +154,10 @@ export class Input extends React.Component {
         });
         Quagga.init(quagga_config, (err) => {
             if (err) {
-                console.error(err);
+                console.error(err); //asd
+                this.setState({
+                    barcode_stream_failed: true
+                });
                 throw err;
             }
             Quagga.onDetected(this.detectedCB);
@@ -163,6 +177,11 @@ export class Input extends React.Component {
                     this.startBarcodeReading();
                 } },
                 React.createElement(FaBarcode, null)),
+            this.state.barcode_stream_failed === true ?
+                React.createElement(CameraError, null,
+                    React.createElement("p", null, oh.translate("camera_error")))
+                :
+                    null,
             React.createElement("div", { className: barcode_stream_classes.join(" "), ref: (ref) => { this.barcode_stream_target = ref; } },
                 React.createElement("div", { className: "barcode_stream_target_close_btn", onClick: () => {
                         Quagga.offDetected(this.detectedCB);
