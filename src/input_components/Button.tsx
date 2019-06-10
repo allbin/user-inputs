@@ -26,7 +26,7 @@ interface ContainerStyleProps {
 }
 
 export default class Button extends React.Component<ButtonProps, any> {
-    container: typeof React.Component;
+    container: any;
 
     constructor(props) {
         super(props);

@@ -32,7 +32,9 @@
         "tslint-eslint-rules": "5.x",
         "react-select": "2.x",
         "styled-components": "3.x",
-        "moment": "2.x"
+        "moment": "2.x",
+        "del": "4.1.1",
+        "gulp-sourcemaps": "2.6.5"
     },
     "peerDependencies": {
         "moment": "2.x",
