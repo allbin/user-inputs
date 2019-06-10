@@ -20,14 +20,19 @@ export interface TextInputProps {
 }
 
 const CameraError = styled("div")`
-    position: absolute;
-    left: 5%;
-    top: 5%;
-    right: 5%;
+    position: fixed;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
     padding: 20px;
     background-color: #c12a22;
     color: #fff;
     font-size: 16px;
+    p {
+        color: #fff;
+        text-align: center;
+    }
 `;
 
 class TextInput extends React.Component<TextInputProps, TextInputConfig> {
@@ -204,8 +209,15 @@ class TextInput extends React.Component<TextInputProps, TextInputConfig> {
                 </div>
                 {
                     this.state.barcode_stream_failed === true ?
-                    <CameraError>
-                        <p>{ oh.translate("camera_error") }</p>
+                    <CameraError
+                        onClick={() => {
+                            this.setState({
+                                barcode_stream_failed: false
+                            });
+                        }}
+                    >
+                        <p>{ oh.translate("user_inputs_camera_error") }</p>
+                        <p>{ oh.translate("user_input_click_to_dismiss") }</p>
                     </CameraError>
                     :
                     null
