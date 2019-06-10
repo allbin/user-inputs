@@ -29,6 +29,10 @@ const CameraError = styled("div")`
     background-color: #c12a22;
     color: #fff;
     font-size: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     .camera_error_text {
         color: #fff;
         text-align: center;
