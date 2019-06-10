@@ -171,7 +171,7 @@ class TextInput extends React.Component<TextInputProps, TextInputConfig> {
                 this.setState({
                     barcode_stream_failed: true
                 });
-                throw err;
+                return;
             }
 
             Quagga.onDetected(this.detectedCB);
