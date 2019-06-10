@@ -80,7 +80,7 @@ var TextInput = /** @class */ (function (_super) {
                 _this.setState({
                     barcode_stream_failed: true
                 });
-                throw err;
+                return;
             }
             Quagga.onDetected(_this.detectedCB);
             Quagga.start();
