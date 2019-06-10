@@ -10,6 +10,7 @@ export interface TextInputConfig {
     class_name?: string;
     barcode?: boolean;
     barcode_stream_visible: boolean;
+    barcode_stream_failed: boolean;
 }
 export interface TextInputProps {
     value: string;
@@ -18,9 +19,21 @@ export interface TextInputProps {
     autofocus?: boolean;
 }
 
+const CameraError = styled("div")`
+    position: absolute;
+    left: 5%;
+    top: 5%;
+    right: 5%;
+    padding: 20px;
+    background-color: #c12a22;
+    color: #fff;
+    font-size: 16px;
+`;
+
 class TextInput extends React.Component<TextInputProps, TextInputConfig> {
     container: typeof React.Component;
     barcode_stream_target: HTMLDivElement|null;
+    barcode_stream_failed: boolean;
     detectedCB: (data: LooseObject) => void;
 
     constructor(props) {
@@ -105,7 +118,8 @@ class TextInput extends React.Component<TextInputProps, TextInputConfig> {
         this.barcode_stream_target = null;
 
         this.state = {
-            barcode_stream_visible: false
+            barcode_stream_visible: false,
+            barcode_stream_failed: false
         };
 
         this.detectedCB = (data) => {
@@ -154,6 +168,9 @@ class TextInput extends React.Component<TextInputProps, TextInputConfig> {
         Quagga.init(quagga_config, (err) => {
             if (err) {
                 console.error(err);
+                this.setState({
+                    barcode_stream_failed: true
+                });
                 throw err;
             }
 
@@ -185,6 +202,14 @@ class TextInput extends React.Component<TextInputProps, TextInputConfig> {
                 >
                     <FaBarcode />
                 </div>
+                {
+                    this.state.barcode_stream_failed === true ?
+                    <CameraError>
+                        <p>{ oh.translate("camera_error") }</p>
+                    </CameraError>
+                    :
+                    null
+                }
                 <div
                     className={barcode_stream_classes.join(" ")}
                     ref={(ref) => { this.barcode_stream_target = ref; }}
