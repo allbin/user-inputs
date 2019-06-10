@@ -22,7 +22,7 @@ var styled_components_1 = require("styled-components");
 var Quagga = require('quagga');
 var fa_1 = require("react-icons/fa");
 var output_helpers_1 = require("output-helpers");
-var CameraError = styled_components_1.default("div")(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n    position: fixed;\n    left: 0;\n    top: 0;\n    right: 0;\n    bottom: 0;\n    padding: 20px;\n    background-color: #c12a22;\n    color: #fff;\n    font-size: 16px;\n    p {\n        color: #fff;\n        text-align: center;\n    }\n"], ["\n    position: fixed;\n    left: 0;\n    top: 0;\n    right: 0;\n    bottom: 0;\n    padding: 20px;\n    background-color: #c12a22;\n    color: #fff;\n    font-size: 16px;\n    p {\n        color: #fff;\n        text-align: center;\n    }\n"])));
+var CameraError = styled_components_1.default("div")(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n    position: fixed;\n    left: 0;\n    top: 0;\n    right: 0;\n    bottom: 0;\n    padding: 20px;\n    background-color: #c12a22;\n    color: #fff;\n    font-size: 16px;\n    .camera_error_text {\n        color: #fff;\n        text-align: center;\n    }\n"], ["\n    position: fixed;\n    left: 0;\n    top: 0;\n    right: 0;\n    bottom: 0;\n    padding: 20px;\n    background-color: #c12a22;\n    color: #fff;\n    font-size: 16px;\n    .camera_error_text {\n        color: #fff;\n        text-align: center;\n    }\n"])));
 var TextInput = /** @class */ (function (_super) {
     __extends(TextInput, _super);
     function TextInput(props) {
@@ -106,8 +106,8 @@ var TextInput = /** @class */ (function (_super) {
                             barcode_stream_failed: false
                         });
                     } },
-                    React.createElement("p", null, output_helpers_1.default.translate("user_inputs_camera_error")),
-                    React.createElement("p", null, output_helpers_1.default.translate("user_input_click_to_dismiss")))
+                    React.createElement("p", { className: "camera_error_text" }, output_helpers_1.default.translate("user_input_hoc_camera_error")),
+                    React.createElement("p", { className: "camera_error_text" }, output_helpers_1.default.translate("user_input_hoc_click_to_dismiss")))
                 :
                     null,
             React.createElement("div", { className: barcode_stream_classes.join(" "), ref: function (ref) { _this.barcode_stream_target = ref; } },
@@ -115,7 +115,8 @@ var TextInput = /** @class */ (function (_super) {
                         Quagga.offDetected(_this.detectedCB);
                         Quagga.stop();
                         _this.setState({
-                            barcode_stream_visible: false
+                            barcode_stream_visible: false,
+                            barcode_stream_failed: false
                         });
                     } }, output_helpers_1.default.translate("user_input_hoc_cancel")))));
     };
