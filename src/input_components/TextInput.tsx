@@ -29,7 +29,7 @@ const CameraError = styled("div")`
     background-color: #c12a22;
     color: #fff;
     font-size: 16px;
-    p {
+    .camera_error_text {
         color: #fff;
         text-align: center;
     }
@@ -216,8 +216,8 @@ class TextInput extends React.Component<TextInputProps, TextInputConfig> {
                             });
                         }}
                     >
-                        <p>{ oh.translate("user_inputs_camera_error") }</p>
-                        <p>{ oh.translate("user_input_click_to_dismiss") }</p>
+                        <p className="camera_error_text">{ oh.translate("user_input_hoc_camera_error") }</p>
+                        <p className="camera_error_text">{ oh.translate("user_input_hoc_click_to_dismiss") }</p>
                     </CameraError>
                     :
                     null
@@ -232,7 +232,8 @@ class TextInput extends React.Component<TextInputProps, TextInputConfig> {
                             Quagga.offDetected(this.detectedCB);
                             Quagga.stop();
                             this.setState({
-                                barcode_stream_visible: false
+                                barcode_stream_visible: false,
+                                barcode_stream_failed: false
                             });
                         }}
                     >
