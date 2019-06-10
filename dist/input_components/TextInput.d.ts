@@ -5,6 +5,7 @@ export interface TextInputConfig {
     class_name?: string;
     barcode?: boolean;
     barcode_stream_visible: boolean;
+    barcode_stream_failed: boolean;
 }
 export interface TextInputProps {
     value: string;
@@ -15,6 +16,7 @@ export interface TextInputProps {
 declare class TextInput extends React.Component<TextInputProps, TextInputConfig> {
     container: typeof React.Component;
     barcode_stream_target: HTMLDivElement | null;
+    barcode_stream_failed: boolean;
     detectedCB: (data: LooseObject) => void;
     constructor(props: any);
     startBarcodeReading(): void;

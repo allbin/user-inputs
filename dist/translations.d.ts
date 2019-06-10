@@ -1,5 +1,6 @@
 declare const _default: {
     "sv-SE": {
+        camera_error: string;
         cancel: string;
         confirm: string;
     };
