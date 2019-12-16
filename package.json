@@ -15,7 +15,7 @@
     "author": "",
     "license": "ISC",
     "dependencies": {
-        "output-helpers": "git+https://bitbucket.org/allbin/output-helpers.git#v2.0.3",
+        "output-helpers": "git+https://github.com/allbin/output-helpers.git#v2.0.3",
         "react-icons": "3.x",
         "quagga": "0.x",
         "react-select": "2.x",
