@@ -1,43 +1,43 @@
 {
-    "name": "user-inputs",
-    "version": "5.2.25",
-    "description": "",
-    "main": "dist/index.js",
-    "scripts": {
-        "release:patch": "gulp4 release:patch",
-        "release:minor": "gulp4 release:minor",
-        "release:major": "gulp4 release:major",
-        "build": "gulp4 build",
-        "test": "echo \"Error: no test specified\" && exit 1"
-    },
-    "author": "",
-    "license": "ISC",
-    "dependencies": {
-        "output-helpers": "git+https://bitbucket.org/allbin/output-helpers.git#v2.0.3",
-        "react": "16.x",
-        "react-icons": "3.x",
-        "quagga": "0.x",
-        "react-select": "2.x"
-    },
-    "devDependencies": {
-        "@types/react": "16.4.6",
-        "@types/react-dom": "16.0.6",
-        "gulp4": "4.0.2",
-        "gulp-allbin": "git+https://bitbucket.org/allbin/gulp-allbin.git#v0.2.2",
-        "gulp-typescript": "5.0.0-alpha.3",
-        "gulp-bump": "3.x",
-        "gulp-tslint": "8.x",
-        "typescript": "3.x",
-        "tslint": "5.x",
-        "tslint-eslint-rules": "5.x",
-        "react-select": "2.x",
-        "styled-components": "3.x",
-        "moment": "2.x",
-        "del": "4.1.1",
-        "gulp-sourcemaps": "2.6.5"
-    },
-    "peerDependencies": {
-        "moment": "2.x",
-        "styled-components": "3.x"
-    }
+  "name": "user-inputs",
+  "version": "5.2.25",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "release:patch": "gulp4 release:patch",
+    "release:minor": "gulp4 release:minor",
+    "release:major": "gulp4 release:major",
+    "build": "gulp4 build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "output-helpers": "git+https://github.com/allbin/output-helpers.git#v2.0.3",
+    "react": "16.x",
+    "react-icons": "3.x",
+    "quagga": "0.x",
+    "react-select": "2.x"
+  },
+  "devDependencies": {
+    "@types/react": "16.4.6",
+    "@types/react-dom": "16.0.6",
+    "gulp4": "4.0.2",
+    "gulp-allbin": "git+https://bitbucket.org/allbin/gulp-allbin.git#v0.2.2",
+    "gulp-typescript": "5.0.0-alpha.3",
+    "gulp-bump": "3.x",
+    "gulp-tslint": "8.x",
+    "typescript": "3.x",
+    "tslint": "5.x",
+    "tslint-eslint-rules": "5.x",
+    "react-select": "2.x",
+    "styled-components": "3.x",
+    "moment": "2.x",
+    "del": "4.1.1",
+    "gulp-sourcemaps": "2.6.5"
+  },
+  "peerDependencies": {
+    "moment": "2.x",
+    "styled-components": "3.x"
+  }
 }
