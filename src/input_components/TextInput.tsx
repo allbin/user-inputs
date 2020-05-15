@@ -169,9 +169,11 @@ class TextInput extends React.Component<TextInputProps, TextInputConfig> {
             frequency: 5,
             decoder: {
                 readers: ["code_128_reader", "code_39_reader", "ean_reader"],
-                drawBoundingBox: true,
-                drawScanline: true,
-                showPattern: true,
+                debug:{
+                    drawBoundingBox: true,
+                    drawScanline: true,
+                    showPattern: true,
+                }
             },
             locator: {
                 halfSample: true,
