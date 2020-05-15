@@ -158,11 +158,20 @@ class TextInput extends React.Component<TextInputProps, TextInputConfig> {
                     height: 720,
                     facingMode: "environment"
                 },
-                target: this.barcode_stream_target
+                target: this.barcode_stream_target,
+                area: { // defines rectangle of the detection/localization area
+                    top: "25%",    // top offset
+                    right: "25%",  // right offset
+                    left: "25%",   // left offset
+                    bottom: "25%"  // bottom offset
+                },
             },
             frequency: 5,
             decoder: {
-                readers: ["code_128_reader", "code_39_reader", "ean_reader"]
+                readers: ["code_128_reader", "code_39_reader", "ean_reader"],
+                drawBoundingBox: true,
+                drawScanline: true,
+                showPattern: true,
             },
             locator: {
                 halfSample: true,

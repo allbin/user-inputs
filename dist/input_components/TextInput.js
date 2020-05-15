@@ -60,11 +60,20 @@ var TextInput = /** @class */ (function (_super) {
                     height: 720,
                     facingMode: "environment"
                 },
-                target: this.barcode_stream_target
+                target: this.barcode_stream_target,
+                area: {
+                    top: "25%",
+                    right: "25%",
+                    left: "25%",
+                    bottom: "25%" // bottom offset
+                },
             },
             frequency: 5,
             decoder: {
-                readers: ["code_128_reader", "code_39_reader", "ean_reader"]
+                readers: ["code_128_reader", "code_39_reader", "ean_reader"],
+                drawBoundingBox: true,
+                drawScanline: true,
+                showPattern: true,
             },
             locator: {
                 halfSample: true,
